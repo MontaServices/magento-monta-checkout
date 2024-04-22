@@ -70,29 +70,15 @@ abstract class AbstractDeliveryOptions extends Action
 
     public function generateApi(RequestInterface $request, $language, $logger = null, $use_googlekey = false)
     {
-//        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-//        $directory = $objectManager->get('\Magento\Framework\Filesystem\DirectoryList');
-//        $rootDir = $directory->getRoot();
-//
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/MontapackingShipping.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/Address.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/OpeningTime.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/Option.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/Order.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/PickupPoint.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/Product.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/Settings.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/Shipper.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/ShippingOption.php';
-//        require_once $directory->getRoot() . '/app/code/Montapacking/MontaCheckout/vendor/monta/checkout-api-wrapper/src/Objects/TimeFrame.php';
-
-        if($request->getParam('street') != null && is_array($request->getParam('street')) && count($request->getParam('street')) > 1){
-            $street =  trim(implode(" ", $request->getParam('street')));
-        } else if ($request->getParam('street') != null) {
-            $street = trim($request->getParam('street'));
-        } else {
-            $street = "";
+        $street = $request->getParam('street', '');
+        if ($street) {
+            if (is_array($street)) {
+                $street = trim(implode(' ', $street));
+            } else {
+                $street = trim($street);
+            }
         }
+
         $postcode = $request->getParam('postcode') ? trim($request->getParam('postcode')) : "";
         $city = $request->getParam('city') ? trim($request->getParam('city')) : "";
         $country = $request->getParam('country') ? trim($request->getParam('country')) : "";
