@@ -81,15 +81,6 @@ class Shipping
 
 
         if ($deliveryOptionType == 'pickup') {
-            foreach ($this->checkoutSession->getLatestShipping()[1] as $timeframe) {
-//                $mysuperlist = $timeframe;
-//                foreach ($timeframe->options as $option) {
-//                    if($option->code == $deliveryOptionAdditionalInfo->code){
-//                        $selectedOptionFromCache = $option;
-//                        $fee = $selectedOptionFromCache->price_raw;
-//                    }
-//                }
-            }
             $method_title = $deliveryOptionAdditionalInfo->company;
 
             $desc = explode("|", $deliveryOptionAdditionalInfo->description);
@@ -97,7 +88,6 @@ class Shipping
         }
 
         if ($deliveryOptionType == 'delivery') {
-            $whatisinthislist = $this->checkoutSession->getLatestShipping()[0];
             foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
                 foreach ($timeframe->options as $option) {
                     if($option->code == $deliveryOptionAdditionalInfo->code){
@@ -107,7 +97,6 @@ class Shipping
                 }
             }
 
-            $willitcrashhere = $deliveryOptionAdditionalInfo;
             $method_title = $deliveryOptionAdditionalInfo->name;
 
             $desc = [];
