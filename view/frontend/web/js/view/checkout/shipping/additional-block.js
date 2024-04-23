@@ -224,9 +224,9 @@ define(
 
                             this.deliveryServices(objectArray);
 
-                            if (objectArray.length > 0){
+                            if (objectArray.length > 0) {
                                 this.preferredShipper = objectArray.find(timeframe => timeframe.options.some(option => option.is_preferred));
-                                if(this.preferredShipper == null) {
+                                if (this.preferredShipper == null) {
                                     this.preferredShipper = objectArray[0];
                                 }
 
@@ -235,7 +235,7 @@ define(
                                     const distinctFilteredItems = self.initDatePicker(objectArray);
 
                                     this.filteredDeliveryServices(filteredDeliveryServicesList.filter(timeframe => {
-                                            return timeframe.date === distinctFilteredItems[0].date
+                                        return timeframe.date === distinctFilteredItems[0].date
                                     }));
 
                                     // set width of date picker by number of list items
@@ -243,16 +243,18 @@ define(
                                     $("#slider-content").width(width * 110);
 
                                     let indexOfDay = 0;
-                                    if(this.preferredShipper != null && this.preferredShipper.options[0].code != "MultipleShipper_ShippingDayUnknown") {
-                                        indexOfDay = distinctFilteredItems.indexOf(distinctFilteredItems.find(x=>x.date == this.preferredShipper.date));
+                                    if (this.preferredShipper != null && this.preferredShipper.options[0].code != "MultipleShipper_ShippingDayUnknown") {
+                                        indexOfDay = distinctFilteredItems.indexOf(distinctFilteredItems.find(x => x.date == this.preferredShipper.date));
                                     }
 
                                     $('#slider-content ol li:nth-child(' + (indexOfDay + 1) + ')').trigger("click");
                                 }
 
-                                var fakeTimeframe = {};
-                                fakeTimeframe['options'] = [services[3]];
-                                this.standardDeliveryServices(fakeTimeframe);
+                                if (services[3] != null) {
+                                    var fakeTimeframe = {};
+                                    fakeTimeframe['options'] = [services[3]];
+                                    this.standardDeliveryServices(fakeTimeframe);
+                                }
                             }
 
                             let marker_id = 1;
@@ -267,39 +269,38 @@ define(
 
                             this.pickupServices(Object.values(services[1]));
                         }.bind(this)
-
                     );
                 },
 
-                renderedHandler: function(){
+                renderedHandler: function () {
                     self.setPreferredShipper();
                 },
 
-                setPreferredShipper(){
+                setPreferredShipper() {
                     var standardDeliveryServicesElement = $("#standard-delivery-services .delivery-option:not(.SameDayDelivery)");
                     var filteredDeliveryServicesElement = $("#deliveryServices-delivery-services .delivery-option:not(.SameDayDelivery)");
 
-                    if(this.preferredShipper != null &&
+                    if (this.preferredShipper != null &&
                         standardDeliveryServicesElement.length == this.standardDeliveryServices().length &&
                         filteredDeliveryServicesElement.length == this.filteredDeliveryServices()[0].options.length) {
-                            if(this.preferredShipper.options[0].code == "MultipleShipper_ShippingDayUnknown"){
-                                standardDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]").trigger("click");
+                        if (this.preferredShipper.options[0].code == "MultipleShipper_ShippingDayUnknown") {
+                            standardDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]").trigger("click");
 
-                               var sliderElement = document.getElementById('montapacking-plugin');
-                               sliderElement.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
-                            } else {
-                                filteredDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]").trigger("click");
-                            }
+                            var sliderElement = document.getElementById('montapacking-plugin');
+                            sliderElement.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
+                        } else {
+                            filteredDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]").trigger("click");
+                        }
                         this.preferredShipper = null;
                     }
                 },
 
                 initDatePicker: function (objectArray) {
                     /** Add DiscountPercentage to array list because the datepicker use it on date level instead on shipping level */
-                   objectArray = objectArray.filter(datepicker => datepicker.options.some(o => {
-                       datepicker['discount'] = o.discountPercentage;
-                       return datepicker;
-                   }));
+                    objectArray = objectArray.filter(datepicker => datepicker.options.some(o => {
+                        datepicker['discount'] = o.discountPercentage;
+                        return datepicker;
+                    }));
 
                     this.daysForSelect(objectArray);
 
@@ -365,8 +366,8 @@ define(
                     // return distinctFilteredItems;
                 },
 
-                checkDiscount(){
-                    return this.daysForSelect.some(x=>x.discountPercentage > 0)
+                checkDiscount() {
+                    return this.daysForSelect.some(x => x.discountPercentage > 0)
                 },
                 setDeliveryOption: function (type, details, additional_info) {
                     const deliveryOption = {
