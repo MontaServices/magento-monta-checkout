@@ -142,6 +142,7 @@ abstract class AbstractDeliveryOptions extends Action
         /**
          * Todo: Fix to make dynamic from Magento settings later
          */
+        $currency = "€";
         $settings = new Settings(
             $webshop,
             $username,
@@ -150,6 +151,7 @@ abstract class AbstractDeliveryOptions extends Action
             $maxPickupPoints,
             $googleapikey,
             $defaultShippingCost,
+            $currency,
             $language
         );
 
