@@ -152,7 +152,7 @@ abstract class AbstractDeliveryOptions extends Action
             $googleapikey,
             $defaultShippingCost,
             $language,
-            $currency
+            currency: $currency
         );
 
         $oApi = new MontpackingApi($settings, $language);
