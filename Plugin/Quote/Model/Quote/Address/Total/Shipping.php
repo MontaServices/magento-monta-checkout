@@ -98,11 +98,15 @@ class Shipping
 
         if ($deliveryOptionType == 'delivery') {
             $whatisinthislist = $this->checkoutSession->getLatestShipping()[0];
-            foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
-                foreach ($timeframe->options as $option) {
-                    if($option->code == $deliveryOptionAdditionalInfo->code){
-                        $selectedOptionFromCache = $option;
-                        $fee = $selectedOptionFromCache->price;
+            if ($deliveryOptionAdditionalInfo->code == "MultipleShipper_ShippingDayUnknown") {
+                $fee = $deliveryOptionAdditionalInfo->price;
+            } else {
+                foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
+                    foreach ($timeframe->options as $option) {
+                        if ($option->code == $deliveryOptionAdditionalInfo->code) {
+                            $selectedOptionFromCache = $option;
+                            $fee = $selectedOptionFromCache->price;
+                        }
                     }
                 }
             }
@@ -124,7 +128,7 @@ class Shipping
                 foreach ($deliveryOptionDetails->options as $value) {
                     $desc[] = $value;
                     foreach ($selectedOptionFromCache->deliveryOptions as $extra) {
-                                                if($extra->code == $value){
+                        if ($extra->code == $value) {
                             $fee += $extra->price;
                         }
                     }

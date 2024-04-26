@@ -151,8 +151,8 @@ abstract class AbstractDeliveryOptions extends Action
             $maxPickupPoints,
             $googleapikey,
             $defaultShippingCost,
-            $currency,
-            $language
+            $language,
+            $currency
         );
 
         $oApi = new MontpackingApi($settings, $language);
