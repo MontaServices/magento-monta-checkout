@@ -78,13 +78,20 @@ abstract class AbstractDeliveryOptions extends Action
 
     public function generateApi(RequestInterface $request, $language, $logger = null, $use_googlekey = false)
     {
-        if($request->getParam('street') != null && is_array($request->getParam('street')) && count($request->getParam('street')) > 1){
-            $street =  trim(implode(" ", $request->getParam('street')));
-        } else if ($request->getParam('street') != null) {
-            $street = trim(implode($request->getParam('street')));
+        $street = $request->getParam('street');
+
+        if($street != null && is_array($street) && count($street) > 1){
+            $street =  trim(implode(" ", $street));
+        } else if ($street != null) {
+            if (is_array($street)) {
+                $street = implode("", $street);
+            }
+
+            $street = trim($street);
         } else {
             $street = "";
         }
+
         $postcode = $request->getParam('postcode') ? trim($request->getParam('postcode')) : "";
         $city = $request->getParam('city') ? trim($request->getParam('city')) : "";
         $country = $request->getParam('country') ? trim($request->getParam('country')) : "";
@@ -134,40 +141,35 @@ abstract class AbstractDeliveryOptions extends Action
         $oApi->setCarrierConfig($this->getCarrierConfig());
         $oApi->setAddress($street, $housenumber, $housenumberaddition, $postcode, $city, $state, $country);
 
+        $quote = $cart->getQuote();
+        
+        $priceIncl = $quote->getSubtotal();
+        $priceExcl = $quote->getSubtotal();
 
-        $priceIncl = $cart->getQuote()->getSubtotal();
-        $priceExcl = $cart->getQuote()->getSubtotal();
-
-        if ($cart->getQuote()->getSubtotalInclTax() > 0) {
-            $priceIncl = $cart->getQuote()->getSubtotalInclTax();
-        } else if ($cart->getQuote()->getShippingAddress()->getSubtotalInclTax() > 0) {
-            $priceIncl = $cart->getQuote()->getShippingAddress()->getSubtotalInclTax();
-            $priceExcl = $cart->getQuote()->getShippingAddress()->getSubtotal();
+        if ($quote->getSubtotalInclTax() > 0) {
+            $priceIncl = $quote->getSubtotalInclTax();
+        } else if ($quote->getShippingAddress()->getSubtotalInclTax() > 0) {
+            $priceIncl = $quote->getShippingAddress()->getSubtotalInclTax();
+            $priceExcl = $quote->getShippingAddress()->getSubtotal();
         }
 
         $oApi->setOrder($priceIncl, $priceExcl); //phpcs:ignore
 
-        $items = $cart->getQuote()->getAllVisibleItems();
-
+        $items = $quote->getAllVisibleItems();
         $bAllProductsAvailable = true;
 
         foreach ($items as $item) {
 
             if ($leadingstockmontapacking) {
-                $oApi->addProduct($item->getSku(), $item->getQty()); //phpcs:ignore
+                $oApi->addProduct($item->getSku(), $item->getQty());
 
                 if (!$disabledeliverydays) {
-
                     // we let our api calculate the stock with the added products, so we set the stock on false
                     $bAllProductsAvailable = false;
                 }
 
             } else {
                 $stockItem = $item->getProduct()->getExtensionAttributes()->getStockItem();
-
-                //print $stockItem->getQty()."-".$item->getQty();
-                //exit;
-                //echo "<pre>";print_r($item->debug());
 
                 if ($stockItem->getQty() <= 0 || $stockItem->getQty() < $item->getQty()) {
 
