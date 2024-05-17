@@ -142,7 +142,7 @@ abstract class AbstractDeliveryOptions extends Action
         $oApi->setAddress($street, $housenumber, $housenumberaddition, $postcode, $city, $state, $country);
 
         $quote = $cart->getQuote();
-        
+
         $priceIncl = $quote->getSubtotal();
         $priceExcl = $quote->getSubtotal();
 
