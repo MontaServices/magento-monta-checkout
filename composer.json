@@ -4,7 +4,7 @@
     "require": {
         "php": "~7.1|~7.2|~7.3|~7.4|~8.1",
         "ext-json": "*",
-        "monta/checkout-api-wrapper": "^1.14"
+        "monta/checkout-api-wrapper": "^1.17"
     },
     "type": "magento2-module",
     "license": "CC-BY-NC-ND-3.0",
