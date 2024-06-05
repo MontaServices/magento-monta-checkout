@@ -2,7 +2,7 @@
     "name": "monta/montacheckout",
     "description": "Monta Checkout Extension",
     "require": {
-        "php": "~7.1|~7.2|~7.3|~7.4|~8.1",
+        "php": "~7.1|~7.2|~7.3|~7.4|~8.1|~8.2",
         "ext-json": "*",
         "monta/checkout-api-wrapper": "^1.17"
     },
