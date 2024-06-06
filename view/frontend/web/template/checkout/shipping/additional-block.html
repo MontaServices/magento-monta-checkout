@@ -31,9 +31,9 @@
     </div>
 
     <!-- ko if: standardDeliveryServices() != null && standardDeliveryServices().options != null -->
-    <div data-bind="foreach: standardDeliveryServices" class="clearboth" id="standard-delivery-services">
-        <div data-bind="template: {name: 'deliveryServices-template', afterRender:  $parent.renderedHandler }"></div>
-    </div>
+        <div data-bind="if: standardDeliveryServices().options != null" class="clearboth" id="standard-delivery-services">
+            <div data-bind="template: {name: 'deliveryServices-template', afterRender:  $parent.renderedHandler, data: standardDeliveryServices() }"></div>
+        </div>
     <!-- /ko -->
 
     <!-- ko if: filteredDeliveryServices().length > 0 -->
