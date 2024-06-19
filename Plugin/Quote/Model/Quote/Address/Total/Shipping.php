@@ -89,7 +89,9 @@ class Shipping
         }
 
         if ($deliveryOptionType == 'delivery') {
-           
+            if ($deliveryOptionAdditionalInfo->code == "MultipleShipper_ShippingDayUnknown") {
+                $fee = $deliveryOptionAdditionalInfo->price;
+            } else {
                 foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
                     foreach ($timeframe->options as $option) {
                         if ($option->code == $deliveryOptionAdditionalInfo->code) {
@@ -98,7 +100,7 @@ class Shipping
                         }
                     }
                 }
-            
+            }
 
             $method_title = $deliveryOptionAdditionalInfo->name;
 
@@ -116,7 +118,7 @@ class Shipping
                 foreach ($deliveryOptionDetails->options as $value) {
                     $desc[] = $value;
                     foreach ($selectedOptionFromCache->deliveryOptions as $extra) {
-                                                if($extra->code == $value){
+                        if ($extra->code == $value) {
                             $fee += $extra->price;
                         }
                     }
