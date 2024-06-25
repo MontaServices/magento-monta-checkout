@@ -30,7 +30,7 @@
         <!-- /ko -->
     </div>
 
-    <!-- ko if: standardDeliveryServices() != null && standardDeliveryServices().options != null -->
+    <!-- ko if: standardDeliveryServices() != null && standardDeliveryServices().options != null-->
         <div data-bind="if: standardDeliveryServices().options != null" class="clearboth" id="standard-delivery-services">
             <div data-bind="template: {name: 'deliveryServices-template', afterRender:  $parent.renderedHandler, data: standardDeliveryServices() }"></div>
         </div>
