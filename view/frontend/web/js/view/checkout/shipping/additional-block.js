@@ -252,6 +252,9 @@ define(
 
                                 var fakeTimeframe = {};
                                 fakeTimeframe['options'] = [services[3]];
+                                if(fakeTimeframe['options'][0] === null){
+                                    fakeTimeframe['options'] = null;
+                                }
                                 this.standardDeliveryServices(fakeTimeframe);
                             }
 
