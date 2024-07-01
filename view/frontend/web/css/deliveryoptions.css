@@ -262,7 +262,7 @@
 .montapacking-parent .montapacking-tab.day.selected_day {
     border:  none;
     box-shadow: 1px 1px 10px -4px grey;
-    
+
     font-weight: 700;
 }
 
@@ -297,6 +297,9 @@
 
 }
 
+.montapacking-container-logo.MultipleShipper {
+    background-image: url(../images/MultipleShipper.png) !important;
+}
 .montapacking-container-logo.GLS,
 .montapacking-container-logo.GLSPickupPoint{
     background-image: url(../images/GLS.png) !important;
@@ -1196,7 +1199,7 @@
 
 .discount-percentage{
     margin:  auto;
-    width: 60%; 
+    width: 60%;
     color:green;
     background-color: lightgreen;
 }
