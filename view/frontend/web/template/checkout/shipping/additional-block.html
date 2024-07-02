@@ -149,7 +149,7 @@
                               data-bind="text: shipper"></span>
 
                         <div class="montapacking-container-header">
-                            <div class="montapacking-container-logo" data-bind="css: code.split('_')[0]"></div>
+                            <div class="montapacking-container-logo" data-bind="css: code.split('_').length > 0 ? code.split('_')[0] : ''"></div>
                             <div class="montapacking-container-content">
                                 <div style="display: flex;">
                                     <p class="title" data-bind="text: displayName"></p>
