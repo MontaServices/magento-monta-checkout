@@ -262,7 +262,7 @@
 .montapacking-parent .montapacking-tab.day.selected_day {
     border:  none;
     box-shadow: 1px 1px 10px -4px grey;
-    
+
     font-weight: 700;
 }
 
@@ -295,6 +295,10 @@
     background-size: auto 50px;
     margin-right: 15px;;
 
+}
+
+.montapacking-container-logo.MultipleShipper {
+    background-image: url(../images/MultipleShipper.png) !important;
 }
 
 .montapacking-container-logo.GLS,
