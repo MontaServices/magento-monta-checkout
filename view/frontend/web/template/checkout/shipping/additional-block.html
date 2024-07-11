@@ -145,8 +145,8 @@
 
 
                         <span class="notranslate cropped_price montapacking-hidden" data-bind="text: price"></span>
-                        <span class="notranslate cropped_image_class_replaced montapacking-hidden"
-                              data-bind="text: shipper"></span>
+                        <span class="notranslate cropped_image_class montapacking-hidden" data-bind="text: shipperCodes"></span>
+                        <span class="notranslate cropped_image_class_replaced montapacking-hidden" data-bind="text: code.split('_').length > 0 ? code.split('_')[0] : code"></span>
 
                         <div class="montapacking-container-header">
                             <div class="montapacking-container-logo" data-bind="css: code.split('_').length > 0 ? code.split('_')[0] : code"></div>
