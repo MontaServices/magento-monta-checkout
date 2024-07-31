@@ -229,6 +229,7 @@ define(
                             if(fakeTimeframe['options'][0] === null){
                                 fakeTimeframe['options'] = null;
                             }
+                            
                             this.standardDeliveryServices(fakeTimeframe);
 
                             if (objectArray.length > 0){
