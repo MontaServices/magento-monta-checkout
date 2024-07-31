@@ -224,9 +224,19 @@ define(
 
                             this.deliveryServices(objectArray);
 
+                            var fakeTimeframe = {};
+                            fakeTimeframe['options'] = [services[3]];
+                            if(fakeTimeframe['options'][0] === null){
+                                fakeTimeframe['options'] = null;
+                            }
+                            this.standardDeliveryServices(fakeTimeframe);
+
                             if (objectArray.length > 0){
-                                this.preferredShipper = objectArray.find(timeframe => timeframe.options.some(option => option.is_preferred));
-                                if(this.preferredShipper == null) {
+                                this.preferredShipper = objectArray.find(timeframe => timeframe.options.some(option => option.isPreferred));
+                                if(this.preferredShipper == undefined) {
+                                    this.preferredShipper = fakeTimeframe;
+                                }
+                                else if (this.preferredShipper == null) {
                                     this.preferredShipper = objectArray[0];
                                 }
 
@@ -247,15 +257,9 @@ define(
                                         indexOfDay = distinctFilteredItems.indexOf(distinctFilteredItems.find(x=>x.date == this.preferredShipper.date));
                                     }
 
-                                    $('#slider-content ol li:nth-child(' + (indexOfDay + 1) + ')').trigger("click");
+                                    $('#slider-content ol li:nth-child(' + (indexOfDay) + ')').trigger("click");
                                 }
 
-                                var fakeTimeframe = {};
-                                fakeTimeframe['options'] = [services[3]];
-                                if(fakeTimeframe['options'][0] === null){
-                                    fakeTimeframe['options'] = null;
-                                }
-                                this.standardDeliveryServices(fakeTimeframe);
                             }
 
                             let marker_id = 1;
@@ -283,7 +287,6 @@ define(
                     var filteredDeliveryServicesElement = $("#deliveryServices-delivery-services .delivery-option:not(.SameDayDelivery)");
 
                     if(this.preferredShipper != null &&
-                        standardDeliveryServicesElement.length == this.standardDeliveryServices().length &&
                         filteredDeliveryServicesElement.length == this.filteredDeliveryServices()[0].options.length) {
                             if(this.preferredShipper.options[0].code == "MultipleShipper_ShippingDayUnknown"){
                                 standardDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]").trigger("click");
