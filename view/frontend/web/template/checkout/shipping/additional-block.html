@@ -30,13 +30,13 @@
         <!-- /ko -->
     </div>
 
-    <!-- ko if: standardDeliveryServices() != null && standardDeliveryServices().options != null-->
-        <div data-bind="if: standardDeliveryServices().options != null" class="clearboth" id="standard-delivery-services">
-            <div data-bind="template: {name: 'deliveryServices-template', afterRender:  $parent.renderedHandler, data: standardDeliveryServices() }"></div>
+    <!-- ko if: standardDeliveryServices() !== null -->
+        <div class="clearboth" id="standard-delivery-services">
+            <div data-bind="template: {name: 'deliveryServices-template', afterRender:  renderedHandler, data: standardDeliveryServices() }"></div>
         </div>
     <!-- /ko -->
 
-    <!-- ko if: filteredDeliveryServices().length > 0 -->
+    <!-- ko if: filteredDeliveryServices() !== null && filteredDeliveryServices().length > 0 -->
     <div id="date-picker">
         <button class="date-picker-button left" type="button" data-bind="click: moveLeft"><</button>
         <button class="date-picker-button right" type="button" data-bind="click: moveRight">></button>
@@ -62,7 +62,7 @@
 
     <div class="montapacking-services">
         <div class="delivery-services">
-            <!-- ko if: filteredDeliveryServices().length > 0  || standardDeliveryServices().length > 0 -->
+            <!-- ko if: ((filteredDeliveryServices() != null && filteredDeliveryServices().length > 0)  || (standardDeliveryServices() !== null)) -->
             <div class="container montapacking-delivery-service delivery-information displaynone">
                 <div class="montapacking-container-header">
                     <div class="montapacking-container-logo"></div>
@@ -103,7 +103,7 @@
             </div>
             <!-- /ko -->
 
-            <!-- ko if: filteredDeliveryServices().length == 0 && standardDeliveryServices().length == 0 -->
+            <!-- ko if: filteredDeliveryServices().length === 0 && standardDeliveryServices() === null -->
             <div class="container montapacking-delivery-service delivery-information">
                 <div class="montapacking-container-header">
                     <div class="montapacking-container-logo"></div>
@@ -117,7 +117,7 @@
             </div>
             <!-- /ko -->
 
-            <!-- ko if: filteredDeliveryServices().length > 0 -->
+            <!-- ko if: filteredDeliveryServices() != null  && filteredDeliveryServices().length > 0 -->
             <div data-bind="foreach: filteredDeliveryServices" class="clearboth"
                  id="deliveryServices-delivery-services">
                 <div
