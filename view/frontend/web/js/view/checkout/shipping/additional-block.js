@@ -542,7 +542,6 @@ define(
 
                     const code = $(this).val();
                     const name = $(this).parents(".delivery-option").find(".cropped_name").text();
-                    const priceFormatted = $(this).parents(".delivery-option").find(".cropped_priceFormatted").text();
                     const type = $(this).parents(".delivery-option").find(".cropped_type").text();
                     let date = $(this).parents(".delivery-option").find(".cropped_date").text();
                     let date_text = $(this).parents(".delivery-option").find(".cropped_time").text();
@@ -645,14 +644,8 @@ define(
                         }, 250
                     );
 
-                    var price_text = "&euro; " + total_price;
-
-                    if (isNaN(parseFloat(priceFormatted))) {
-                        // Todo: Bugfix total_price
-                        price_text = priceFormatted;
-                    }
-                    $(".delivery-information").find(".montapacking-container-price").html(price_text);
-
+                     // Todo: Bugfix total_price
+                     $(".delivery-information").find(".montapacking-container-price").html("&euro; " + total_price);
                     const additional_info = [];
                     additional_info.push(
                         {
@@ -706,7 +699,6 @@ define(
                     const country = $(this).parents(".pickup-option").find(".cropped_country").text();
                     const price = $(this).parents(".pickup-option").find(".cropped_price").text();
                     const image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
-                    const priceFormatted = $(this).parents(".pickup-option").find(".cropped_priceFormatted").text();
                     const short_code = image_class;
                     const distance = $(this).parents(".pickup-option").find(".cropped_distance").text();
                     const optionsvalues = $(this).parents(".pickup-option").find(".cropped_optionswithvalue").text();
@@ -734,15 +726,7 @@ define(
                     $(".pickup-information").find(".montapacking-pickup-information-description-postal-city-country").html(postal + ' ' + city + ' (' + country + ')');
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
-                    var price_text = "&euro; " + total_price;
-
-                    if (isNaN(parseFloat(priceFormatted))) {
-                        // Todo: Bugfix total_price
-                        price_text = priceFormatted;
-                    }
-
-                    $(".pickup-information").find(".montapacking-container-price").html(price_text);
-
+                    $(".pickup-information").find(".montapacking-container-price").html("&euro; " + price.replace(".", ","));
 
                     //set image class
                     $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
@@ -933,13 +917,6 @@ define(
                         function (index) {
                             const openingtimes = $(this).find(".table-container .table").html();
 
-                            const priceFormatted = $(this).find("span.cropped_priceFormatted").text().replace(".", ",")
-                            var price_text = "&euro; " + $(this).find("span.cropped_price").text().replace(".", ",");
-
-                            if (isNaN(parseFloat(priceFormatted))) {
-                                // Todo: Bugfix total_price
-                                price_text = priceFormatted;
-                            }
 
                             markers.push(
                                 {
@@ -960,7 +937,7 @@ define(
                                     'description': $(this).find("span.cropped_description").text(),
                                     'image': site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png',
                                     'price': $(this).find("span.cropped_price").text(),
-                                    'priceformatted': price_text,
+                                    'priceformatted': $(this).find("span.cropped_price").text().replace(".", ","),
                                     'openingtimes': openingtimes,
                                     'raw': 1,
                                 }
