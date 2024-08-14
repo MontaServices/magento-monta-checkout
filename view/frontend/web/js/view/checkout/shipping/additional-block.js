@@ -294,23 +294,29 @@ define(
                     var standardDeliveryServicesElement = $("#standard-delivery-services");
                     var filteredDeliveryServicesElement = $("#deliveryServices-delivery-services .delivery-option:not(.SameDayDelivery)");
 
-                    if (this.preferredShipper != null &&
-                        (this.filteredDeliveryServices().length > 0 && filteredDeliveryServicesElement.length === this.filteredDeliveryServices()[0].options.length) ||
-                        (this.standardDeliveryServices() != null && standardDeliveryServicesElement.length === this.standardDeliveryServices().options.length)) {
-                        if (this.preferredShipper.options !== null && this.preferredShipper.options[0].code === "MultipleShipper_ShippingDayUnknown") {
-                            const standardDeliveryServicesInputElement = standardDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
-                            if (standardDeliveryServicesInputElement.length > 0) {
-                                standardDeliveryServicesInputElement.trigger("click");
+                    if (this.selectedMethod() != null) {
+                        if (this.preferredShipper != null &&
+                            (this.filteredDeliveryServices().length > 0 && filteredDeliveryServicesElement.length === this.filteredDeliveryServices()[0].options.length) ||
+                            (this.standardDeliveryServices() != null && standardDeliveryServicesElement.length === this.standardDeliveryServices().options.length)) {
+                            if (this.preferredShipper.options !== null && this.preferredShipper.options[0].code === "MultipleShipper_ShippingDayUnknown") {
+                                const standardDeliveryServicesInputElement = standardDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
+                                if (standardDeliveryServicesInputElement.length > 0) {
+                                    standardDeliveryServicesInputElement.trigger("click");
 
-                                var sliderElement = document.getElementById('montapacking-plugin');
-                                sliderElement.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
-                                this.preferredShipper = null;
-                            }
-                        } else {
-                            const filteredDeliveryServicesInputElement = filteredDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
-                            if (filteredDeliveryServicesInputElement.length > 0) {
-                                filteredDeliveryServicesInputElement.trigger("click");
-                                this.preferredShipper = null;
+                                    var sliderElement = document.getElementById('montapacking-plugin');
+                                    sliderElement.scrollIntoView({
+                                        behavior: "smooth",
+                                        block: "nearest",
+                                        inline: "nearest"
+                                    });
+                                    this.preferredShipper = null;
+                                }
+                            } else {
+                                const filteredDeliveryServicesInputElement = filteredDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
+                                if (filteredDeliveryServicesInputElement.length > 0) {
+                                    filteredDeliveryServicesInputElement.trigger("click");
+                                    this.preferredShipper = null;
+                                }
                             }
                         }
                     }
@@ -387,7 +393,7 @@ define(
                     // return distinctFilteredItems;
                 },
 
-                checkDiscount(){
+                checkDiscount() {
                     return this.daysForSelect.some(x => x.discountPercentage > 0)
                 },
                 setDeliveryOption: function (type, details, additional_info) {
@@ -536,6 +542,7 @@ define(
 
                     const code = $(this).val();
                     const name = $(this).parents(".delivery-option").find(".cropped_name").text();
+                    const priceFormatted = $(this).parents(".delivery-option").find(".cropped_priceFormatted").text();
                     const type = $(this).parents(".delivery-option").find(".cropped_type").text();
                     let date = $(this).parents(".delivery-option").find(".cropped_date").text();
                     let date_text = $(this).parents(".delivery-option").find(".cropped_time").text();
@@ -638,8 +645,13 @@ define(
                         }, 250
                     );
 
-                    // Todo: Bugfix total_price
-                    $(".delivery-information").find(".montapacking-container-price").html("&euro; " + total_price);
+                    var price_text = "&euro; " + total_price;
+
+                    if (isNaN(parseFloat(priceFormatted))) {
+                        // Todo: Bugfix total_price
+                        price_text = priceFormatted;
+                    }
+                    $(".delivery-information").find(".montapacking-container-price").html(price_text);
 
                     const additional_info = [];
                     additional_info.push(
@@ -694,6 +706,7 @@ define(
                     const country = $(this).parents(".pickup-option").find(".cropped_country").text();
                     const price = $(this).parents(".pickup-option").find(".cropped_price").text();
                     const image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
+                    const priceFormatted = $(this).parents(".pickup-option").find(".cropped_priceFormatted").text();
                     const short_code = image_class;
                     const distance = $(this).parents(".pickup-option").find(".cropped_distance").text();
                     const optionsvalues = $(this).parents(".pickup-option").find(".cropped_optionswithvalue").text();
@@ -721,8 +734,15 @@ define(
                     $(".pickup-information").find(".montapacking-pickup-information-description-postal-city-country").html(postal + ' ' + city + ' (' + country + ')');
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
-                    // set price
-                    $(".pickup-information").find(".montapacking-container-price").html("&euro; " + price.replace(".", ","));
+                    var price_text = "&euro; " + total_price;
+
+                    if (isNaN(parseFloat(priceFormatted))) {
+                        // Todo: Bugfix total_price
+                        price_text = priceFormatted;
+                    }
+
+                    $(".pickup-information").find(".montapacking-container-price").html(price_text);
+
 
                     //set image class
                     $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
@@ -913,6 +933,14 @@ define(
                         function (index) {
                             const openingtimes = $(this).find(".table-container .table").html();
 
+                            const priceFormatted = $(this).find("span.cropped_priceFormatted").text().replace(".", ",")
+                            var price_text = "&euro; " + $(this).find("span.cropped_price").text().replace(".", ",");
+
+                            if (isNaN(parseFloat(priceFormatted))) {
+                                // Todo: Bugfix total_price
+                                price_text = priceFormatted;
+                            }
+
                             markers.push(
                                 {
                                     'id': $(this).attr("data-markerid"),
@@ -932,7 +960,7 @@ define(
                                     'description': $(this).find("span.cropped_description").text(),
                                     'image': site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png',
                                     'price': $(this).find("span.cropped_price").text(),
-                                    'priceformatted': $(this).find("span.cropped_price").text().replace(".", ","),
+                                    'priceformatted': price_text,
                                     'openingtimes': openingtimes,
                                     'raw': 1,
                                 }
