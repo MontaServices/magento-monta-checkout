@@ -198,6 +198,8 @@ define(
                  * Retrieve Delivery Options from Montapacking.
                  */
                 getDeliveryServices: function (street, postcode, city, country, housenumber, housenumberaddition, longlat) {
+                    // console.log("window.checkout.baseUrl", window.checkout.baseUrl + "pub/media/Images/default/w03486.jpg")
+
                     $.ajax(
                         {
                             method: 'GET',
@@ -542,6 +544,7 @@ define(
 
                     const code = $(this).val();
                     const name = $(this).parents(".delivery-option").find(".cropped_name").text();
+                    const priceFormatted = $(this).parents(".delivery-option").find(".cropped_priceFormatted").text();
                     const type = $(this).parents(".delivery-option").find(".cropped_type").text();
                     let date = $(this).parents(".delivery-option").find(".cropped_date").text();
                     let date_text = $(this).parents(".delivery-option").find(".cropped_time").text();
@@ -644,8 +647,14 @@ define(
                         }, 250
                     );
 
-                     // Todo: Bugfix total_price
-                     $(".delivery-information").find(".montapacking-container-price").html("&euro; " + total_price);
+                    var price_text = "&euro; " + total_price;
+
+                    if (isNaN(parseFloat(priceFormatted))) {
+                        // Todo: Bugfix total_price
+                        price_text = priceFormatted;
+                    }
+                    $(".delivery-information").find(".montapacking-container-price").html(price_text);
+
                     const additional_info = [];
                     additional_info.push(
                         {
@@ -698,7 +707,9 @@ define(
                     const description = $(this).parents(".pickup-option").find(".cropped_description").text();
                     const country = $(this).parents(".pickup-option").find(".cropped_country").text();
                     const price = $(this).parents(".pickup-option").find(".cropped_price").text();
-                    const image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
+                    let image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
+                    const image_url = $(this).parents(".pickup-option").find(".cropped_img_url").text();
+                    const priceFormatted = $(this).parents(".pickup-option").find(".cropped_priceFormatted").text();
                     const short_code = image_class;
                     const distance = $(this).parents(".pickup-option").find(".cropped_distance").text();
                     const optionsvalues = $(this).parents(".pickup-option").find(".cropped_optionswithvalue").text();
@@ -726,10 +737,27 @@ define(
                     $(".pickup-information").find(".montapacking-pickup-information-description-postal-city-country").html(postal + ' ' + city + ' (' + country + ')');
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
-                    $(".pickup-information").find(".montapacking-container-price").html("&euro; " + price.replace(".", ","));
+                    var price_text = "&euro; " + total_price;
+
+                    if (isNaN(parseFloat(priceFormatted))) {
+                        // Todo: Bugfix total_price
+                        price_text = priceFormatted;
+                    }
+
+                    $(".pickup-information").find(".montapacking-container-price").html(price_text);
+
+                    debugger
+                    if($(this).parents(".pickup-option").find(".cropped_image_class").text() === "AFH") {
+                        const AFH_custom = image_url;
+                        if (AFH_custom) {
+                            image_class = AFH_custom;
+                            $(".pickup-information").find(".montapacking-container-logo").css("background-image", "url(" + image_class + ")")
+                        }else{
+                            $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
+                        }
+                    }
 
                     //set image class
-                    $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
 
                     $(".pickup-information").fadeIn('slow');
 
@@ -913,9 +941,29 @@ define(
                     const useLocator = $('#bh-sl-map-container');
                     const markers = [];
                     const site_url = '/static/frontend/Magento/luma/nl_NL/Montapacking_MontaCheckout';
+                    let AFH_image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
                     $(".montapacking-pickup-service.pickup-option").each(
                         function (index) {
                             const openingtimes = $(this).find(".table-container .table").html();
+
+                            const priceFormatted = $(this).find("span.cropped_priceFormatted").text().replace(".", ",")
+                            var price_text = "&euro; " + $(this).find("span.cropped_price").text().replace(".", ",");
+
+                            if (isNaN(parseFloat(priceFormatted))) {
+                                // Todo: Bugfix total_price
+                                price_text = priceFormatted;
+                            }
+
+                            debugger
+                            let image  = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
+
+                            if($(this).find("span.cropped_image_class").text() == "AFH") {
+                                const AFH_custom = $(this).find("span.cropped_img_url").text();
+                                if (AFH_custom) {
+                                    AFH_image = AFH_custom;
+                                    image = AFH_custom;
+                                }
+                            }
 
 
                             markers.push(
@@ -935,9 +983,9 @@ define(
                                     'postal': $(this).find("span.cropped_postal").text(),
                                     'country': $(this).find("span.cropped_country").text(),
                                     'description': $(this).find("span.cropped_description").text(),
-                                    'image': site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png',
+                                    'image': image,
                                     'price': $(this).find("span.cropped_price").text(),
-                                    'priceformatted': $(this).find("span.cropped_price").text().replace(".", ","),
+                                    'priceformatted': price_text,
                                     'openingtimes': openingtimes,
                                     'raw': 1,
                                 }
@@ -949,6 +997,7 @@ define(
                             }
                         }
                     );
+
 
                     const config = {
                         'debug': false,
@@ -974,7 +1023,7 @@ define(
                             'PAK': [site_url + '/images/PostNL.png', 32, 32],
                             'DHLservicepunt': [site_url + '/images/DHL.png', 32, 32],
                             'DPDparcelstore': [site_url + '/images/DPD.png', 32, 32],
-                            'AFH': [site_url + '/images/AFH.png', 32, 32],
+                            'AFH': [AFH_image, 32, 32],
                             'DHLFYPickupPoint': [site_url + '/images/DHLFYPickupPoint.png', 32, 32],
                             'DHLParcelConnectPickupPoint': [site_url + '/images/DHLParcelConnectPickupPoint.png', 32, 32],
                             'DHLservicepuntGroot': [site_url + '/images/DHLservicepuntGroot.png', 32, 32],

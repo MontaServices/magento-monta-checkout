@@ -65,7 +65,8 @@ class Delivery extends AbstractDeliveryOptions
         Logger          $logger,
         Cart            $cart,
         PickupHelper    $pickupHelper,
-        DeliveryHelper  $deliveryHelper
+        DeliveryHelper  $deliveryHelper,
+        \Magento\Store\Model\StoreManagerInterface    $storeManager
     )
     {
 //        $tomorrow = Carbon::now()->addDay();
@@ -78,11 +79,17 @@ class Delivery extends AbstractDeliveryOptions
         $this->cart = $cart;
         $this->pickupHelper = $pickupHelper;
         $this->deliveryHelper = $deliveryHelper;
+//
+//        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+//        $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+//        $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+//        echo $mediaUrl;
 
         parent::__construct(
             $context,
             $carrierConfig,
-            $cart
+            $cart,
+            $storeManager
         );
     }
 

@@ -47,7 +47,8 @@ class LongLat extends AbstractDeliveryOptions
         LocaleResolver $localeResolver,
         CarrierConfig $carrierConfig,
         \Montapacking\MontaCheckout\Logger\Logger $logger,
-        \Magento\Checkout\Model\Cart $cart
+        \Magento\Checkout\Model\Cart $cart,
+        \Magento\Store\Model\StoreManagerInterface    $storeManager
     ) {
         $this->_logger = $logger;
 
@@ -55,10 +56,12 @@ class LongLat extends AbstractDeliveryOptions
         $this->localeResolver = $localeResolver;
         $this->cart = $cart;
 
+
         parent::__construct(
             $context,
             $carrierConfig,
-            $cart
+            $cart,
+            $storeManager
         );
     }
 
