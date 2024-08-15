@@ -751,7 +751,6 @@ define(
 
                     $(".pickup-information").find(".montapacking-container-price").html(price_text);
 
-                    debugger
                     if($(this).parents(".pickup-option").find(".cropped_image_class").text() === "AFH") {
                         const AFH_custom = image_url;
                         if (AFH_custom) {
@@ -959,7 +958,6 @@ define(
                                 price_text = priceFormatted;
                             }
 
-                            debugger
                             let image  = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
 
                             if($(this).find("span.cropped_image_class").text() == "AFH") {
@@ -969,7 +967,6 @@ define(
                                     image = AFH_custom;
                                 }
                             }
-
 
                             markers.push(
                                 {

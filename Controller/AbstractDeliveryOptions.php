@@ -215,6 +215,7 @@ abstract class AbstractDeliveryOptions extends Action
         }
 
         foreach ($frames['PickupOptions'] as $item) {
+            $item->imageURL= null;
             $item->distanceMeters = round($item->distanceMeters / 1000, 2);
         }
 
