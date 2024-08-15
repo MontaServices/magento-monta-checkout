@@ -235,23 +235,27 @@ define(
                             if (objectArray.length > 0) {
                                 this.preferredShipper = objectArray.find(timeframe => timeframe.options.some(option => option.isPreferred));
 
-                                // if standardshipper is preferred
-                                if (this.preferredShipper === undefined && services[3] !== null && services[3].isPreferred) {
-                                    this.preferredShipper = fakeTimeframe;
-                                } else {
-                                    this.preferredShipper = objectArray[0];
-                                }
-
                                 const filteredDeliveryServicesList = objectArray.filter(timeframe => timeframe.options[0].date !== '');
                                 if (filteredDeliveryServicesList.length > 0) {
                                     const distinctFilteredItems = self.initDatePicker(objectArray);
 
-                                    this.filteredDeliveryServices(filteredDeliveryServicesList.filter(timeframe => {
-                                        return timeframe.date === distinctFilteredItems[0].date
-                                    }));
+                                    if (this.preferredShipper === undefined && services[3] !== null && services[3].isPreferred) {
+                                        this.preferredShipper = fakeTimeframe;
+                                        this.filteredDeliveryServices(filteredDeliveryServicesList.filter(timeframe => {
+                                            return timeframe.date === distinctFilteredItems[0].date
+                                        }));
 
-                                    if (fakeTimeframe && fakeTimeframe?.options?.length > 0) {
-                                        this.standardDeliveryServices(fakeTimeframe);
+                                        if (fakeTimeframe && fakeTimeframe?.options?.length > 0) {
+                                            this.standardDeliveryServices(fakeTimeframe);
+                                        }
+                                    } else {
+                                        this.preferredShipper = objectArray[0];
+                                        if (fakeTimeframe && fakeTimeframe?.options?.length > 0) {
+                                            this.standardDeliveryServices(fakeTimeframe);
+                                        }
+                                        this.filteredDeliveryServices(filteredDeliveryServicesList.filter(timeframe => {
+                                            return timeframe.date === distinctFilteredItems[0].date
+                                        }));
                                     }
 
                                     // set width of date picker by number of list items
@@ -259,8 +263,8 @@ define(
                                     $("#slider-content").width(width * 110);
 
                                     let indexOfDay = 0;
-                                    if (this.preferredShipper != null && this.preferredShipper.options != null && this.preferredShipper.options[0].code != "MultipleShipper_ShippingDayUnknown") {
-                                        indexOfDay = distinctFilteredItems.indexOf(distinctFilteredItems.find(x => x.date == this.preferredShipper.date));
+                                    if (this.preferredShipper != null && this.preferredShipper.options != null && this.preferredShipper.options[0].code !== "MultipleShipper_ShippingDayUnknown") {
+                                        indexOfDay = distinctFilteredItems.indexOf(distinctFilteredItems.find(x => x.date === this.preferredShipper.date));
                                     }
 
                                     $('#slider-content ol li:nth-child(' + (indexOfDay) + ')').trigger("click");
@@ -295,27 +299,28 @@ define(
                     var filteredDeliveryServicesElement = $("#deliveryServices-delivery-services .delivery-option:not(.SameDayDelivery)");
 
                     if (this.selectedMethod() != null) {
-                        if (this.preferredShipper != null &&
-                            (this.filteredDeliveryServices().length > 0 && filteredDeliveryServicesElement.length === this.filteredDeliveryServices()[0].options.length) ||
-                            (this.standardDeliveryServices() != null && standardDeliveryServicesElement.length === this.standardDeliveryServices().options.length)) {
-                            if (this.preferredShipper.options !== null && this.preferredShipper.options[0].code === "MultipleShipper_ShippingDayUnknown") {
-                                const standardDeliveryServicesInputElement = standardDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
-                                if (standardDeliveryServicesInputElement.length > 0) {
-                                    standardDeliveryServicesInputElement.trigger("click");
+                        if (this.preferredShipper != null) {
+                            if (this.filteredDeliveryServices().length > 0 && filteredDeliveryServicesElement.length === this.filteredDeliveryServices()[0].options.length ||
+                                this.standardDeliveryServices() != null && standardDeliveryServicesElement.length === this.standardDeliveryServices().options.length) {
+                                if (this.preferredShipper.options !== null && this.preferredShipper.options[0].code === "MultipleShipper_ShippingDayUnknown") {
+                                    const standardDeliveryServicesInputElement = standardDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
+                                    if (standardDeliveryServicesInputElement.length > 0) {
+                                        standardDeliveryServicesInputElement.trigger("click");
 
-                                    var sliderElement = document.getElementById('montapacking-plugin');
-                                    sliderElement.scrollIntoView({
-                                        behavior: "smooth",
-                                        block: "nearest",
-                                        inline: "nearest"
-                                    });
-                                    this.preferredShipper = null;
-                                }
-                            } else {
-                                const filteredDeliveryServicesInputElement = filteredDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
-                                if (filteredDeliveryServicesInputElement.length > 0) {
-                                    filteredDeliveryServicesInputElement.trigger("click");
-                                    this.preferredShipper = null;
+                                        var sliderElement = document.getElementById('montapacking-plugin');
+                                        sliderElement.scrollIntoView({
+                                            behavior: "smooth",
+                                            block: "nearest",
+                                            inline: "nearest"
+                                        });
+                                        this.preferredShipper = null;
+                                    }
+                                } else {
+                                    const filteredDeliveryServicesInputElement = filteredDeliveryServicesElement.find("input[value=" + this.preferredShipper.options[0].code + "]")
+                                    if (filteredDeliveryServicesInputElement.length > 0) {
+                                        filteredDeliveryServicesInputElement.trigger("click");
+                                        this.preferredShipper = null;
+                                    }
                                 }
                             }
                         }
@@ -644,8 +649,8 @@ define(
                         }, 250
                     );
 
-                     // Todo: Bugfix total_price
-                     $(".delivery-information").find(".montapacking-container-price").html("&euro; " + total_price);
+                    // Todo: Bugfix total_price
+                    $(".delivery-information").find(".montapacking-container-price").html("&euro; " + total_price);
                     const additional_info = [];
                     additional_info.push(
                         {
