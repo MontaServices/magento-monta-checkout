@@ -655,9 +655,10 @@ define(
                         }, 250
                     );
 
-                    var price_text = self.createPriceText(total_price, priceFormatted);
+                    var price_element = $(".delivery-information").find(".montapacking-container-price")
+                    var price_text = self.createPriceText(total_price, priceFormatted, price_element);
 
-                    $(".delivery-information").find(".montapacking-container-price").html(price_text);
+                    price_element.html(price_text);
 
                     const additional_info = [];
                     additional_info.push(
@@ -694,11 +695,14 @@ define(
 
                 },
 
-                createPriceText: function (total_price, priceFormatted) {
+                createPriceText: function (total_price, priceFormatted, elementToColorGreenWhenFree = "") {
                     var price_text = "&euro; " + total_price;
 
                     if (isNaN(parseFloat(priceFormatted))) {
                         price_text = priceFormatted;
+                        if (elementToColorGreenWhenFree !== "") {
+                            elementToColorGreenWhenFree.addClass('color-green');
+                        }
                     }
 
                     return price_text;
@@ -750,9 +754,10 @@ define(
                     $(".pickup-information").find(".montapacking-pickup-information-description-postal-city-country").html(postal + ' ' + city + ' (' + country + ')');
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
-                    var price_text = self.createPriceText(price.replace(".", ","), priceFormatted);
+                    var price_element = $(".pickup-information").find(".montapacking-container-price");
+                    var price_text = self.createPriceText(price.replace(".", ","), priceFormatted, price_element);
 
-                    $(".pickup-information").find(".montapacking-container-price").html(price_text);
+                    price_element.html(price_text);
 
                     if ($(this).parents(".pickup-option").find(".cropped_image_class").text() === "AFH") {
                         // if custom image for AFH is set

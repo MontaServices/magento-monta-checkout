@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                             <div class="montapacking-container-price"
-                                 data-bind="text: priceFormatted, css: { 'color-green': discountPercentage > 0 }"></div>
+                                 data-bind="text: priceFormatted, css: { 'color-green': (price == 0 || discountPercentage > 0) }"></div>
                             <div class="clearboth"></div>
                         </div>
 
