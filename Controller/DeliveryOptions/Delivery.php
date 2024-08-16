@@ -50,6 +50,8 @@ class Delivery extends AbstractDeliveryOptions
      */
     protected $deliveryHelper;
 
+    private $storeManager;
+
     /**
      * Services constructor.
      *
@@ -79,6 +81,8 @@ class Delivery extends AbstractDeliveryOptions
         $this->cart = $cart;
         $this->pickupHelper = $pickupHelper;
         $this->deliveryHelper = $deliveryHelper;
+        $this->storeManager = $storeManager;
+
 //
 //        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 //        $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
@@ -107,9 +111,12 @@ class Delivery extends AbstractDeliveryOptions
 
         try {
             $oApi = $this->generateApi($request, $language, $this->_logger, true);
+            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $AFHImage_basepath = $mediaUrl . 'Images/';
+
             $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'],  $oApi['CustomerLocation'], $oApi['StandardShipper']]);
 
-            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper']]);
+            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'],$AFHImage_basepath ]);
         } catch (Exception $e) {
 
             $context = ['source' => 'Montapacking Checkout'];

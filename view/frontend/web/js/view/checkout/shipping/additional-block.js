@@ -36,7 +36,8 @@ define(
                     pickupFee: ko.observable(),
                     selectedShippers: ko.observable(),
                     selectedPickup: ko.observable(),
-                    preferredShipper: ko.observable()
+                    preferredShipper: ko.observable(),
+                    afhimageBaseURL: null
                 },
                 initObservable: function () {
                     //one step checkout solution, update buttons and quantity change are not working, so we are gonna hide this options
@@ -114,7 +115,8 @@ define(
                             'standardDeliveryServices',
                             'daysForSelect',
                             'pickupPoints',
-                            'preferredShipper'
+                            'preferredShipper',
+                            'afhimageBaseURL'
                         ]
                     );
 
@@ -223,6 +225,7 @@ define(
                             }
 
                             const objectArray = Object.values(services[0]);
+                            self.afhimageBaseURL = services[4];
 
                             var fakeTimeframe = {};
                             if (services[3] !== null) {
@@ -652,12 +655,8 @@ define(
                         }, 250
                     );
 
-                    var price_text = "&euro; " + total_price;
+                    var price_text = self.createPriceText(total_price, priceFormatted);
 
-                    if (isNaN(parseFloat(priceFormatted))) {
-                        // Todo: Bugfix total_price
-                        price_text = priceFormatted;
-                    }
                     $(".delivery-information").find(".montapacking-container-price").html(price_text);
 
                     const additional_info = [];
@@ -695,6 +694,15 @@ define(
 
                 },
 
+                createPriceText: function (total_price, priceFormatted) {
+                    var price_text = "&euro; " + total_price;
+
+                    if (isNaN(parseFloat(priceFormatted))) {
+                        price_text = priceFormatted;
+                    }
+
+                    return price_text;
+                },
 
                 selectPickUp: function () {
                     $(".pickup-information").hide();
@@ -713,7 +721,7 @@ define(
                     const country = $(this).parents(".pickup-option").find(".cropped_country").text();
                     const price = $(this).parents(".pickup-option").find(".cropped_price").text();
                     let image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
-                    const image_url = $(this).parents(".pickup-option").find(".cropped_img_url").text();
+                    const image_name_for_AFH = $(this).parents(".pickup-option").find(".cropped_img_name").text();
                     const priceFormatted = $(this).parents(".pickup-option").find(".cropped_priceFormatted").text();
                     const short_code = image_class;
                     const distance = $(this).parents(".pickup-option").find(".cropped_distance").text();
@@ -742,26 +750,20 @@ define(
                     $(".pickup-information").find(".montapacking-pickup-information-description-postal-city-country").html(postal + ' ' + city + ' (' + country + ')');
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
-                    var price_text = "&euro; " + total_price;
-
-                    if (isNaN(parseFloat(priceFormatted))) {
-                        // Todo: Bugfix total_price
-                        price_text = priceFormatted;
-                    }
+                    var price_text = self.createPriceText(price.replace(".", ","), priceFormatted);
 
                     $(".pickup-information").find(".montapacking-container-price").html(price_text);
 
-                    if($(this).parents(".pickup-option").find(".cropped_image_class").text() === "AFH") {
-                        const AFH_custom = image_url;
-                        if (AFH_custom) {
-                            image_class = AFH_custom;
-                            $(".pickup-information").find(".montapacking-container-logo").css("background-image", "url(" + image_class + ")")
-                        }else{
+                    if ($(this).parents(".pickup-option").find(".cropped_image_class").text() === "AFH") {
+                        // if custom image for AFH is set
+                        if (image_name_for_AFH) {
+                            $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").css("background-image", "url(" + self.afhimageBaseURL + image_name_for_AFH + ")")
+                        } else {
                             $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
                         }
+                    } else {
+                        $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
                     }
-
-                    //set image class
 
                     $(".pickup-information").fadeIn('slow');
 
@@ -945,27 +947,18 @@ define(
                     const useLocator = $('#bh-sl-map-container');
                     const markers = [];
                     const site_url = '/static/frontend/Magento/luma/nl_NL/Montapacking_MontaCheckout';
-                    let AFH_image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
+                    let image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
                     $(".montapacking-pickup-service.pickup-option").each(
                         function (index) {
                             const openingtimes = $(this).find(".table-container .table").html();
 
                             const priceFormatted = $(this).find("span.cropped_priceFormatted").text().replace(".", ",")
-                            var price_text = "&euro; " + $(this).find("span.cropped_price").text().replace(".", ",");
+                            var price_text = self.createPriceText("&euro; " + $(this).find("span.cropped_price").text().replace(".", ","), priceFormatted)
 
-                            if (isNaN(parseFloat(priceFormatted))) {
-                                // Todo: Bugfix total_price
-                                price_text = priceFormatted;
-                            }
-
-                            let image  = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
-
-                            if($(this).find("span.cropped_image_class").text() == "AFH") {
-                                const AFH_custom = $(this).find("span.cropped_img_url").text();
-                                if (AFH_custom) {
-                                    AFH_image = AFH_custom;
-                                    image = AFH_custom;
-                                }
+                            if ($(this).find("span.cropped_image_class").text() === "AFH" && $(this).find("span.cropped_img_name").text()) {
+                                image = self.afhimageBaseURL +  $(this).find("span.cropped_img_name").text();
+                            } else {
+                                image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
                             }
 
                             markers.push(
@@ -1025,7 +1018,7 @@ define(
                             'PAK': [site_url + '/images/PostNL.png', 32, 32],
                             'DHLservicepunt': [site_url + '/images/DHL.png', 32, 32],
                             'DPDparcelstore': [site_url + '/images/DPD.png', 32, 32],
-                            'AFH': [AFH_image, 32, 32],
+                            'AFH': [image, 32, 32],
                             'DHLFYPickupPoint': [site_url + '/images/DHLFYPickupPoint.png', 32, 32],
                             'DHLParcelConnectPickupPoint': [site_url + '/images/DHLParcelConnectPickupPoint.png', 32, 32],
                             'DHLservicepuntGroot': [site_url + '/images/DHLservicepuntGroot.png', 32, 32],

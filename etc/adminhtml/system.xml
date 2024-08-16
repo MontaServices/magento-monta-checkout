@@ -104,7 +104,6 @@
                     <comment><![CDATA[When filled in this name wil be shown for store collect]]></comment>
                 </field>
 
-
                 <field id="imageForStoreCollect" translate="label" type="image" sortOrder="17" showInDefault="1" showInWebsite="1">
                     <label>Upload Image</label>
                     <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>

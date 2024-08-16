@@ -115,17 +115,19 @@ class Carrier extends AbstractConfigProvider
         return $this->getConfigValue(self::XPATH_CARRIER_SHOWZEROCOSTSASFREE);
     }
 
+     /**
+     * @return string
+     */
     public function getImageForStoreCollect()
     {
         return $this->getConfigValue(self::XPATH_CARRIER_IMAGEFORSTORECOLLECT);
     }
 
+     /**
+     * @return string
+     */
     public function getCustomNameStoreCollect()
     {
         return $this->getConfigValue(self::XPATH_CARRIER_CUSTOMNAMESTORECOLLECT);
     }
-
-
-
-
 }

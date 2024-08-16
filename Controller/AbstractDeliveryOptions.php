@@ -16,15 +16,16 @@ abstract class AbstractDeliveryOptions extends Action
 
     public $cart;
     private $storeManager;
+
     /**
      * AbstractDeliveryOptions constructor.
      *
      * @param Context $context
      */
     public function __construct(
-        Context                      $context,
-        CarrierConfig                $carrierConfig,
-        \Magento\Checkout\Model\Cart $cart,
+        Context                                    $context,
+        CarrierConfig                              $carrierConfig,
+        \Magento\Checkout\Model\Cart               $cart,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     )
     {
@@ -111,7 +112,7 @@ abstract class AbstractDeliveryOptions extends Action
         $username = $this->getCarrierConfig()->getUserName();
         $password = $this->getCarrierConfig()->getPassword();
         $imageForStoreCollect = $this->getCarrierConfig()->getImageForStoreCollect();
-        $nameForStoreCollect  = $this->getCarrierConfig()->getCustomNameStoreCollect();
+        $nameForStoreCollect = $this->getCarrierConfig()->getCustomNameStoreCollect();
 
         $googleapikey = null;
         if ($use_googlekey) {
@@ -123,8 +124,8 @@ abstract class AbstractDeliveryOptions extends Action
         $disabledPickupPoints = $this->getCarrierConfig()->getDisablePickupPoints();
         $defaultShippingCost = $this->getCarrierConfig()->getPrice();
         $maxPickupPoints = $this->getCarrierConfig()->getMaxpickuppoints() ?: 4;
-
         $showZeroCostsAsFree = $this->getCarrierConfig()->getShowZeroCostsAsFree();
+        
         /**
          * Retrieve Order Information
          */
@@ -142,7 +143,7 @@ abstract class AbstractDeliveryOptions extends Action
             $googleapikey,
             $defaultShippingCost,
             $language,
-            $showZeroCostsAsFree
+            showZeroCostsAsFree: $showZeroCostsAsFree
         );
 
         $oApi = new MontpackingApi($settings, $language);
@@ -202,20 +203,23 @@ abstract class AbstractDeliveryOptions extends Action
 
         if ($frames['StoreLocation'] != null) {
 
-            $mediaUrl = $this ->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
-            $url = null;
-            if(isset($imageForStoreCollect)) {
-                $url  = $mediaUrl . 'Images/' . $imageForStoreCollect;
+            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $imageName = null;
+            if (isset($imageForStoreCollect)) {
+                $imageName = $imageForStoreCollect;
             }
-            if(isset($nameForStoreCollect)){
+            if (isset($nameForStoreCollect)) {
                 $frames['StoreLocation']->displayName = $nameForStoreCollect;
             }
-            $frames['StoreLocation']->imageURL= $url;
+            $frames['StoreLocation']->imageName = $imageName;
             $frames['PickupOptions'][] = $frames['StoreLocation'];
         }
 
         foreach ($frames['PickupOptions'] as $item) {
-            $item->imageURL= null;
+            if ($item->code !== "AFH") {
+                $item->imageName  = null;
+            }
+
             $item->distanceMeters = round($item->distanceMeters / 1000, 2);
         }
 
