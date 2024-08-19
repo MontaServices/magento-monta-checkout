@@ -200,7 +200,6 @@ define(
                  * Retrieve Delivery Options from Montapacking.
                  */
                 getDeliveryServices: function (street, postcode, city, country, housenumber, housenumberaddition, longlat) {
-                    // console.log("window.checkout.baseUrl", window.checkout.baseUrl + "pub/media/Images/default/w03486.jpg")
 
                     $.ajax(
                         {
@@ -445,30 +444,8 @@ define(
                     self.setfilterDeliveryServicesByDate(date);
                 },
 
-                // Todo: Kevin check this out
                 setfilterDeliveryServicesByDate: function (date) {
                     const objects = this.deliveryServices;
-
-                    // console.log('objects? ', objects.filter(timeframe => timeframe.date == date.date))
-                    //
-                    // console.log('date', date.date)
-
-                    // const filter = 'nature';
-                    // const filteredResult = objects.filter((item) => {
-                    //     return (item.options);
-                    // });
-                    //
-                    // console.log('filteredResult', filteredResult)
-                    //
-                    //
-                    // // console.log('Hello Kevin, this is debug' , objects);
-                    //
-                    // const objectsFiltered = objects.filter(timeframe => timeframe.options[0].date === date.date);
-                    // const objectsSorted = objectsFiltered.sort((a, b) =>
-                    //     parseInt(parseFloat(a.options[0].price_raw)) - parseInt(parseFloat(b.options[0].price_raw))
-                    // );
-                    // console.log('objectsSorted', objectsSorted)
-
 
                     var objectsSorted = objects.filter(timeframe => timeframe.date == date.date)
 
