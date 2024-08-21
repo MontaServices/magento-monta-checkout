@@ -1,5 +1,10 @@
 /* SHIPPING METHODS TABLE */
 
+body.shipping-methods-loading #montapacking-plugin {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
 #montapacking-plugin a {
     color: #005293 !important;
     text-decoration: none !important;
@@ -1200,7 +1205,7 @@
 
 .discount-percentage{
     margin:  auto;
-    width: 60%; 
+    width: 60%;
     color:green;
     background-color: lightgreen;
 }

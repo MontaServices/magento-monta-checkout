@@ -161,12 +161,14 @@ define(
                  * Retrieve LONG LAT
                  */
                 getLongLat: function (street, postcode, city, country, housenumber, housenumberaddition, longlat) {
+                    this.setLoading();
+
                     $.ajax(
                         {
                             method: 'GET',
                             url: this.urlPrefix + '/montacheckout/deliveryoptions/longlat',
                             type: 'jsonp',
-                            showLoader: true,
+                            showLoader: false,
                             data: {
                                 street: street,
                                 postcode: postcode,
@@ -190,7 +192,9 @@ define(
                                 $("#hasconnection").val("n");
                             }
 
+                            this.removeLoading();
                         }.bind(this)
+
                     );
                 },
 
@@ -198,12 +202,14 @@ define(
                  * Retrieve Delivery Options from Montapacking.
                  */
                 getDeliveryServices: function (street, postcode, city, country, housenumber, housenumberaddition, longlat) {
+                    this.setLoading();
+
                     $.ajax(
                         {
                             method: 'GET',
                             url: this.urlPrefix + '/montacheckout/deliveryoptions/delivery',
                             type: 'jsonp',
-                            showLoader: true,
+                            showLoader: false,
                             data: {
                                 street: street,
                                 postcode: postcode,
@@ -286,8 +292,18 @@ define(
                             $("#hasconnection").val("y");
 
                             this.pickupServices(Object.values(services[1]));
+
+                            this.removeLoading();
                         }.bind(this)
                     );
+                },
+
+                setLoading() {
+                    $('body').addClass('shipping-methods-loading');
+                },
+
+                removeLoading() {
+                    $('body').removeClass('shipping-methods-loading');
                 },
 
                 renderedHandler: function () {
@@ -838,12 +854,13 @@ define(
                         let newZip = document.getElementById('storelocator-postcode-search-input').value;
                         const address = JSON.parse($("#old_address").val());
                         if (newZip.length > 0) {
+                            this.setLoading();
                             $.ajax(
                                 {
                                     method: 'GET',
                                     url: this.urlPrefix + '/montacheckout/deliveryoptions/delivery',
                                     type: 'jsonp',
-                                    showLoader: true,
+                                    showLoader: false,
                                     data: {
                                         street: "n",
                                         postcode: newZip,
@@ -868,6 +885,8 @@ define(
                                     self.loadMap();
                                     document.getElementById('category-filters').style.visibility = 'hidden';
                                     self.toggleTab('.montapacking-tab-pickup', '.montapacking-tab-pickup', '.pickup-services', '.pickup-services', true, true);
+
+                                    this.removeLoading();
                                 }.bind(this)
                             );
                         }
