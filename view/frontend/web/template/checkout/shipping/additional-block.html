@@ -187,7 +187,9 @@
                                         type="checkbox"
                                         class="radio"/>
                                     <label data-bind="text: description, attr: {for: $parent.code +code}"></label>
-                                    <span class="delivery-fee" data-bind="text: priceFormatted"></span>
+                                    <!-- ko if: price !== 0 -->
+                                        <span class="delivery-fee" data-bind="text: priceFormatted"></span>
+                                    <!-- /ko -->
                                     <span class="delivery-fee-hidden montapacking-hidden"
                                           data-bind="text: price"></span>
                                 </div>

@@ -675,7 +675,8 @@ define(
                 createPriceText: function (total_price, priceFormatted, elementToColorGreenWhenFree = "") {
                     var price_text = "&euro; " + total_price;
 
-                    if (isNaN(parseFloat(priceFormatted))) {
+                    elementToColorGreenWhenFree.removeClass('color-green');
+                    if (isNaN(parseFloat(priceFormatted.substr(1)))) {
                         price_text = priceFormatted;
                         if (elementToColorGreenWhenFree !== "") {
                             elementToColorGreenWhenFree.addClass('color-green');
