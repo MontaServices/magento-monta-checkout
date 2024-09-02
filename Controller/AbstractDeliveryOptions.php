@@ -124,7 +124,7 @@ abstract class AbstractDeliveryOptions extends Action
         $disabledPickupPoints = $this->getCarrierConfig()->getDisablePickupPoints();
         $defaultShippingCost = $this->getCarrierConfig()->getPrice();
         $maxPickupPoints = $this->getCarrierConfig()->getMaxpickuppoints() ?: 4;
-        $showZeroCostsAsFree = $this->getCarrierConfig()->getShowZeroCostsAsFree();
+        $showZeroCostsAsFree = $this->getCarrierConfig()->getShowZeroCostsAsFree() ?: false;
 
         /**
          * Retrieve Order Information
