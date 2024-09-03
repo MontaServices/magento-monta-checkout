@@ -97,7 +97,6 @@
                     <label>Show zero costs as free</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[When enabled costs are shown as free]]></comment>
-                    <value>0</value>
                 </field>
 
                 <field id="customTitleStoreCollect" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="0" showInStore="0"  canRestore="1">
