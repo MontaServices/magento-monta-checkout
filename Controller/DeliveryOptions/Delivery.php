@@ -50,12 +50,22 @@ class Delivery extends AbstractDeliveryOptions
      */
     protected $deliveryHelper;
 
+    protected $storeManager;
+
+    protected $currency;
+
+
     /**
      * Services constructor.
      *
      * @param Context $context
      * @param Session $checkoutSession
+     * @param LocaleResolver $localeResolver
      * @param CarrierConfig $carrierConfig
+     * @param Logger $logger
+     * @param Cart $cart
+     * @param PickupHelper $pickupHelper
+     * @param DeliveryHelper $deliveryHelper
      */
     public function __construct(
         Context         $context,
@@ -65,7 +75,9 @@ class Delivery extends AbstractDeliveryOptions
         Logger          $logger,
         Cart            $cart,
         PickupHelper    $pickupHelper,
-        DeliveryHelper  $deliveryHelper
+        DeliveryHelper  $deliveryHelper,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Locale\CurrencyInterface $currencyInterface,
     )
     {
 //        $tomorrow = Carbon::now()->addDay();
@@ -78,11 +90,15 @@ class Delivery extends AbstractDeliveryOptions
         $this->cart = $cart;
         $this->pickupHelper = $pickupHelper;
         $this->deliveryHelper = $deliveryHelper;
+        $this->storeManager = $storeManager;
+        $this->currency = $currencyInterface;
 
         parent::__construct(
             $context,
             $carrierConfig,
-            $cart
+            $cart,
+            $storeManager,
+            $currencyInterface,
         );
     }
 

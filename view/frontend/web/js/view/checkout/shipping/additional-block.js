@@ -547,6 +547,7 @@ define(
 
                     const code = $(this).val();
                     const name = $(this).parents(".delivery-option").find(".cropped_name").text();
+                    const priceFormatted = $(this).parents(".delivery-option").find(".cropped_priceFormatted").text();
                     const type = $(this).parents(".delivery-option").find(".cropped_type").text();
                     let date = $(this).parents(".delivery-option").find(".cropped_date").text();
                     let date_text = $(this).parents(".delivery-option").find(".cropped_time").text();
@@ -645,12 +646,12 @@ define(
 
                     setTimeout(
                         function () {
-                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html("&euro;" + total_price);
+                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html(priceFormatted);
                         }, 250
                     );
 
                     // Todo: Bugfix total_price
-                    $(".delivery-information").find(".montapacking-container-price").html("&euro; " + total_price);
+                    $(".delivery-information").find(".montapacking-container-price").html(priceFormatted);
                     const additional_info = [];
                     additional_info.push(
                         {
@@ -703,6 +704,7 @@ define(
                     const description = $(this).parents(".pickup-option").find(".cropped_description").text();
                     const country = $(this).parents(".pickup-option").find(".cropped_country").text();
                     const price = $(this).parents(".pickup-option").find(".cropped_price").text();
+                    const priceFormatted = $(this).parents(".pickup-option").find(".cropped_priceFormatted").text();
                     const image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
                     const short_code = image_class;
                     const distance = $(this).parents(".pickup-option").find(".cropped_distance").text();
@@ -731,7 +733,7 @@ define(
                     $(".pickup-information").find(".montapacking-pickup-information-description-postal-city-country").html(postal + ' ' + city + ' (' + country + ')');
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
-                    $(".pickup-information").find(".montapacking-container-price").html("&euro; " + price.replace(".", ","));
+                    $(".pickup-information").find(".montapacking-container-price").html(priceFormatted);
 
                     //set image class
                     $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
@@ -745,7 +747,7 @@ define(
 
                     setTimeout(
                         function () {
-                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html("&euro;" + total_price);
+                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html(priceFormatted);
                         }, 250
                     );
 
