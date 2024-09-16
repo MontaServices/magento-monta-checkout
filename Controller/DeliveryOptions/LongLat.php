@@ -63,7 +63,6 @@ class LongLat extends AbstractDeliveryOptions
         $this->storeManager = $storeManager;
         $this->currency = $currencyInterface;
 
-
         parent::__construct(
             $context,
             $carrierConfig,
