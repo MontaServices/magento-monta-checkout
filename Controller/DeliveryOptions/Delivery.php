@@ -50,14 +50,22 @@ class Delivery extends AbstractDeliveryOptions
      */
     protected $deliveryHelper;
 
-    private $storeManager;
+    protected $storeManager;
+
+    protected $currency;
+
 
     /**
      * Services constructor.
      *
      * @param Context $context
      * @param Session $checkoutSession
+     * @param LocaleResolver $localeResolver
      * @param CarrierConfig $carrierConfig
+     * @param Logger $logger
+     * @param Cart $cart
+     * @param PickupHelper $pickupHelper
+     * @param DeliveryHelper $deliveryHelper
      */
     public function __construct(
         Context         $context,
@@ -68,7 +76,8 @@ class Delivery extends AbstractDeliveryOptions
         Cart            $cart,
         PickupHelper    $pickupHelper,
         DeliveryHelper  $deliveryHelper,
-        \Magento\Store\Model\StoreManagerInterface    $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Locale\CurrencyInterface $currencyInterface,
     )
     {
 //        $tomorrow = Carbon::now()->addDay();
@@ -82,18 +91,14 @@ class Delivery extends AbstractDeliveryOptions
         $this->pickupHelper = $pickupHelper;
         $this->deliveryHelper = $deliveryHelper;
         $this->storeManager = $storeManager;
-
-//
-//        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-//        $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
-//        $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
-//        echo $mediaUrl;
+        $this->currency = $currencyInterface;
 
         parent::__construct(
             $context,
             $carrierConfig,
             $cart,
-            $storeManager
+            $storeManager,
+            $currencyInterface,
         );
     }
 

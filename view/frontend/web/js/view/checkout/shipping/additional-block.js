@@ -628,15 +628,17 @@ define(
 
                     setTimeout(
                         function () {
-                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html("&euro;" + total_price);
+                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html(priceFormatted);
                         }, 250
                     );
 
                     var price_element = $(".delivery-information").find(".montapacking-container-price")
-                    var price_text = self.createPriceText(total_price, priceFormatted, price_element);
+                    var price_text = self.createPriceText(priceFormatted, price_element);
 
                     price_element.html(price_text);
 
+                    // Todo: Bugfix total_price
+                    $(".delivery-information").find(".montapacking-container-price").html(priceFormatted);
                     const additional_info = [];
                     additional_info.push(
                         {
@@ -672,10 +674,14 @@ define(
 
                 },
 
-                createPriceText: function (total_price, priceFormatted, elementToColorGreenWhenFree = "") {
-                    var price_text = "&euro; " + total_price;
+                createPriceText: function (priceFormatted, elementToColorGreenWhenFree = "") {
+                    var price_text = priceFormatted;
 
-                    elementToColorGreenWhenFree.removeClass('color-green');
+                    if(elementToColorGreenWhenFree != ""){
+                        elementToColorGreenWhenFree.removeClass('color-green');
+                    }
+
+                    // if text is 'Free' set text color green
                     if (isNaN(parseFloat(priceFormatted.substr(1)))) {
                         price_text = priceFormatted;
                         if (elementToColorGreenWhenFree !== "") {
@@ -733,7 +739,8 @@ define(
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
                     var price_element = $(".pickup-information").find(".montapacking-container-price");
-                    var price_text = self.createPriceText(price.replace(".", ","), priceFormatted, price_element);
+                    var price_text = self.createPriceText(priceFormatted, price_element);
+                    $(".pickup-information").find(".montapacking-container-price").html(priceFormatted);
 
                     price_element.html(price_text);
 
@@ -757,7 +764,7 @@ define(
 
                     setTimeout(
                         function () {
-                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html("&euro;" + total_price);
+                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html(priceFormatted);
                         }, 250
                     );
 
@@ -936,7 +943,7 @@ define(
                             const openingtimes = $(this).find(".table-container .table").html();
 
                             const priceFormatted = $(this).find("span.cropped_priceFormatted").text().replace(".", ",")
-                            var price_text = self.createPriceText("&euro; " + $(this).find("span.cropped_price").text().replace(".", ","), priceFormatted)
+                            var price_text = self.createPriceText(priceFormatted)
 
                             if ($(this).find("span.cropped_image_class").text() === "AFH" && $(this).find("span.cropped_img_name").text()) {
                                 image = self.afhimageBaseURL +  $(this).find("span.cropped_img_name").text();

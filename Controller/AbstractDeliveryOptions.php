@@ -2,9 +2,12 @@
 
 namespace Montapacking\MontaCheckout\Controller;
 
+use Magento\Checkout\Model\Cart;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Locale\CurrencyInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Monta\CheckoutApiWrapper\Objects\Settings;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
 use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
@@ -15,24 +18,32 @@ abstract class AbstractDeliveryOptions extends Action
     private $carrierConfig;
 
     public $cart;
-    private $storeManager;
+    protected $storeManager;
+    protected $currency;
+
 
     /**
      * AbstractDeliveryOptions constructor.
      *
      * @param Context $context
+     * @param CarrierConfig $carrierConfig
+     * @param Cart $cart
+     * @param StoreManagerInterface $storeManager
+     * @param CurrencyInterface $currencyInterface
      */
     public function __construct(
-        Context                                    $context,
-        CarrierConfig                              $carrierConfig,
-        \Magento\Checkout\Model\Cart               $cart,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        Context                      $context,
+        CarrierConfig                $carrierConfig,
+        \Magento\Checkout\Model\Cart $cart,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Locale\CurrencyInterface $currencyInterface,
     )
     {
         $this->carrierConfig = $carrierConfig;
 
         $this->cart = $cart;
         $this->storeManager = $storeManager;
+        $this->currency = $currencyInterface;
 
         parent::__construct(
             $context
@@ -126,6 +137,11 @@ abstract class AbstractDeliveryOptions extends Action
         $maxPickupPoints = $this->getCarrierConfig()->getMaxpickuppoints() ?: 4;
         $showZeroCostsAsFree = $this->getCarrierConfig()->getShowZeroCostsAsFree() ?: false;
 
+        $currentStore = $this->storeManager->getStore();
+        $currentCurrencyCode = $currentStore->getCurrentCurrency()->getCode();
+        $currencySymbol = $this->currency->getCurrency($currentCurrencyCode)->getSymbol();
+        $currencyRate = $this->storeManager->getStore()->getCurrentCurrencyRate();
+
         /**
          * Retrieve Order Information
          */
@@ -143,7 +159,8 @@ abstract class AbstractDeliveryOptions extends Action
             $googleapikey,
             $defaultShippingCost,
             $language,
-            showZeroCostsAsFree: $showZeroCostsAsFree
+            showZeroCostsAsFree: $showZeroCostsAsFree,
+            currency: $currencySymbol
         );
 
         $oApi = new MontpackingApi($settings, $language);
