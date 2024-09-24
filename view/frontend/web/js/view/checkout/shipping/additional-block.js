@@ -163,7 +163,6 @@ define(
                  * Retrieve LONG LAT
                  */
                 getLongLat: function (street, postcode, city, country, housenumber, housenumberaddition, longlat) {
-
                     $.ajax(
                         {
                             method: 'GET',
@@ -194,7 +193,6 @@ define(
                             }
 
                         }.bind(this)
-
                     );
                 },
 
@@ -292,7 +290,6 @@ define(
                             $("#hasconnection").val("y");
 
                             this.pickupServices(Object.values(services[1]));
-
                         }.bind(this)
                     );
                 },
@@ -890,7 +887,6 @@ define(
                                     self.loadMap();
                                     document.getElementById('category-filters').style.visibility = 'hidden';
                                     self.toggleTab('.montapacking-tab-pickup', '.montapacking-tab-pickup', '.pickup-services', '.pickup-services', true, true);
-
                                 }.bind(this)
                             );
                         }
