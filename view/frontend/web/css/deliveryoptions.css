@@ -1,10 +1,5 @@
 /* SHIPPING METHODS TABLE */
 
-body.shipping-methods-loading #montapacking-plugin {
-    opacity: 0.3;
-    pointer-events: none;
-}
-
 #montapacking-plugin a {
     color: #005293 !important;
     text-decoration: none !important;
