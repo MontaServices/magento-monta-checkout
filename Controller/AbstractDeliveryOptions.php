@@ -166,20 +166,22 @@ abstract class AbstractDeliveryOptions extends Action
         $oApi = new MontpackingApi($settings, $language);
         $oApi->setAddress($street, $housenumber, $housenumberaddition, $postcode, $city, $state, $country);
 
-        $priceIncl = $cart->getQuote()->getSubtotal();
-        $priceExcl = $cart->getQuote()->getSubtotal();
+        $quote = $cart->getQuote();
 
-        if ($cart->getQuote()->getSubtotalInclTax() > 0) {
-            $priceIncl = $cart->getQuote()->getSubtotalInclTax();
-            $priceIncl = $cart->getQuote()->getSubtotalInclTax();
-        } else if ($cart->getQuote()->getShippingAddress()->getSubtotalInclTax() > 0) {
-            $priceIncl = $cart->getQuote()->getShippingAddress()->getSubtotalInclTax();
-            $priceExcl = $cart->getQuote()->getShippingAddress()->getSubtotal();
+        $priceIncl = $quote->getSubtotal();
+        $priceExcl = $quote->getSubtotal();
+
+        if ($quote->getSubtotalInclTax() > 0) {
+            $priceIncl = $quote->getSubtotalInclTax();
+            $priceIncl = $quote->getSubtotalInclTax();
+        } else if ($quote->getShippingAddress()->getSubtotalInclTax() > 0) {
+            $priceIncl = $quote->getShippingAddress()->getSubtotalInclTax();
+            $priceExcl = $quote->getShippingAddress()->getSubtotal();
         }
 
         $oApi->setOrder($priceIncl, $priceExcl); //phpcs:ignore
 
-        $items = $cart->getQuote()->getAllVisibleItems();
+        $items = $quote->getAllVisibleItems();
 
         $bAllProductsAvailable = true;
 

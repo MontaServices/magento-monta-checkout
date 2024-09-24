@@ -72,7 +72,6 @@ define(
                                             return false;
                                         } else {
                                             obj.additional_info[0].code_pickup = obj.additional_info[0].code_pickup + ",DHLPCPostNummer_" + $("#DHLPCPostNummer").val().trim();
-                                            console.log(obj);
                                             checkoutConfig.quoteData.montapacking_montacheckout_data = JSON.stringify(obj);
                                         }
 
