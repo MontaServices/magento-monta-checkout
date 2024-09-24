@@ -14,6 +14,9 @@ class Carrier extends AbstractConfigProvider
     const XPATH_CARRIER_MAXPICKUPPOINTS = 'carriers/montapacking/maxpickuppoints';
     const XPATH_CARRIER_DISABLEDELIVERYDAYS = 'carriers/montapacking/disabledeliverydays';
     const XPATH_CARRIER_LEADINGSTOCKMONTAPACKING = 'carriers/montapacking/leadingstockmontapacking';
+    const XPATH_CARRIER_SHOWZEROCOSTSASFREE = 'carriers/montapacking/showzerocostsasfree';
+    const XPATH_CARRIER_IMAGEFORSTORECOLLECT = 'carriers/montapacking/imageForStoreCollect';
+    const XPATH_CARRIER_CUSTOMNAMESTORECOLLECT = 'carriers/montapacking/customTitleStoreCollect';
     const XPATH_CARRIER_PRICE = 'carriers/montapacking/price';
 
     /**
@@ -102,5 +105,29 @@ class Carrier extends AbstractConfigProvider
     public function getMaxPickupPoints()
     {
         return $this->getConfigValue(self::XPATH_CARRIER_MAXPICKUPPOINTS);
+    }
+
+    /**
+     * @return string
+     */
+    public function getShowZeroCostsAsFree()
+    {
+        return $this->getConfigValue(self::XPATH_CARRIER_SHOWZEROCOSTSASFREE);
+    }
+
+     /**
+     * @return string
+     */
+    public function getImageForStoreCollect()
+    {
+        return $this->getConfigValue(self::XPATH_CARRIER_IMAGEFORSTORECOLLECT);
+    }
+
+     /**
+     * @return string
+     */
+    public function getCustomNameStoreCollect()
+    {
+        return $this->getConfigValue(self::XPATH_CARRIER_CUSTOMNAMESTORECOLLECT);
     }
 }

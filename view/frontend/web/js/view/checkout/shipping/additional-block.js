@@ -36,7 +36,8 @@ define(
                     pickupFee: ko.observable(),
                     selectedShippers: ko.observable(),
                     selectedPickup: ko.observable(),
-                    preferredShipper: ko.observable()
+                    preferredShipper: ko.observable(),
+                    afhimageBaseURL: null
                 },
                 initObservable: function () {
                     //one step checkout solution, update buttons and quantity change are not working, so we are gonna hide this options
@@ -114,7 +115,8 @@ define(
                             'standardDeliveryServices',
                             'daysForSelect',
                             'pickupPoints',
-                            'preferredShipper'
+                            'preferredShipper',
+                            'afhimageBaseURL'
                         ]
                     );
 
@@ -227,6 +229,7 @@ define(
                             }
 
                             const objectArray = Object.values(services[0]);
+                            self.afhimageBaseURL = services[4];
 
                             var fakeTimeframe = {};
                             if (services[3] !== null) {
@@ -456,30 +459,8 @@ define(
                     self.setfilterDeliveryServicesByDate(date);
                 },
 
-                // Todo: Kevin check this out
                 setfilterDeliveryServicesByDate: function (date) {
                     const objects = this.deliveryServices;
-
-                    // console.log('objects? ', objects.filter(timeframe => timeframe.date == date.date))
-                    //
-                    // console.log('date', date.date)
-
-                    // const filter = 'nature';
-                    // const filteredResult = objects.filter((item) => {
-                    //     return (item.options);
-                    // });
-                    //
-                    // console.log('filteredResult', filteredResult)
-                    //
-                    //
-                    // // console.log('Hello Kevin, this is debug' , objects);
-                    //
-                    // const objectsFiltered = objects.filter(timeframe => timeframe.options[0].date === date.date);
-                    // const objectsSorted = objectsFiltered.sort((a, b) =>
-                    //     parseInt(parseFloat(a.options[0].price_raw)) - parseInt(parseFloat(b.options[0].price_raw))
-                    // );
-                    // console.log('objectsSorted', objectsSorted)
-
 
                     var objectsSorted = objects.filter(timeframe => timeframe.date == date.date)
 
@@ -563,6 +544,7 @@ define(
 
                     const code = $(this).val();
                     const name = $(this).parents(".delivery-option").find(".cropped_name").text();
+                    const priceFormatted = $(this).parents(".delivery-option").find(".cropped_priceFormatted").text();
                     const type = $(this).parents(".delivery-option").find(".cropped_type").text();
                     let date = $(this).parents(".delivery-option").find(".cropped_date").text();
                     let date_text = $(this).parents(".delivery-option").find(".cropped_time").text();
@@ -661,12 +643,17 @@ define(
 
                     setTimeout(
                         function () {
-                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html("&euro;" + total_price);
+                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html(priceFormatted);
                         }, 250
                     );
 
+                    var price_element = $(".delivery-information").find(".montapacking-container-price")
+                    var price_text = self.createPriceText(priceFormatted, price_element);
+
+                    price_element.html(price_text);
+
                     // Todo: Bugfix total_price
-                    $(".delivery-information").find(".montapacking-container-price").html("&euro; " + total_price);
+                    $(".delivery-information").find(".montapacking-container-price").html(priceFormatted);
                     const additional_info = [];
                     additional_info.push(
                         {
@@ -702,6 +689,23 @@ define(
 
                 },
 
+                createPriceText: function (priceFormatted, elementToColorGreenWhenFree = "") {
+                    var price_text = priceFormatted;
+
+                    if(elementToColorGreenWhenFree != ""){
+                        elementToColorGreenWhenFree.removeClass('color-green');
+                    }
+
+                    // if text is 'Free' set text color green
+                    if (isNaN(parseFloat(priceFormatted.substr(1)))) {
+                        price_text = priceFormatted;
+                        if (elementToColorGreenWhenFree !== "") {
+                            elementToColorGreenWhenFree.addClass('color-green');
+                        }
+                    }
+
+                    return price_text;
+                },
 
                 selectPickUp: function () {
                     $(".pickup-information").hide();
@@ -719,7 +723,9 @@ define(
                     const description = $(this).parents(".pickup-option").find(".cropped_description").text();
                     const country = $(this).parents(".pickup-option").find(".cropped_country").text();
                     const price = $(this).parents(".pickup-option").find(".cropped_price").text();
-                    const image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
+                    let image_class = $(this).parents(".pickup-option").find(".cropped_image_class").text();
+                    const image_name_for_AFH = $(this).parents(".pickup-option").find(".cropped_img_name").text();
+                    const priceFormatted = $(this).parents(".pickup-option").find(".cropped_priceFormatted").text();
                     const short_code = image_class;
                     const distance = $(this).parents(".pickup-option").find(".cropped_distance").text();
                     const optionsvalues = $(this).parents(".pickup-option").find(".cropped_optionswithvalue").text();
@@ -747,10 +753,22 @@ define(
                     $(".pickup-information").find(".montapacking-pickup-information-description-postal-city-country").html(postal + ' ' + city + ' (' + country + ')');
                     $(".pickup-information").find(".table-container .table").html(openingtimes_html);
 
-                    $(".pickup-information").find(".montapacking-container-price").html("&euro; " + price.replace(".", ","));
+                    var price_element = $(".pickup-information").find(".montapacking-container-price");
+                    var price_text = self.createPriceText(priceFormatted, price_element);
+                    $(".pickup-information").find(".montapacking-container-price").html(priceFormatted);
 
-                    //set image class
-                    $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
+                    price_element.html(price_text);
+
+                    if ($(this).parents(".pickup-option").find(".cropped_image_class").text() === "AFH") {
+                        // if custom image for AFH is set
+                        if (image_name_for_AFH) {
+                            $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").css("background-image", "url(" + self.afhimageBaseURL + image_name_for_AFH + ")")
+                        } else {
+                            $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
+                        }
+                    } else {
+                        $(".pickup-information").find(".montapacking-container-logo").removeClass().addClass("montapacking-container-logo").addClass(image_class);
+                    }
 
                     $(".pickup-information").fadeIn('slow');
 
@@ -761,7 +779,7 @@ define(
 
                     setTimeout(
                         function () {
-                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html("&euro;" + total_price);
+                            $(".table-checkout-shipping-method").find("input[value='montapacking_montapacking']").parents(".row").find("span.price").html(priceFormatted);
                         }, 250
                     );
 
@@ -937,10 +955,19 @@ define(
                     const useLocator = $('#bh-sl-map-container');
                     const markers = [];
                     const site_url = '/static/frontend/Magento/luma/nl_NL/Montapacking_MontaCheckout';
+                    let image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
                     $(".montapacking-pickup-service.pickup-option").each(
                         function (index) {
                             const openingtimes = $(this).find(".table-container .table").html();
 
+                            const priceFormatted = $(this).find("span.cropped_priceFormatted").text().replace(".", ",")
+                            var price_text = self.createPriceText(priceFormatted)
+
+                            if ($(this).find("span.cropped_image_class").text() === "AFH" && $(this).find("span.cropped_img_name").text()) {
+                                image = self.afhimageBaseURL +  $(this).find("span.cropped_img_name").text();
+                            } else {
+                                image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
+                            }
 
                             markers.push(
                                 {
@@ -959,9 +986,9 @@ define(
                                     'postal': $(this).find("span.cropped_postal").text(),
                                     'country': $(this).find("span.cropped_country").text(),
                                     'description': $(this).find("span.cropped_description").text(),
-                                    'image': site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png',
+                                    'image': image,
                                     'price': $(this).find("span.cropped_price").text(),
-                                    'priceformatted': $(this).find("span.cropped_price").text().replace(".", ","),
+                                    'priceformatted': price_text,
                                     'openingtimes': openingtimes,
                                     'raw': 1,
                                 }
@@ -973,6 +1000,7 @@ define(
                             }
                         }
                     );
+
 
                     const config = {
                         'debug': false,
@@ -998,7 +1026,7 @@ define(
                             'PAK': [site_url + '/images/PostNL.png', 32, 32],
                             'DHLservicepunt': [site_url + '/images/DHL.png', 32, 32],
                             'DPDparcelstore': [site_url + '/images/DPD.png', 32, 32],
-                            'AFH': [site_url + '/images/AFH.png', 32, 32],
+                            'AFH': [image, 32, 32],
                             'DHLFYPickupPoint': [site_url + '/images/DHLFYPickupPoint.png', 32, 32],
                             'DHLParcelConnectPickupPoint': [site_url + '/images/DHLParcelConnectPickupPoint.png', 32, 32],
                             'DHLservicepuntGroot': [site_url + '/images/DHLservicepuntGroot.png', 32, 32],

@@ -142,8 +142,7 @@
                               data-bind="text: $parent.dateOnlyFormatted"></span>
                         <span class="notranslate cropped_time_from montapacking-hidden" data-bind="text: from"></span>
                         <span class="notranslate cropped_time_to montapacking-hidden" data-bind="text: to"></span>
-
-
+                        <span class="notranslate cropped_priceFormatted montapacking-hidden" data-bind="text: priceFormatted"></span>
                         <span class="notranslate cropped_price montapacking-hidden" data-bind="text: price"></span>
                         <span class="notranslate cropped_image_class montapacking-hidden" data-bind="text: shipperCodes"></span>
                         <span class="notranslate cropped_image_class_replaced montapacking-hidden" data-bind="text: code.split('_').length > 0 ? code.split('_')[0] : code"></span>
@@ -169,7 +168,7 @@
                                 </div>
                             </div>
                             <div class="montapacking-container-price"
-                                 data-bind="text: priceFormatted, css: { 'color-green': discountPercentage > 0 }"></div>
+                                 data-bind="text: priceFormatted, css: { 'color-green': (price == 0 || discountPercentage > 0) }"></div>
                             <div class="clearboth"></div>
                         </div>
 
@@ -186,7 +185,9 @@
                                         type="checkbox"
                                         class="radio"/>
                                     <label data-bind="text: description, attr: {for: $parent.code +code}"></label>
-                                    <span class="delivery-fee" data-bind="text: priceFormatted"></span>
+                                    <!-- ko if: price !== 0 -->
+                                        <span class="delivery-fee" data-bind="text: priceFormatted"></span>
+                                    <!-- /ko -->
                                     <span class="delivery-fee-hidden montapacking-hidden"
                                           data-bind="text: price"></span>
                                 </div>
@@ -271,6 +272,8 @@
                      class="container montapacking-pickup-service pickup-option">
                     <span class="notranslate cropped_shipper montapacking-hidden" data-bind="text: shipperCode"></span>
                     <span class="notranslate cropped_company montapacking-hidden" data-bind="text: company "></span>
+                    <span class="notranslate cropped_img_name montapacking-hidden" data-bind="text: imageName "></span>
+                    <span class="notranslate cropped_priceFormatted montapacking-hidden" data-bind="text: priceFormatted "></span>
                     <span class="notranslate cropped_street montapacking-hidden" data-bind="text: street "></span>
                     <span class="notranslate cropped_housenumber montapacking-hidden"
                           data-bind="text: houseNumber "></span>

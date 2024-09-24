@@ -34,6 +34,10 @@ class LongLat extends AbstractDeliveryOptions
      */
     public $cart;
 
+    protected $storeManager;
+
+    protected $currency;
+
     /**
      * Services constructor.
      *
@@ -47,18 +51,24 @@ class LongLat extends AbstractDeliveryOptions
         LocaleResolver $localeResolver,
         CarrierConfig $carrierConfig,
         \Montapacking\MontaCheckout\Logger\Logger $logger,
-        \Magento\Checkout\Model\Cart $cart
+        \Magento\Checkout\Model\Cart $cart,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Locale\CurrencyInterface $currencyInterface,
     ) {
         $this->_logger = $logger;
 
         $this->checkoutSession = $checkoutSession;
         $this->localeResolver = $localeResolver;
         $this->cart = $cart;
+        $this->storeManager = $storeManager;
+        $this->currency = $currencyInterface;
 
         parent::__construct(
             $context,
             $carrierConfig,
-            $cart
+            $cart,
+            $storeManager,
+            $currencyInterface,
         );
     }
 
