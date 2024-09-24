@@ -122,6 +122,8 @@ abstract class AbstractDeliveryOptions extends Action
         $webshop = $this->getCarrierConfig()->getWebshop();
         $username = $this->getCarrierConfig()->getUserName();
         $password = $this->getCarrierConfig()->getPassword();
+        $imageForStoreCollect = $this->getCarrierConfig()->getImageForStoreCollect();
+        $nameForStoreCollect = $this->getCarrierConfig()->getCustomNameStoreCollect();
 
         $googleapikey = null;
         if ($use_googlekey) {
@@ -132,7 +134,8 @@ abstract class AbstractDeliveryOptions extends Action
         $disabledeliverydays = $this->getCarrierConfig()->getDisableDeliveryDays();
         $disabledPickupPoints = $this->getCarrierConfig()->getDisablePickupPoints();
         $defaultShippingCost = $this->getCarrierConfig()->getPrice();
-        $maxPickupPoints =  $this->getCarrierConfig()->getMaxpickuppoints() ?: 4;
+        $maxPickupPoints = $this->getCarrierConfig()->getMaxpickuppoints() ?: 4;
+        $showZeroCostsAsFree = $this->getCarrierConfig()->getShowZeroCostsAsFree() ?: false;
 
         $currentStore = $this->storeManager->getStore();
         $currentCurrencyCode = $currentStore->getCurrentCurrency()->getCode();
@@ -156,6 +159,7 @@ abstract class AbstractDeliveryOptions extends Action
             $googleapikey,
             $defaultShippingCost,
             $language,
+            showZeroCostsAsFree: $showZeroCostsAsFree,
             currency: $currencySymbol
         );
 
@@ -179,10 +183,9 @@ abstract class AbstractDeliveryOptions extends Action
 
         $bAllProductsAvailable = true;
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
 
-            if(!$leadingstockmontapacking)
-            {
+            if (!$leadingstockmontapacking) {
                 $stockItem = $item->getProduct()->getExtensionAttributes()->getStockItem();
 
                 if ($stockItem->getQty() <= 0 || $stockItem->getQty() < $item->getQty()) {
@@ -208,18 +211,32 @@ abstract class AbstractDeliveryOptions extends Action
 
         $frames = $oApi->getShippingOptions();
 
-        if($disabledeliverydays) {
+        if ($disabledeliverydays) {
 
             unset($frames['DeliveryOptions']);
             $frames['DeliveryOptions'] = [];
         }
 
 
-        if($frames['StoreLocation'] != null) {
+        if ($frames['StoreLocation'] != null) {
+
+            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $imageName = null;
+            if (isset($imageForStoreCollect)) {
+                $imageName = $imageForStoreCollect;
+            }
+            if (isset($nameForStoreCollect)) {
+                $frames['StoreLocation']->displayName = $nameForStoreCollect;
+            }
+            $frames['StoreLocation']->imageName = $imageName;
             $frames['PickupOptions'][] = $frames['StoreLocation'];
         }
 
-        foreach($frames['PickupOptions'] as $item) {
+        foreach ($frames['PickupOptions'] as $item) {
+            if ($item->code !== "AFH") {
+                $item->imageName  = null;
+            }
+
             $item->distanceMeters = round($item->distanceMeters / 1000, 2);
         }
 

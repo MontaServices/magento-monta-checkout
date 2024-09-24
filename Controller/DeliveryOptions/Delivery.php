@@ -116,9 +116,12 @@ class Delivery extends AbstractDeliveryOptions
 
         try {
             $oApi = $this->generateApi($request, $language, $this->_logger, true);
+            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $AFHImage_basepath = $mediaUrl . 'Images/';
+
             $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'],  $oApi['CustomerLocation'], $oApi['StandardShipper']]);
 
-            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper']]);
+            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'],$AFHImage_basepath ]);
         } catch (Exception $e) {
 
             $context = ['source' => 'Montapacking Checkout'];
