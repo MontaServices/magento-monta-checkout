@@ -78,7 +78,9 @@ class Shipping
             return $result;
         }
 
-
+        if(!$this->checkoutSession->getLatestShipping()) {
+            return $result;
+        }
 
         if ($deliveryOptionType == 'pickup') {
             $method_title = $deliveryOptionAdditionalInfo->company;
