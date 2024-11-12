@@ -92,7 +92,9 @@ class Shipping
 
         if ($deliveryOptionType == 'delivery') {
             if ($deliveryOptionAdditionalInfo->code == "MultipleShipper_ShippingDayUnknown") {
-                $fee = $deliveryOptionAdditionalInfo->price;
+                if(isset($deliveryOptionAdditionalInfo->price)){
+					$fee = $deliveryOptionAdditionalInfo->price;
+				}
             } else {
                 foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
                     foreach ($timeframe->options as $option) {
