@@ -912,7 +912,6 @@ define(
                             'storeLocator'], function (Handlebars, $, google, storeLocator) {
                             window.Handlebars = Handlebars;
                             const useLocator = $('#bh-sl-map-container');
-                            const site_url = '/static/frontend/Magento/luma/nl_NL/Montapacking_MontaCheckout';
                             /* Map */
                             if (useLocator) {
                                 self.loadMap();
@@ -936,7 +935,7 @@ define(
 
                     const useLocator = $('#bh-sl-map-container');
                     const markers = [];
-                    const site_url = '/static/frontend/Magento/luma/nl_NL/Montapacking_MontaCheckout';
+                    var site_url = document.getElementById('montapacking-config').getAttribute('data-site-url');
                     let image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
                     $(".montapacking-pickup-service.pickup-option").each(
                         function (index) {
