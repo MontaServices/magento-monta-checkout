@@ -2,8 +2,10 @@
 
 namespace Montapacking\MontaCheckout\Plugin\Quote\Model;
 
+use DateTimeZone;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Framework\Locale\ResolverInterface;
 
 class QuoteManagement
 {
@@ -14,16 +16,23 @@ class QuoteManagement
     private $orderRepository;
 
     /**
+     * @var ResolverInterface
+     */
+    private $localeResolver;
+
+    /**
      * QuoteManagement constructor.
      *
      * @param CartRepositoryInterface $cartRepository
      */
     public function __construct(
         CartRepositoryInterface $cartRepository,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        ResolverInterface $localeResolver
     ) {
         $this->cartRepository = $cartRepository;
         $this->orderRepository = $orderRepository;
+        $this->localeResolver = $localeResolver;
     }
 
     /**
@@ -80,6 +89,92 @@ class QuoteManagement
         $quote = $this->cartRepository->get($quoteId);
         $address = $quote->getShippingAddress();
         $deliveryOption = $address->getMontapackingMontacheckoutData();
+
+        $date_stripped_obj = json_decode($deliveryOption);
+        if (isset($date_stripped_obj->additional_info[0]->date)) {
+            $date_stripped = $date_stripped_obj->additional_info[0]->date;
+
+            try {
+                // Stap 1: Achterhaal de huidige locale (bijv. 'de_DE' of 'nl_NL')
+                $locale = $this->localeResolver->getLocale();
+
+                // Stap 2: Bepaal de bijbehorende tijdzone of gebruik een standaardtijdzone
+                $timeZoneMap = [
+                    // Europa
+                    'nl_NL' => 'Europe/Amsterdam',
+                    'de_DE' => 'Europe/Berlin',
+                    'fr_FR' => 'Europe/Paris',
+                    'it_IT' => 'Europe/Rome',
+                    'es_ES' => 'Europe/Madrid',
+                    'pt_PT' => 'Europe/Lisbon',
+                    'pl_PL' => 'Europe/Warsaw',
+                    'ru_RU' => 'Europe/Moscow',
+                    'en_GB' => 'Europe/London',
+                    'sv_SE' => 'Europe/Stockholm',
+
+                    // Noord-Amerika
+                    'en_US' => 'America/New_York',
+                    'es_MX' => 'America/Mexico_City',
+                    'en_CA' => 'America/Toronto',
+                    'fr_CA' => 'America/Toronto',
+
+                    // Zuid-Amerika
+                    'pt_BR' => 'America/Sao_Paulo',
+                    'es_AR' => 'America/Argentina/Buenos_Aires',
+                    'es_CO' => 'America/Bogota',
+                    'es_CL' => 'America/Santiago',
+
+                    // Afrika
+                    'en_ZA' => 'Africa/Johannesburg',
+                    'ar_EG' => 'Africa/Cairo',
+                    'fr_DZ' => 'Africa/Algiers',
+                    'sw_KE' => 'Africa/Nairobi',
+                    'fr_SN' => 'Africa/Dakar',
+
+                    // Azië
+                    'zh_CN' => 'Asia/Shanghai',
+                    'ja_JP' => 'Asia/Tokyo',
+                    'ko_KR' => 'Asia/Seoul',
+                    'hi_IN' => 'Asia/Kolkata',
+                    'ar_SA' => 'Asia/Riyadh',
+                    'th_TH' => 'Asia/Bangkok',
+                    'ms_MY' => 'Asia/Kuala_Lumpur',
+
+                    // Oceanië
+                    'en_AU' => 'Australia/Sydney',
+                    'en_NZ' => 'Pacific/Auckland',
+                    'en_PG' => 'Pacific/Port_Moresby',
+
+                    // Midden-Oosten
+                    'fa_IR' => 'Asia/Tehran',
+                    'he_IL' => 'Asia/Jerusalem',
+
+                    // Universele Tijd (Fallback)
+                    'default' => 'UTC', // Voor alle onbekende of ongebruikelijke locales
+                ];
+                $timeZone = $timeZoneMap[$locale] ?? 'UTC'; // Valt terug op UTC als de locale niet bekend is
+
+                // Stap 3: Maak een DateTime-object met de juiste tijdzone
+                $datetime = new \DateTime($date_stripped, new \DateTimeZone($timeZone));
+
+                if ($datetime === false) {
+                    throw new \Exception('Ongeldige datum ontvangen: ' . $date_stripped);
+                }
+
+                // Stap 4: Zet de tijdzone van het DateTime-object om naar UTC
+                $datetime->setTimezone(new \DateTimeZone('UTC'));
+
+                // Stap 5: Formatteer de datum zoals gewenst
+                $formattedDate = $datetime->format('d-m-Y'); // Of een ander formaat zoals 'd-m-Y H:i:s'
+
+                // Opslaan in JSON
+                $date_stripped_obj->additional_info[0]->date = $formattedDate;
+                $deliveryOption = json_encode($date_stripped_obj);
+
+            } catch (\Exception $e) {
+//                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
+            }
+        }
 
         if (!$deliveryOption) {
             return $orderId;
