@@ -2,4 +2,6 @@
 
 /** @var \Montapacking\MontaCheckout\Block\Checkout $block */
 ?>
+
 <div id="google-maps-api" data-api-key="<?= (strlen($block->getGoogleMapsApiKey()) == 39) ? $block->getGoogleMapsApiKey() : "" ?>"></div>
+<div id="montapacking-config" data-site-url="<?= $block->getViewFileUrl('Montapacking_MontaCheckout') ?>"></div>
