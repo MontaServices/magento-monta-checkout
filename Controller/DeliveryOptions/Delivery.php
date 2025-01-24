@@ -77,7 +77,7 @@ class Delivery extends AbstractDeliveryOptions
         PickupHelper    $pickupHelper,
         DeliveryHelper  $deliveryHelper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface,
+        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
     )
     {
 //        $tomorrow = Carbon::now()->addDay();
@@ -98,7 +98,7 @@ class Delivery extends AbstractDeliveryOptions
             $carrierConfig,
             $cart,
             $storeManager,
-            $currencyInterface,
+            $currencyInterface
         );
     }
 
