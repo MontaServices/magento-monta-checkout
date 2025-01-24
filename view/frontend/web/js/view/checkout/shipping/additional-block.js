@@ -253,12 +253,34 @@ define(
                                             this.standardDeliveryServices(fakeTimeframe);
                                         }
                                     } else {
-                                        this.preferredShipper = objectArray[0];
+
+                                        let found = false;
+                                        let selectedPreferred = { loading: true }
+                                        for (let i = 0; i < objectArray.length && !found; i++) {
+                                            const parentObject = objectArray[i];
+                                            const options = parentObject.options;
+
+                                            for (let j = 0; j < options.length; j++) {
+                                                if (options[j].isPreferred) {
+
+                                                    selectedPreferred = { 'loading': false, parent: i, shipper: options[j], shipperIndex: j }
+
+                                                    found = true; // Stel in op true zodat de buitenste loop stopt
+                                                    break; // Stop de binnenste loop
+                                                }
+                                            }
+
+                                            if(!found) {
+                                                selectedPreferred = { 'loading': false, parent: 0, shipper: options[0], shipperIndex: 0 }
+                                            }
+                                        }
+
+                                        this.preferredShipper = objectArray[selectedPreferred.parent];
                                         if (fakeTimeframe && fakeTimeframe?.options?.length > 0) {
                                             this.standardDeliveryServices(fakeTimeframe);
                                         }
                                         this.filteredDeliveryServices(filteredDeliveryServicesList.filter(timeframe => {
-                                            return timeframe.date === distinctFilteredItems[0].date
+                                            return timeframe.date === distinctFilteredItems[selectedPreferred.parent].date
                                         }));
                                     }
 
@@ -271,7 +293,7 @@ define(
                                         indexOfDay = distinctFilteredItems.indexOf(distinctFilteredItems.find(x => x.date === this.preferredShipper.date));
                                     }
 
-                                    $('#slider-content ol li:nth-child(' + (indexOfDay) + ')').trigger("click");
+                                    $('#slider-content ol li:nth-child(' + (indexOfDay-1) + ')').trigger("click");
                                 }
                                 // only standardshipper is enabled
                             } else if (services[3] !== null) {
