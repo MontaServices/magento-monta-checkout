@@ -265,8 +265,8 @@ define(
 
                                                     selectedPreferred = { 'loading': false, parent: i, shipper: options[j], shipperIndex: j }
 
-                                                    found = true; // Stel in op true zodat de buitenste loop stopt
-                                                    break; // Stop de binnenste loop
+                                                    found = true;
+                                                    break;
                                                 }
                                             }
 
