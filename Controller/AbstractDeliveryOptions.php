@@ -36,7 +36,7 @@ abstract class AbstractDeliveryOptions extends Action
         CarrierConfig                $carrierConfig,
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface,
+        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
     )
     {
         $this->carrierConfig = $carrierConfig;
@@ -159,8 +159,8 @@ abstract class AbstractDeliveryOptions extends Action
             $googleapikey,
             $defaultShippingCost,
             $language,
-            showZeroCostsAsFree: $showZeroCostsAsFree,
-            currency: $currencySymbol
+            $showZeroCostsAsFree,
+            $currencySymbol
         );
 
         $oApi = new MontpackingApi($settings, $language);

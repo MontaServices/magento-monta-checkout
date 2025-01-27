@@ -53,7 +53,7 @@ class LongLat extends AbstractDeliveryOptions
         \Montapacking\MontaCheckout\Logger\Logger $logger,
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface,
+        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
     ) {
         $this->_logger = $logger;
 
@@ -68,7 +68,7 @@ class LongLat extends AbstractDeliveryOptions
             $carrierConfig,
             $cart,
             $storeManager,
-            $currencyInterface,
+            $currencyInterface
         );
     }
 
