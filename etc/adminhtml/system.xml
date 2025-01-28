@@ -72,7 +72,7 @@
                 <field id="leadingstockmontapacking" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="0" showInStore="0"  canRestore="1">
                     <label>Does Monta have the leading stock</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[If this option is active, the stock, sizes and weights of the SKUs are checked with the data known in the Montaportal.When selecting 'No' the Magento stock is leading]]></comment>
+                    <comment><![CDATA[If this option is active, the stock and weights of the SKUs are checked with the data known in the Montaportal]]></comment>
                 </field>
 
                 <field id="disabledeliverydays" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0"  canRestore="1">
