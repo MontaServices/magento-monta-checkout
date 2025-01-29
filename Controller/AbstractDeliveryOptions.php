@@ -196,17 +196,23 @@ abstract class AbstractDeliveryOptions extends Action
                 }
             }
 
-            $abc = (int)$item->getData('weight') ;
+            if($leadingstockmontapacking) {
+                $oApi->addProduct(
+                    (string)$item->getSku(),
+                    (int)$item->getQty(),
+                );
+            } else {
+                $oApi->addProduct(
+                    (string)$item->getSku(),
+                    (int)$item->getQty(),
+                    (int)$item->getData('length') ?: 0,
+                    (int)$item->getData('width') ?: 0,
+                    (int)$item->getData('height') ?: 0,
+                    (int)$item->getData('weight') * 1000 ?: 0,
+                    (float)$item->getData('price_incl_tax') ?: 0
+                );
+            }
 
-            $oApi->addProduct(
-                (string)$item->getSku(),
-                (int)$item->getQty(),
-                (int)$item->getData('length') ?: 0,
-                (int)$item->getData('width') ?: 0,
-                (int)$item->getData('height') ?: 0,
-                (int)$item->getData('weight') * 1000 ?: 0,
-                (float)$item->getData('price_incl_tax') ?: 0
-            );
         }
 
         if (false === $bAllProductsAvailable || $disabledeliverydays) {
