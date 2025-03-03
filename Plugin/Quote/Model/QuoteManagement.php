@@ -53,19 +53,20 @@ class QuoteManagement
             return;
         }
 
-        $deliveryOption = json_decode($deliveryOption);
+        try {
+            $deliveryOption = json_decode($deliveryOption);
+            $type = $deliveryOption->type;
 
-        $type = $deliveryOption->type;
+            if ($type == 'pickup') {
+                $newAddress = $deliveryOption->additional_info[0];
 
-        if ($type == 'pickup') {
-
-            $newAddress = $deliveryOption->additional_info[0];
-
-            $shippingAddress->setStreet($newAddress->street . ' ' . $newAddress->housenumber);
-            $shippingAddress->setCompany($newAddress->company);
-            $shippingAddress->setPostcode($newAddress->postal);
-            $shippingAddress->setCity($newAddress->city);
-            $shippingAddress->setCountryId($newAddress->country);
+                $shippingAddress->setStreet($newAddress->street . ' ' . $newAddress->housenumber);
+                $shippingAddress->setCompany($newAddress->company);
+                $shippingAddress->setPostcode($newAddress->postal);
+                $shippingAddress->setCity($newAddress->city);
+                $shippingAddress->setCountryId($newAddress->country);
+            }
+        } catch(\JsonException $exception) {
         }
     }
 
@@ -90,11 +91,11 @@ class QuoteManagement
         $address = $quote->getShippingAddress();
         $deliveryOption = $address->getMontapackingMontacheckoutData();
 
-        $date_stripped_obj = json_decode($deliveryOption);
-        if (isset($date_stripped_obj->additional_info[0]->date)) {
-            $date_stripped = $date_stripped_obj->additional_info[0]->date;
+        try {
+            $date_stripped_obj = json_decode($deliveryOption);
+            if (isset($date_stripped_obj->additional_info[0]->date)) {
 
-            try {
+                $date_stripped = $date_stripped_obj->additional_info[0]->date;
                 // Stap 1: Achterhaal de huidige locale (bijv. 'de_DE' of 'nl_NL')
                 $locale = $this->localeResolver->getLocale();
 
@@ -190,17 +191,17 @@ class QuoteManagement
                 $date_stripped_obj->additional_info[0]->date = $formattedDate;
                 $deliveryOption = json_encode($date_stripped_obj);
 
-            } catch (\Exception $e) {
-//                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
+                if (!$deliveryOption) {
+                    return $orderId;
+                }
+
+                $order->setMontapackingMontacheckoutData($deliveryOption);
+                $order->save();
+
             }
+        } catch (\Exception $e) {
+//                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
         }
-
-        if (!$deliveryOption) {
-            return $orderId;
-        }
-
-        $order->setMontapackingMontacheckoutData($deliveryOption);
-        $order->save();
 
         return $orderId;
     }

@@ -163,6 +163,8 @@ abstract class AbstractDeliveryOptions extends Action
             $currencySymbol
         );
 
+        $settings->setExcludeShippingDiscount(false);
+
         $oApi = new MontpackingApi($settings, $language);
         $oApi->setAddress($street, $housenumber, $housenumberaddition, $postcode, $city, $state, $country);
 
@@ -200,7 +202,11 @@ abstract class AbstractDeliveryOptions extends Action
                 $oApi->addProduct(
                     (string)$item->getSku(),
                     (int)$item->getQty(),
-                );
+                    0,
+                    0,
+                    0,
+                    0,
+                    (float)$item->getData('price_incl_tax') ?: 0);
             } else {
                 $oApi->addProduct(
                     (string)$item->getSku(),
