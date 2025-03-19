@@ -92,6 +92,7 @@ class QuoteManagement
         $deliveryOption = $address->getMontapackingMontacheckoutData();
 
         try {
+            // Delivery
             $date_stripped_obj = json_decode($deliveryOption);
             if (isset($date_stripped_obj->additional_info[0]->date)) {
 
@@ -197,6 +198,18 @@ class QuoteManagement
 
                 $order->setMontapackingMontacheckoutData($deliveryOption);
                 $order->save();
+
+            } else {
+                // Pickup/on-date flow
+                try {
+                    if (!$deliveryOption) {
+                        return $orderId;
+                    }
+
+                    $order->setMontapackingMontacheckoutData($deliveryOption);
+                    $order->save();
+                } catch (\Exception $e) {
+                }
 
             }
         } catch (\Exception $e) {
