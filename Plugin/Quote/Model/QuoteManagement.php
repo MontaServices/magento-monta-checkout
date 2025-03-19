@@ -186,7 +186,7 @@ class QuoteManagement
                 $datetime->setTimezone(new \DateTimeZone('UTC'));
 
                 // Stap 5: Formatteer de datum zoals gewenst
-                $formattedDate = $datetime->format('d-m-Y'); // Of een ander formaat zoals 'd-m-Y H:i:s'
+                $formattedDate = $datetime->format('Y-m-d'); // Of een ander formaat zoals 'd-m-Y H:i:s'
 
                 // Opslaan in JSON
                 $date_stripped_obj->additional_info[0]->date = $formattedDate;
