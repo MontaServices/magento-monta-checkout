@@ -159,8 +159,9 @@ abstract class AbstractDeliveryOptions extends Action
             $googleapikey,
             $defaultShippingCost,
             $language,
-            $showZeroCostsAsFree,
-            $currencySymbol
+            $currencySymbol,
+            false,
+            $showZeroCostsAsFree
         );
 
         $settings->setExcludeShippingDiscount(false);
