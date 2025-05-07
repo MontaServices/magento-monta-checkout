@@ -363,65 +363,6 @@ define(
                     this.daysForSelect(objectArray);
 
                     return objectArray;
-
-                    // const distinctFilteredItems = [];
-                    //
-                    // //search all shipping options with delivery date, so the dates can be used for the datepicker
-                    // const filteredItems = objectArray.filter(timeframe => timeframe.options[0].date !== '').map(option => {
-                    //
-                    //     let prettyDate = option.date.split('-');
-                    //     let testdate = new Date(prettyDate[2] + '-' + prettyDate[1] + '-' + prettyDate[0])
-                    //
-                    //     let longDate = new Date(testdate).toLocaleDateString('nl-NL', { weekday:"long", year:"numeric", month:"long", day:"numeric"});
-                    //     let longdateString = `${longDate.split(' ')[1]} ${longDate.split(' ')[2]}`;
-                    //
-                    //     console.log('longDate', longDate)
-                    //     console.log('longdateString', longdateString)
-                    //
-                    //     return {
-                    //         "date": option.date,
-                    //         "day": getDayName(testdate, "nl-NL"),
-                    //         "day_string": longdateString,
-                    //         "discount_percentage" : option.options.some(x=>x.discount_percentage > 0) ? option.options.find(x=>x.discount_percentage > 0).discount_percentage : 0,
-                    //         "discount_percentage_text" : option.options.some(x=>x.discount_percentage > 0) ? '-' + option.options.find(x=>x.discount_percentage > 0).discount_percentage + '%' : 0
-                    //     }
-                    // });
-                    //
-                    // function getDayName(dateStr, locale)
-                    // {
-                    //     var date = new Date(dateStr);
-                    //     return date.toLocaleDateString(locale, { weekday: 'long' });
-                    // }
-                    //
-                    // filteredItems.sort(function(a,b) {
-                    //     let date1 = a.date.split('-');
-                    //     let date2 = b.date.split('-');
-                    //     return new Date(date1[2],date1[1],date1[0]) - new Date(date2[2], date2[1], date2[0]) || b.discount_percentage - a.discount_percentage
-                    // })
-                    //
-                    // // filter all duplicates
-                    // $.each(filteredItems, function (index, item) {
-                    //     let alreadyAdded = false;
-                    //     let i;
-                    //     for (i in distinctFilteredItems) {
-                    //         console.log(distinctFilteredItems[i]);
-                    //         if (distinctFilteredItems[i].date === item.date) {
-                    //             alreadyAdded = true;
-                    //         }
-                    //     }
-                    //     if (!alreadyAdded) {
-                    //         distinctFilteredItems.push(item);
-                    //     }
-                    //     //show max 10 days in date picker
-                    //     if (distinctFilteredItems.length === 10) {
-                    //         return false;
-                    //     }
-                    // });
-                    //
-                    // this.daysForSelect(distinctFilteredItems);
-                    //
-                    //
-                    // return distinctFilteredItems;
                 },
 
                 checkDiscount() {
