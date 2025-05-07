@@ -138,7 +138,7 @@ class DeliveryHelper
         $extras = [];
         if (count($extra_values) > 0) {
             foreach ($extra_values as $extra) {
-                ## Extra optie toevoegen
+                // Extra optie toevoegen
                 $extras[] = [
                     'code' => $extra->code,
                     'name' => __($extra->code),

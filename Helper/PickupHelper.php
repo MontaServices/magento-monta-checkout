@@ -58,35 +58,35 @@ class PickupHelper
             $hour_string = " Uhr";
         }
 
-        ## Currency symbol
+        // Currency symbol
         $curr = '€';
 
         $marker_id = 0;
-        ## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
+        // Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
         if (is_array($frames) || is_object($frames)) {
             foreach ($frames as $nr_temp => $frame) {
                 $nr = $nr_temp + 1;
 
-                ## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
+                // Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
                 if ($frame->from != '' && $frame->to != '') {
-                    ## Loop trough options
+                    // Loop trough options
                     $selected = null;
 
-                    ## Lowest price
+                    // Lowest price
                     $lowest = 9999999;
 
-                    ## Shipper opties ophalen
+                    // Shipper opties ophalen
                     $options = null;
                     foreach ($frame->options as $onr => $option) {
                         $from = $option->from;
                         $to = $option->to;
 
-                        ## Check of maximale besteltijd voorbij is
+                        // Check of maximale besteltijd voorbij is
                         if (time() < strtotime($option->date) && $selected == null) {
                             $selected = $option;
                         }
 
-                        ## Shipper optie toevoegen
+                        // Shipper optie toevoegen
 
                         $description = [];
                         $description_storelocator = [];
@@ -142,7 +142,7 @@ class PickupHelper
 
                         ];
 
-                        ## Check if we have a lower price
+                        // Check if we have a lower price
                         if ($option->price < $lowest) {
                             $lowest = $option->price;
                         }
@@ -163,7 +163,7 @@ class PickupHelper
                     }
                     $frame->description->OpeningTimes = $arr;
 
-                    ## Check of er een prijs is
+                    // Check of er een prijs is
                     if ($options !== null) {
                         $items[$nr] = (object)[
                             'code' => $frame->code,
@@ -178,21 +178,21 @@ class PickupHelper
                         ];
                     }
                 } else {
-                    ## Loop trough options
+                    // Loop trough options
                     $selected = null;
 
-                    ## Lowest price
+                    // Lowest price
                     $lowest = 9999999;
 
-                    ## Shipper opties ophalen
+                    // Shipper opties ophalen
                     $options = null;
                     foreach ($frame->options as $onr => $option) {
-                        ## Check of maximale besteltijd voorbij is
+                        // Check of maximale besteltijd voorbij is
                         if (($option->date == null || time() < strtotime($option->date)) && $selected == null) {
                             $selected = $option;
                         }
 
-                        ## Shipper optie toevoegen
+                        // Shipper optie toevoegen
 
                         $description = [];
                         $description_storelocator = [];
@@ -246,13 +246,13 @@ class PickupHelper
 
                         ];
 
-                        ## Check if we have a lower price
+                        // Check if we have a lower price
                         if ($option->price < $lowest) {
                             $lowest = $option->price;
                         }
                     }
 
-                    ## Check of er een prijs is
+                    // Check of er een prijs is
                     if ($options !== null) {
                         $items[$nr] = (object)[
                             'code' => $frame->code,
