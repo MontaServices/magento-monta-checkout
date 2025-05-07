@@ -26,7 +26,6 @@ class OrderLoadAfter implements ObserverInterface
 
         $extensionAttributes = $order->getExtensionAttributes();
 
-
         if ($extensionAttributes === null) {
             $extensionAttributes = $this->orderExtension;
         }

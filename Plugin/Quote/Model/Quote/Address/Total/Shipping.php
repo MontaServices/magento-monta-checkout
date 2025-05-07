@@ -19,7 +19,6 @@ class Shipping
      */
     protected $_logger;
 
-
     /** @var Session $checkoutSession */
     private $checkoutSession;
 
@@ -63,7 +62,6 @@ class Shipping
         if (empty($rates)) {
             return $result;
         }
-
 
         $deliveryOption = $this->getDeliveryOption($address);
 

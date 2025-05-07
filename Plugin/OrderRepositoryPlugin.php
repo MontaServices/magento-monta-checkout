@@ -66,7 +66,6 @@ class OrderRepositoryPlugin
         foreach ($orders as &$order) {
             $orderComment = $order->getData(self::FIELD_NAME);
 
-
             $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
             $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
 
