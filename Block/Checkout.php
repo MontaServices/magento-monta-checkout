@@ -8,9 +8,7 @@ use Montapacking\MontaCheckout\Model\Config\Provider\Carrier;
 
 class Checkout extends Template
 {
-    /**
-     * @var Carrier
-     */
+    /** @var Carrier $carrier */
     private $carrier;
 
     /**
@@ -32,7 +30,7 @@ class Checkout extends Template
     }
 
     /**
-     * Return true if the google maps api key has been filled
+     * Return true if the Google Maps api key has been filled
      *
      * @return bool
      */
@@ -42,7 +40,7 @@ class Checkout extends Template
     }
 
     /**
-     * Returns the google maps api key in string format, might return empty string
+     * Returns the Google Maps api key in string format, might return empty string
      *
      * @return string
      */

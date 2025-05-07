@@ -15,13 +15,11 @@ use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
 
 abstract class AbstractDeliveryOptions extends Action
 {
-    /** @var $carrierConfig CarrierConfig */
     private $carrierConfig;
 
     public $cart;
     protected $storeManager;
     protected $currency;
-
 
     /**
      * AbstractDeliveryOptions constructor.
@@ -59,6 +57,9 @@ abstract class AbstractDeliveryOptions extends Action
         return $this->carrierConfig;
     }
 
+    /**
+     * @return Cart
+     */
     public function getCart()
     {
         return $this->cart;
@@ -104,7 +105,7 @@ abstract class AbstractDeliveryOptions extends Action
 
         $postcode = str_replace(" ", "", $postcode);
 
-        // check is ZIPCODE valid for dutch customers
+        // check is ZIPCODE valid for Dutch customers
         if ($country == 'NL') {
             if (!preg_match("/^\W*[1-9]{1}[0-9]{3}\W*[a-zA-Z]{2}\W*$/", $postcode)) {
                 $postcode = '';
@@ -228,7 +229,6 @@ abstract class AbstractDeliveryOptions extends Action
             unset($frames['DeliveryOptions']);
             $frames['DeliveryOptions'] = [];
         }
-
 
         if ($frames['StoreLocation'] != null) {
             $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);

@@ -60,7 +60,6 @@ class Data extends AbstractHelper
     /**
      * @param     $bytes
      * @param int $precision
-     *
      * @return string
      */
     protected function filesizeToReadableString($bytes, $precision = 2)

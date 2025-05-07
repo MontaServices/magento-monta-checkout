@@ -21,8 +21,8 @@ class DeliveryHelper
     protected $_logger;
 
     /**
-     * Services constructor.
-     *
+     * @param LocaleResolver $localeResolver
+     * @param Logger $logger
      */
     public function __construct(
         LocaleResolver $localeResolver,
@@ -35,150 +35,11 @@ class DeliveryHelper
 
     /**
      * @param $frames
-     *
      * @return array
      */
     public function formatShippingOptions($frames)
     {
-//        $items = [];
-//
-//        $language = strtoupper(strstr($this->localeResolver->getLocale(), '_', true));
-//
-//        if ($language != 'NL' && $language != 'BE' && $language != 'DE') {
-//            $language = 'EN';
-//        }
-//
-//        $hour_string = "h";
-//        if ($language == 'NL') {
-//            $hour_string = " uur";
-//        }
-//        if ($language == 'DE') {
-//            $hour_string = " Uhr";
-//        }
-//
-//        ## Currency symbol
-//        $curr = '€';
-//
-//        if (is_array($frames) || is_object($frames)) {
-//
-//            foreach ($frames as $nr => $frame) {
-//
-//                foreach ($frame->options as $onr => $option) {
-//
-//                    $description = [];
-//
-//                    $from = null;
-//                    $to = null;
-//                    $date = null;
-//                    $time = null;
-//
-//                    if ($frame->type == 'DeliveryDay') {
-//                        $from = $option->from;
-//                        $to = $option->to;
-//                        $date = date("Y-m-d", strtotime($from));
-//                        $time = date('H:i', strtotime($frame->from)) != date('H:i', strtotime($frame->to)) ? date('H:i', strtotime($frame->from)) . '-' . date('H:i', strtotime($frame->to)) : '';
-//
-//                        if (trim($option->description)) {
-//                            $description[] = $option->description;
-//                        }
-//                        if (date('H:i', strtotime($from)) != '00:00') {
-//                            $description[] = date('H:i', strtotime($from)) . " - " . date('H:i', strtotime($to)) . $hour_string; //phpcs:ignore
-//                        }
-//                        if ($frame->code != null && trim($frame->code)) {
-//                            $description[] = __($frame->code);
-//                        }
-//                    }
-//
-//                    if ($frame->type == 'ShippingDay') {
-//                        $from = date("Y-m-d", strtotime($option->date));
-//                        $to = date("Y-m-d", strtotime($option->date));
-//                        $date = date("Y-m-d", strtotime($from));
-//
-//                        if (trim($option->description)) {
-//                            $description[] = $option->description;
-//                        }
-//
-//                        if ($frame->code != null && trim($frame->code)) {
-//                            $description[] = $frame->code;
-//                        }
-//
-//                        $description[] = __("Ships on this date from the Netherlands");
-//                    }
-//
-//                    if ($frame->type == 'Unknown') {
-//
-//                        if (isset($option->date) && strtotime($option->date) > 0) {
-//                            $from = date("Y-m-d", strtotime($option->date));
-//                            $to = date("Y-m-d", strtotime($option->date));
-//                        } elseif ($option->code == 'RED_ShippingDayUnknown') {
-//                            $from = date('d-m-Y', time());
-//                            $to = $from = date('d-m-Y', time());
-//                        } elseif ($option->code == 'Trunkrs_ShippingDayUnknown') {
-//                            $from = date('d-m-Y', time());
-//                            $to = $from = date('d-m-Y', time());
-//                        }
-//
-//                        if (isset($from)) {
-//                            $date = date("Y-m-d", strtotime($from));
-//                        }
-//
-//
-//                        if (trim($option->description)) {
-//                            $description[] = $option->description;
-//                        }
-//
-//                        if ($frame->code != null && trim($frame->code)) {
-//                            $description[] = $frame->code;
-//                        }
-//
-//                    }
-//
-//                    $description = implode(" | ", $description);
-//
-//                    $extras = [];
-//                    if (isset($option->extras) && count($option->extras) > 0) {
-//                        $extras = self::calculateExtras($option->extras, $curr);
-//                    }
-//
-//                    $options = [];
-//                    $created_option = self::calculateOptions($frame, $option, $curr, $description, $from, $to, $extras, $hour_string); //phpcs:ignore
-//
-//                    if (null !== $created_option) {
-//
-//                        $options[] = $created_option;
-//                        if (!isset($items[$date])) {
-//                            $items[$date] = [];
-//                        }
-//
-//                        $items[$date][] = (object)[
-//                            'code' => $frame->code,
-//                            'date' => $from != null && strtotime($from) > 0 ? date('d-m-Y', strtotime($from)) : "",
-//                            'time' => $time != null ? $time : "", //phpcs:ignore
-//                            'description' => $frame->description,
-//                            'price_currency' => $curr,
-//                            'options' => $options
-//                        ];
-//                    }
-//
-//                }
-//            }
-//        }
-//
-//        ksort($items);
-//        $list = [];
-//        foreach ($items as $key => $values) {
-//
-//
-//            foreach ($values as $key_value => $value) {
-//                $list[] = $value;
-//            }
-//        }
-//        $items = $list;
-//
-//        return $items;
-
         $items = (object)$frames;
-//        $items[] = $frames;
 
         $curr = '€';
 
@@ -192,15 +53,8 @@ class DeliveryHelper
             $hour_string = " Uhr";
         }
 
-//        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
-
         foreach ($items as $frameItem) {
             foreach ($frameItem->options as $key => $options) {
-//                if ((time() + 3600) >= strtotime($options->date)) {
-//                    continue;
-////                    $items[$key]->options[] = $options_object;
-//                }
-
                 if ($options->from != null && (date("Y-m-d", strtotime($options->from)) == date("Y-m-d") && $frameItem->code != 'SameDayDelivery')) {
                     return null;
                 }
@@ -222,10 +76,6 @@ class DeliveryHelper
                     $extras = self::calculateExtras($options->extras, $curr);
                 }
 
-//                if ($freeShippingCouponCode) {
-//                    $options->price = 0;
-//                }
-
                 if (count($options->optioncodes)) {
                     foreach ($options->optioncodes as $optioncode) {
                         if ($optioncode == 'EveningDelivery') {
@@ -235,8 +85,6 @@ class DeliveryHelper
                 }
 
                 $frameItem->code = $options->code;
-//                $frameItem->date = date('d-m-Y', strtotime($options->date));
-//                $frameItem->datename = translate(date("l", strtotime($options->date)));
 
                 $options->from = date('H:i', strtotime($options->from . ' +0 hour'));
                 $options->to = date('H:i', strtotime($options->to . ' +0 hour'));
@@ -276,7 +124,6 @@ class DeliveryHelper
                 $options->type = $frameItem->type;
                 $options->date_from_to_formatted = '12:00 - 14:30 uur';
                 $options->date_from_to = '17:30-22:30';
-//                $options->date_string = 'Woensdag 130 juni';
 
                 $options->date_string = $date_string;
                 $options->name = $options->description;

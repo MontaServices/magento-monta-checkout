@@ -10,9 +10,8 @@ class ShippingAddressManagement
 {
     /**
      * @param QuoteShippingAddressManagement $subject
-     * @param                                $cartId
+     * @param $cartId
      * @param AddressInterface|null $address
-     *
      * @return array|void
      */
     // @codingStandardsIgnoreLine

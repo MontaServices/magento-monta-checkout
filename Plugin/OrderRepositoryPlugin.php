@@ -37,6 +37,8 @@ class OrderRepositoryPlugin
     /**
      * Add "order_comment" extension attribute to order data object to make it accessible in API data of order record
      *
+     * @param OrderRepositoryInterface $subject
+     * @param OrderInterface $order
      * @return OrderInterface
      */
     public function afterGet(OrderRepositoryInterface $subject, OrderInterface $order)
@@ -53,9 +55,11 @@ class OrderRepositoryPlugin
     /**
      * Add "order_comment" extension attribute to order data object to make it accessible in API data of all order list
      *
+     * @param OrderRepositoryInterface $subject
+     * @param OrderSearchResultInterface $searchResult
      * @return OrderSearchResultInterface
      */
-    public function afterGetList(OrderRepositoryInterface $subject, OrderSearchResultInterface $searchResult)
+    public function afterGetList(OrderRepositoryInterface $subject, OrderSearchResultInterface $searchResult): OrderSearchResultInterface
     {
         $orders = $searchResult->getItems();
 

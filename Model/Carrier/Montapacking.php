@@ -43,19 +43,20 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
      */
     protected $rateMethodFactory;
 
+    protected $_customLogger;
+
+    protected $_request;
+
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
      * @param LoggerInterface $logger
      * @param ResultFactory $rateResultFactory
      * @param MethodFactory $rateMethodFactory
+     * @param LoggerInterface $customLogger
+     * @param RequestInterface $request
      * @param array $data
      */
-
-    protected $_customLogger;
-
-    protected $_request;
-
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         ErrorFactory $rateErrorFactory,

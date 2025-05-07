@@ -7,9 +7,7 @@ use Montapacking\MontaCheckout\Helper\Data;
 
 class Index extends Template
 {
-    /**
-     * @var Data
-     */
+    /** @var Data $logDataHelper */
     protected $logDataHelper;
 
     /**

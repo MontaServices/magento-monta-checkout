@@ -24,8 +24,9 @@ class Shipping
     private $checkoutSession;
 
     /**
-     * Shipping constructor.
-     *
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Session $checkoutSession
+     * @param Logger $logger
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -39,13 +40,12 @@ class Shipping
     }
 
     /**
-     * @param                       $subject
-     * @param                       $result
+     * @param $subject
+     * @param $result
      * @param Quote $quote
      * @param ShippingAssignmentApi $shippingAssignment
      * @param QuoteAddressTotal $total
-     *
-     * @return void|mixed
+     * @return mixed|void
      */
     // @codingStandardsIgnoreLine
     public function afterCollect($subject, $result, Quote $quote, ShippingAssignmentApi $shippingAssignment, QuoteAddressTotal $total)

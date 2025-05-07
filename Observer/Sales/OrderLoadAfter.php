@@ -11,8 +11,7 @@ class OrderLoadAfter implements ObserverInterface
     private $orderExtension;
 
     /**
-     * OrderLoadAfter constructor.
-     *
+     * @param OrderExtension $orderExtension
      */
     public function __construct(
         OrderExtension $orderExtension

@@ -82,10 +82,6 @@ class Delivery extends AbstractDeliveryOptions
         CurrencyInterface $currencyInterface
     )
     {
-        //        $tomorrow = Carbon::now()->addDay();
-        //        $processingstuff = new NumberGenerator();
-        //        print_r($processingstuff->Generate(0, 100)); die();
-
         $this->_logger = $logger;
         $this->checkoutSession = $checkoutSession;
         $this->localeResolver = $localeResolver;

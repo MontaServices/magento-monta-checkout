@@ -14,12 +14,19 @@ abstract class AbstractLog extends System
      */
     protected $fileFactory;
 
+    /**
+     * @param Context $context
+     * @param FileFactory $fileFactory
+     */
     public function __construct(Context $context, FileFactory $fileFactory)
     {
         $this->fileFactory = $fileFactory;
         parent::__construct($context);
     }
 
+    /**
+     * @return mixed
+     */
     public function execute()
     {
         $filePath = $this->getFilePathWithFile($this->getRequest()->getParam('file'));

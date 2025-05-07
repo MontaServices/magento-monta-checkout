@@ -7,11 +7,7 @@ use Monolog\Logger;
 
 class Handler extends Base
 {
-    /**
-     * Logging level
-     *
-     * @var int
-     */
+    /** @var int $loggerType - Logging level */
     protected $loggerType = Logger::INFO;
 
     /**

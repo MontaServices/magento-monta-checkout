@@ -24,8 +24,8 @@ class PickupHelper
     protected $_logger;
 
     /**
-     * Services constructor.
-     *
+     * @param LocaleResolver $localeResolver
+     * @param Logger $logger
      */
     public function __construct(
         LocaleResolver $localeResolver,
@@ -38,7 +38,6 @@ class PickupHelper
 
     /**
      * @param $frames
-     *
      * @return array
      */
     public function formatPickupOptions($frames)
