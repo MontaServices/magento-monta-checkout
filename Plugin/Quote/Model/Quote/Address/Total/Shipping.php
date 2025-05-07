@@ -4,8 +4,8 @@ namespace Montapacking\MontaCheckout\Plugin\Quote\Model\Quote\Address\Total;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Quote\Model\Quote;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface as ShippingAssignmentApi;
+use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total as QuoteAddressTotal;
 use Montapacking\MontaCheckout\Logger\Logger;
 
@@ -40,9 +40,9 @@ class Shipping
     /**
      * @param                       $subject
      * @param                       $result
-     * @param Quote                 $quote
+     * @param Quote $quote
      * @param ShippingAssignmentApi $shippingAssignment
-     * @param QuoteAddressTotal     $total
+     * @param QuoteAddressTotal $total
      *
      * @return void|mixed
      */
@@ -78,7 +78,7 @@ class Shipping
             return $result;
         }
 
-        if(!$this->checkoutSession->getLatestShipping()) {
+        if (!$this->checkoutSession->getLatestShipping()) {
             return $result;
         }
 
@@ -92,9 +92,9 @@ class Shipping
 
         if ($deliveryOptionType == 'delivery') {
             if ($deliveryOptionAdditionalInfo->code == "MultipleShipper_ShippingDayUnknown") {
-                if(isset($deliveryOptionAdditionalInfo->price)){
-					$fee = $deliveryOptionAdditionalInfo->price;
-				}
+                if (isset($deliveryOptionAdditionalInfo->price)) {
+                    $fee = $deliveryOptionAdditionalInfo->price;
+                }
             } else {
                 foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
                     foreach ($timeframe->options as $option) {
@@ -155,7 +155,6 @@ class Shipping
 
     private function adjustTotals($name, $code, $address, $total, $fee, $description)
     {
-
         $total->setTotalAmount($code, $fee);
         $total->setBaseTotalAmount($code, $fee);
         $total->setBaseShippingAmount($fee);

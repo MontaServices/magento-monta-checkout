@@ -2,10 +2,10 @@
 
 namespace Montapacking\MontaCheckout\Helper;
 
+use DateTime;
 use DateTimeZone;
+use IntlDateFormatter;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
-use \DateTime;
-use \IntlDateFormatter;
 
 /**
  * Class PickupHelper
@@ -29,7 +29,8 @@ class PickupHelper
     public function __construct(
         LocaleResolver $localeResolver,
         \Montapacking\MontaCheckout\Logger\Logger $logger
-    ) {
+    )
+    {
         $this->_logger = $logger;
         $this->localeResolver = $localeResolver;
     }
@@ -63,13 +64,11 @@ class PickupHelper
         $marker_id = 0;
         ## Check of er meerdere timeframes zijn, wanneer maar één dan enkel shipper keuze zonder datum/tijd
         if (is_array($frames) || is_object($frames)) {
-
             foreach ($frames as $nr_temp => $frame) {
                 $nr = $nr_temp + 1;
 
                 ## Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
                 if ($frame->from != '' && $frame->to != '') {
-
                     ## Loop trough options
                     $selected = null;
 
@@ -92,7 +91,6 @@ class PickupHelper
                         $description = [];
                         $description_storelocator = [];
                         if (trim($option->description)) {
-
                             $description[] = $option->description;
                             $description_storelocator[] = $option->description;
                         }
@@ -110,7 +108,7 @@ class PickupHelper
 
                         $arr = array();
                         foreach ($option->optionsWithValue as $key => $value) {
-                            $extra_code  = $key."_".$value;
+                            $extra_code = $key . "_" . $value;
                             if (trim($extra_code)) {
                                 $arr[] = $extra_code;
                             }
@@ -125,7 +123,7 @@ class PickupHelper
                             'code_pickup' => $extra_code,
                             'codes' => $option->codes,
                             'image' => trim(implode(",", $option->codes)),
-                            'image_replace' =>  trim(str_replace(",", "_", implode(",", $option->codes))),
+                            'image_replace' => trim(str_replace(",", "_", implode(",", $option->codes))),
                             'optionCodes' => json_encode((array)$option->optioncodes),
                             'optionsWithValue' => json_encode((array)$option->optionsWithValue),
                             'name' => $option->description,
@@ -138,7 +136,7 @@ class PickupHelper
                             'from' => date('H:i', strtotime($from)),
                             'to' => date('H:i', strtotime($to)),
                             'date' => date("d-m-Y", strtotime($from)),
-                            'date_string' => $this->formatLanguage($dt, 'd F Y',$language),
+                            'date_string' => $this->formatLanguage($dt, 'd F Y', $language),
                             'date_from_to' => date('H:i', strtotime($from)) . "-" . date('H:i', strtotime($to)),
                             'date_from_to_formatted' => date('H:i', strtotime($from)) . " - " . date('H:i', strtotime($to)) . $hour_string //phpcs:ignore
 
@@ -148,13 +146,11 @@ class PickupHelper
                         if ($option->price < $lowest) {
                             $lowest = $option->price;
                         }
-
                     }
 
                     $arr = [];
 
                     foreach ($frame->description->OpeningTimes as $key => $time) {
-
                         if (isset($time->Day)) {
                             $obj = (object)[
                                 'Day' => __($time->Day),
@@ -164,13 +160,11 @@ class PickupHelper
 
                             $arr[$key] = $obj;
                         }
-
                     }
                     $frame->description->OpeningTimes = $arr;
 
                     ## Check of er een prijs is
                     if ($options !== null) {
-
                         $items[$nr] = (object)[
                             'code' => $frame->code,
                             'date' => date('d-m-Y', strtotime($frame->from)),
@@ -182,11 +176,8 @@ class PickupHelper
                             'price_formatted' => number_format($lowest, 2, ',', ''),
                             'options' => $options
                         ];
-
                     }
-
                 } else {
-
                     ## Loop trough options
                     $selected = null;
 
@@ -196,7 +187,6 @@ class PickupHelper
                     ## Shipper opties ophalen
                     $options = null;
                     foreach ($frame->options as $onr => $option) {
-
                         ## Check of maximale besteltijd voorbij is
                         if (($option->date == null || time() < strtotime($option->date)) && $selected == null) {
                             $selected = $option;
@@ -224,7 +214,7 @@ class PickupHelper
 
                         $arr = array();
                         foreach ($option->optionsWithValue as $key => $value) {
-                            $extra_code  = $key."_".$value;
+                            $extra_code = $key . "_" . $value;
                             if (trim($extra_code)) {
                                 $arr[] = $extra_code;
                             }
@@ -237,7 +227,7 @@ class PickupHelper
                             'code_pickup' => $extra_code,
                             'codes' => $option->codes,
                             'image' => trim(implode(",", $option->codes)),
-                            'image_replace' =>  trim(str_replace(",", "_", implode(",", $option->codes))),
+                            'image_replace' => trim(str_replace(",", "_", implode(",", $option->codes))),
                             'optionCodes' => json_encode((array)$option->optioncodes),
                             'optionsWithValue' => json_encode((array)$option->optionsWithValue),
                             'name' => $option->description,
@@ -260,12 +250,10 @@ class PickupHelper
                         if ($option->price < $lowest) {
                             $lowest = $option->price;
                         }
-
                     }
 
                     ## Check of er een prijs is
                     if ($options !== null) {
-
                         $items[$nr] = (object)[
                             'code' => $frame->code,
                             'date' => null,
@@ -277,26 +265,23 @@ class PickupHelper
                             'price_formatted' => number_format($lowest, 2, ',', ''),
                             'options' => $options
                         ];
-
                     }
-
                 }
-
             }
-
         }
 
         return $items;
     }
 
-    function formatLanguage(DateTime $dt,string $format,string $language = 'en') : string {
+    function formatLanguage(DateTime $dt, string $format, string $language = 'en'): string
+    {
         $curTz = $dt->getTimezone();
-        if($curTz->getName() === 'Z'){
+        if ($curTz->getName() === 'Z') {
             //INTL don't know Z
             $curTz = new DateTimeZone('UTC');
         }
 
-        $formatPattern = strtr($format,array(
+        $formatPattern = strtr($format, array(
             'D' => '{#1}',
             'l' => '{#2}',
             'M' => '{#3}',
@@ -304,16 +289,16 @@ class PickupHelper
         ));
         $strDate = $dt->format($formatPattern);
         $regEx = '~\{#\d\}~';
-        while(preg_match($regEx,$strDate,$match)) {
-            $IntlFormat = strtr($match[0],array(
+        while (preg_match($regEx, $strDate, $match)) {
+            $IntlFormat = strtr($match[0], array(
                 '{#1}' => 'E',
                 '{#2}' => 'EEEE',
                 '{#3}' => 'MMM',
                 '{#4}' => 'MMMM',
             ));
-            $fmt = datefmt_create( $language ,IntlDateFormatter::FULL, IntlDateFormatter::FULL,
+            $fmt = datefmt_create($language, IntlDateFormatter::FULL, IntlDateFormatter::FULL,
                 $curTz, IntlDateFormatter::GREGORIAN, $IntlFormat);
-            $replace = $fmt ? datefmt_format( $fmt ,$dt) : "???";
+            $replace = $fmt ? datefmt_format($fmt, $dt) : "???";
             $strDate = str_replace($match[0], $replace, $strDate);
         }
 

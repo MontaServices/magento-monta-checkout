@@ -57,7 +57,8 @@ class Montapacking extends \Magento\Shipping\Model\Carrier\AbstractCarrier imple
         \Psr\Log\LoggerInterface $customLogger,
         \Magento\Framework\App\RequestInterface $request,
         array $data = []
-    ) {
+    )
+    {
         $this->_request = $request;
         $this->_customLogger = $customLogger;
         $this->rateResultFactory = $rateResultFactory;
@@ -79,7 +80,6 @@ class Montapacking extends \Magento\Shipping\Model\Carrier\AbstractCarrier imple
      */
     public function collectRates(RateRequest $request)
     {
-
         if (!$this->getConfigFlag('active')) {
             return false;
         }

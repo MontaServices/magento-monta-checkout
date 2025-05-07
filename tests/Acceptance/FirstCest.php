@@ -75,6 +75,5 @@ class FirstCest
         $I->click('.monta-option-pickup');
 
         $I->wait(5);
-
     }
 }

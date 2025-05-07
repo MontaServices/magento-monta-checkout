@@ -2,10 +2,9 @@
 
 namespace Montapacking\MontaCheckout\Plugin\Quote\Model;
 
-use DateTimeZone;
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Framework\Locale\ResolverInterface;
 
 class QuoteManagement
 {
@@ -29,7 +28,8 @@ class QuoteManagement
         CartRepositoryInterface $cartRepository,
         OrderRepositoryInterface $orderRepository,
         ResolverInterface $localeResolver
-    ) {
+    )
+    {
         $this->cartRepository = $cartRepository;
         $this->orderRepository = $orderRepository;
         $this->localeResolver = $localeResolver;
@@ -66,7 +66,7 @@ class QuoteManagement
                 $shippingAddress->setCity($newAddress->city);
                 $shippingAddress->setCountryId($newAddress->country);
             }
-        } catch(\JsonException $exception) {
+        } catch (\JsonException $exception) {
         }
     }
 
@@ -95,7 +95,6 @@ class QuoteManagement
             // Delivery
             $date_stripped_obj = json_decode($deliveryOption);
             if (isset($date_stripped_obj->additional_info[0]->date)) {
-
                 $date_stripped = $date_stripped_obj->additional_info[0]->date;
                 // Stap 1: Achterhaal de huidige locale (bijv. 'de_DE' of 'nl_NL')
                 $locale = $this->localeResolver->getLocale();
@@ -198,7 +197,6 @@ class QuoteManagement
 
                 $order->setMontapackingMontacheckoutData($deliveryOption);
                 $order->save();
-
             } else {
                 // Pickup/on-date flow
                 try {
@@ -210,10 +208,9 @@ class QuoteManagement
                     $order->save();
                 } catch (\Exception $e) {
                 }
-
             }
         } catch (\Exception $e) {
-//                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
+            //                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
         }
 
         return $orderId;

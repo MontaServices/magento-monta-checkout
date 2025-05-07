@@ -3,8 +3,6 @@
 namespace Montapacking\MontaCheckout\Helper;
 
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
-use \DateTime;
-use \IntlDateFormatter;
 
 /**
  * Class DeliveryHelper
@@ -28,7 +26,8 @@ class DeliveryHelper
     public function __construct(
         LocaleResolver $localeResolver,
         \Montapacking\MontaCheckout\Logger\Logger $logger
-    ) {
+    )
+    {
         $this->_logger = $logger;
         $this->localeResolver = $localeResolver;
     }
@@ -178,12 +177,6 @@ class DeliveryHelper
 //        return $items;
 
 
-
-
-
-
-
-
         $items = (object)$frames;
         $itemsArray = [];
 //        $items[] = $frames;
@@ -203,10 +196,8 @@ class DeliveryHelper
 
 //        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
 
-        foreach($items as $frameItem) {
-
-            foreach($frameItem->options as $key => $options) {
-
+        foreach ($items as $frameItem) {
+            foreach ($frameItem->options as $key => $options) {
 //                if ((time() + 3600) >= strtotime($options->date)) {
 //                    continue;
 ////                    $items[$key]->options[] = $options_object;
@@ -220,15 +211,14 @@ class DeliveryHelper
                     $date_string = __(date("l", strtotime($options->from))) . " " . date("d", strtotime($options->from)) . " " . __(date("F", strtotime($options->from)));
                 }
 
-                if(count($options->codes) > 2){
+                if (count($options->codes) > 2) {
                     $image_code = 'DEF';
                 } else {
                     $image_code = trim(str_replace(",", "_", implode(",", $options->codes)));
                 }
 
 
-                if($frameItem->from == null)
-                {
+                if ($frameItem->from == null) {
 //                    $frameItem->from  = date("Y-m-d", time() + 86400);
 //                    $frameItem->to  = date("Y-m-d", time() + 86400);
 
@@ -266,17 +256,17 @@ class DeliveryHelper
 
                 $options->ships_on = "";
 
-                if($frameItem->type == 'DeliveryDay') {
+                if ($frameItem->type == 'DeliveryDay') {
                     $type_text = 'delivered';
 
                     $from = date('d-m-Y', strtotime($frameItem->from));
                     $options->date = $from;
 
 //                    if (date('H:i', strtotime($from)) != '00:00') {
-                        $hours = date('H:i', strtotime($options->from)) . " - " . date('H:i', strtotime($options->to)) . $hour_string;
-                        $options->displayname = $options->displayName . " | " . $hours .  $evening;
+                    $hours = date('H:i', strtotime($options->from)) . " - " . date('H:i', strtotime($options->to)) . $hour_string;
+                    $options->displayname = $options->displayName . " | " . $hours . $evening;
 //                    }
-                } elseif($frameItem->type) {
+                } elseif ($frameItem->type) {
                     $type_text = 'ShippingDay';
 
                     // Todo: Use translation line code
@@ -301,7 +291,6 @@ class DeliveryHelper
 //                }
 
 
-
                 $frameItem->date = date('d-m-Y', strtotime($options->date));
 
                 // Todo: Use translation line code
@@ -322,43 +311,22 @@ class DeliveryHelper
                 $options->image_replace = $image_code;
                 $options->type = $frameItem->type;
                 $options->date_from_to_formatted = '12:00 - 14:30 uur';
-                $options->date_from_to =  '17:30-22:30';
+                $options->date_from_to = '17:30-22:30';
 //                $options->date_string = 'Woensdag 130 juni';
 
                 $options->date_string = $date_string;
                 $options->name = $options->description;
-
-
-
-
-
-
-
             }
         }
 
         return (array)$items;
-
-
-
-
-
-
-
-
-
-
-
     }
 
     public function calculateExtras($extra_values = [], $curr = '&euro;')
     {
-
         $extras = [];
         if (count($extra_values) > 0) {
-
             foreach ($extra_values as $extra) {
-
                 $language = strtoupper(strstr($this->localeResolver->getLocale(), '_', true));
 
                 ## Extra optie toevoegen
@@ -370,7 +338,6 @@ class DeliveryHelper
                     'price_raw' => number_format($extra->price, 2),
                     'price_formatted' => number_format($extra->price, 2, ',', ''),
                 ];
-
             }
         }
 
@@ -392,7 +359,7 @@ class DeliveryHelper
         $description = str_replace("PostNL Pakket", "PostNL", $description);
         $name = $option->description;
 
-        if($option->displayName != null){
+        if ($option->displayName != null) {
             $parts = explode("|", $description);
             $parts[0] = $option->displayName;
             $description = implode(" | ", $parts);
@@ -400,7 +367,7 @@ class DeliveryHelper
             $name = $option->displayName;
         }
 
-        if(count($option->codes) > 2){
+        if (count($option->codes) > 2) {
             $image_code = 'DEF';
         } else {
             $image_code = trim(str_replace(",", "_", implode(",", $option->codes)));

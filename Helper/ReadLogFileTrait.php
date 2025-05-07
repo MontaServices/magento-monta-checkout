@@ -15,14 +15,14 @@ trait ReadLogFileTrait
      * Fetch block
      *
      * @param string $file
-     * @param int    $start
-     * @param int    $limit
+     * @param int $start
+     * @param int $limit
      * @return array
      */
     public function fetch($file, $limit = 1, $start = 0): array
     {
-        $output     = [];
-        $block      = 0;
+        $output = [];
+        $block = 0;
         $blockStamp = null;
 
         $arr = [];
@@ -44,15 +44,15 @@ trait ReadLogFileTrait
                 }
 
                 $blockStamp = $matches[1]; // set new block timestamp
-                $i          = 0;
+                $i = 0;
                 while (isset($output[$blockStamp])) {
-                    $blockStamp = $matches[1].'.'.++$i;
+                    $blockStamp = $matches[1] . '.' . ++$i;
                 }
 
-                $line                = str_replace($matches[0].' ', '', $line); // cut timestamp out
-                $output[$blockStamp] = $line.PHP_EOL;
+                $line = str_replace($matches[0] . ' ', '', $line); // cut timestamp out
+                $output[$blockStamp] = $line . PHP_EOL;
             } elseif ($output) {
-                $output[$blockStamp] .= $line.PHP_EOL;
+                $output[$blockStamp] .= $line . PHP_EOL;
             }
         }
 
@@ -74,7 +74,7 @@ trait ReadLogFileTrait
             $rs = fopen($file, 'r');
 
             if (!$rs) {
-                throw new Exception('Cannot open file: '.$file);
+                throw new Exception('Cannot open file: ' . $file);
             }
 
             while (($line = fgets($rs)) !== false) {

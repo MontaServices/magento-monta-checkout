@@ -17,13 +17,14 @@ class Checkout extends \Magento\Framework\View\Element\Template
      *
      * @param Carrier $carrier
      * @param Context $context
-     * @param array   $data
+     * @param array $data
      */
     public function __construct(
         Carrier $carrier,
         Context $context,
         array $data = []
-    ) {
+    )
+    {
         $this->carrier = $carrier;
 
         parent::__construct($context, $data);

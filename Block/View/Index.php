@@ -2,8 +2,8 @@
 
 namespace Montapacking\MontaCheckout\Block\View;
 
-use Montapacking\MontaCheckout\Helper\ReadLogFileTrait;
 use Magento\Framework\HTTP\PhpEnvironment\Request;
+use Montapacking\MontaCheckout\Helper\ReadLogFileTrait;
 
 class Index extends \Magento\Framework\View\Element\Template
 {
@@ -23,16 +23,16 @@ class Index extends \Magento\Framework\View\Element\Template
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Montapacking\MontaCheckout\Helper\Data                $logDataHelper
-     * @param array                                            $data
+     * @param \Montapacking\MontaCheckout\Helper\Data $logDataHelper
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Montapacking\MontaCheckout\Helper\Data $logDataHelper,
         array $data = [],
         Request $request = null
-    ) {
-
+    )
+    {
         $this->request = $request;
         $this->logDataHelper = $logDataHelper;
         parent::__construct($context, $data);
@@ -45,7 +45,6 @@ class Index extends \Magento\Framework\View\Element\Template
                 if (file_exists($file_name)) {
                     file_put_contents($file_name, '');
                 }
-
             }
         }
     }
@@ -67,12 +66,12 @@ class Index extends \Magento\Framework\View\Element\Template
 
     public function getLimit(): int
     {
-        return (int) $this->getRequest()->getParam('limit', 100) ?: 100;
+        return (int)$this->getRequest()->getParam('limit', 100) ?: 100;
     }
 
     public function getStart(): int
     {
-        return (int) $this->getRequest()->getParam('start', 0);
+        return (int)$this->getRequest()->getParam('start', 0);
     }
 
     public function getFileName()
@@ -90,8 +89,8 @@ class Index extends \Magento\Framework\View\Element\Template
     {
         return $this->getUrl('*/*/*', [
             '_current' => true,
-            'limit'    => $limit,
-            'file'     => $this->getFileName(),
+            'limit' => $limit,
+            'file' => $this->getFileName(),
         ]);
     }
 
@@ -104,9 +103,9 @@ class Index extends \Magento\Framework\View\Element\Template
     public function getStartUrl(int $start): string
     {
         return $this->getUrl('*/*/*', [
-            '_current'     => true,
-            'start'        => $start,
-            'file'         => $this->getFileName(),
+            '_current' => true,
+            'start' => $start,
+            'file' => $this->getFileName(),
         ]);
     }
 
@@ -118,10 +117,9 @@ class Index extends \Magento\Framework\View\Element\Template
      */
     public function getClearUrl(): string
     {
-
         return $this->getUrl('*/*/*', [
-            '_current'     => false,
-            'file'         => $this->getFileName(),
+            '_current' => false,
+            'file' => $this->getFileName(),
         ]);
     }
 
@@ -175,12 +173,12 @@ class Index extends \Magento\Framework\View\Element\Template
      */
     private function logFile(): string
     {
-        return $this->logDataHelper->getPath().DIRECTORY_SEPARATOR.$this->getFileName();
+        return $this->logDataHelper->getPath() . DIRECTORY_SEPARATOR . $this->getFileName();
     }
 
     public function countLines()
     {
-        $file= $this->logFile();
+        $file = $this->logFile();
         $linecount = 0;
         $handle = fopen($file, "r");
         while (!feof($handle)) {

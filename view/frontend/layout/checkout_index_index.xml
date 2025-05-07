@@ -1,14 +1,16 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="checkout" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="checkout"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Montapacking_MontaCheckout::css/deliveryoptions.css"/>
         <script src="Montapacking_MontaCheckout::js/require-loader-script.js"/>
     </head>
     <body>
         <referenceContainer name="content">
-            <block name="content.montapacking" class="Montapacking\MontaCheckout\Block\Checkout" template="Montapacking_MontaCheckout::checkout.phtml" />
+            <block name="content.montapacking" class="Montapacking\MontaCheckout\Block\Checkout"
+                   template="Montapacking_MontaCheckout::checkout.phtml"/>
         </referenceContainer>
-        <referenceBlock name="checkout.root" >
+        <referenceBlock name="checkout.root">
             <arguments>
                 <argument name="jsLayout" xsi:type="array">
                     <item name="components" xsi:type="array">
