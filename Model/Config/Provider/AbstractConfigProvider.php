@@ -16,24 +16,19 @@ abstract class AbstractConfigProvider
     /** @var Manager $moduleManager */
     private $moduleManager;
 
-    private $storeManager;
-
     /**
      * AbstractConfigProvider constructor.
      *
      * @param ScopeConfig $scopeConfig
      * @param Manager $moduleManager
-     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         ScopeConfig $scopeConfig,
         Manager $moduleManager,
-        StoreManagerInterface $storeManager
     )
     {
         $this->scopeConfig = $scopeConfig;
         $this->moduleManager = $moduleManager;
-        $this->storeManager = $storeManager;
     }
 
     /**
