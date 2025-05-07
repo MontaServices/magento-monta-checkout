@@ -7,7 +7,12 @@ use Exception;
 use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Locale\CurrencyInterface;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Monta\MontaProcessing\NumberGenerator;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
 use Montapacking\MontaCheckout\Helper\DeliveryHelper;
@@ -29,22 +34,22 @@ class Delivery extends AbstractDeliveryOptions
     private $localeResolver;
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
     /**
-     * @var \Magento\Checkout\Model\Cart
+     * @var Cart
      */
     public $cart;
 
     /**
-     * @var \Montapacking\MontaCheckout\Helper\PickupHelper
+     * @var PickupHelper
      */
     protected $pickupHelper;
 
     /**
-     * @var \Montapacking\MontaCheckout\Helper\DeliveryHelper
+     * @var DeliveryHelper
      */
     protected $deliveryHelper;
 
@@ -52,10 +57,7 @@ class Delivery extends AbstractDeliveryOptions
 
     protected $currency;
 
-
     /**
-     * Services constructor.
-     *
      * @param Context $context
      * @param Session $checkoutSession
      * @param LocaleResolver $localeResolver
@@ -64,6 +66,8 @@ class Delivery extends AbstractDeliveryOptions
      * @param Cart $cart
      * @param PickupHelper $pickupHelper
      * @param DeliveryHelper $deliveryHelper
+     * @param StoreManagerInterface $storeManager
+     * @param CurrencyInterface $currencyInterface
      */
     public function __construct(
         Context $context,
@@ -74,8 +78,8 @@ class Delivery extends AbstractDeliveryOptions
         Cart $cart,
         PickupHelper $pickupHelper,
         DeliveryHelper $deliveryHelper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
+        StoreManagerInterface $storeManager,
+        CurrencyInterface $currencyInterface
     )
     {
         //        $tomorrow = Carbon::now()->addDay();
@@ -101,7 +105,7 @@ class Delivery extends AbstractDeliveryOptions
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface|ResultInterface
      */
     public function execute()
     {
@@ -114,7 +118,7 @@ class Delivery extends AbstractDeliveryOptions
 
         try {
             $oApi = $this->generateApi($request, $language, $this->_logger, true);
-            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
             $AFHImage_basepath = $mediaUrl . 'Images/';
 
             $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper']]);

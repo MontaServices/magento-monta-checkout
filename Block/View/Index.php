@@ -3,16 +3,19 @@
 namespace Montapacking\MontaCheckout\Block\View;
 
 use Magento\Framework\HTTP\PhpEnvironment\Request;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Montapacking\MontaCheckout\Helper\Data;
 use Montapacking\MontaCheckout\Helper\ReadLogFileTrait;
 
-class Index extends \Magento\Framework\View\Element\Template
+class Index extends Template
 {
     use ReadLogFileTrait {
         fetch as fetchLogFileBlocks;
     }
 
     /**
-     * @var \Montapacking\MontaCheckout\Helper\Data
+     * @var Data
      */
     protected $logDataHelper;
 

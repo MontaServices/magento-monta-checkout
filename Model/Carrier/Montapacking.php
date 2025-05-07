@@ -14,11 +14,19 @@
 
 namespace Montapacking\MontaCheckout\Model\Carrier;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
+use Magento\Quote\Model\Quote\Address\RateResult\Method;
+use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
+use Magento\Shipping\Model\Carrier\AbstractCarrier;
+use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\Result;
+use Magento\Shipping\Model\Rate\ResultFactory;
+use Psr\Log\LoggerInterface;
 
-class Montapacking extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
-    \Magento\Shipping\Model\Carrier\CarrierInterface
+class Montapacking extends AbstractCarrier implements CarrierInterface
 {
     /**
      * @var string
@@ -26,21 +34,21 @@ class Montapacking extends \Magento\Shipping\Model\Carrier\AbstractCarrier imple
     protected $_code = 'montapacking';
 
     /**
-     * @var \Magento\Shipping\Model\Rate\ResultFactory
+     * @var ResultFactory
      */
     protected $rateResultFactory;
 
     /**
-     * @var \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory
+     * @var MethodFactory
      */
     protected $rateMethodFactory;
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ErrorFactory $rateErrorFactory
+     * @param LoggerInterface $logger
+     * @param ResultFactory $rateResultFactory
+     * @param MethodFactory $rateMethodFactory
      * @param array $data
      */
 
@@ -49,13 +57,13 @@ class Montapacking extends \Magento\Shipping\Model\Carrier\AbstractCarrier imple
     protected $_request;
 
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
-        \Psr\Log\LoggerInterface $logger,
-        \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
-        \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
-        \Psr\Log\LoggerInterface $customLogger,
-        \Magento\Framework\App\RequestInterface $request,
+        ScopeConfigInterface $scopeConfig,
+        ErrorFactory $rateErrorFactory,
+        LoggerInterface $logger,
+        ResultFactory $rateResultFactory,
+        MethodFactory $rateMethodFactory,
+        LoggerInterface $customLogger,
+        RequestInterface $request,
         array $data = []
     )
     {
@@ -90,10 +98,10 @@ class Montapacking extends \Magento\Shipping\Model\Carrier\AbstractCarrier imple
             break;
         }
 
-        /** @var \Magento\Shipping\Model\Rate\Result $result */
+        /** @var Result $result */
         $result = $this->rateResultFactory->create();
 
-        /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
+        /** @var Method $method */
         $method = $this->rateMethodFactory->create();
 
         $method->setCarrier('montapacking');

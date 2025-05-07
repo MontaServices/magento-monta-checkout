@@ -2,12 +2,19 @@
 
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
+use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Locale\CurrencyInterface;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
+use Magento\Store\Model\StoreManagerInterface;
 use Montapacking\MontaCheckout\Api_REMOVETHIS\MontapackingShipping as MontpackingApi;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
+use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
+use Zend_Http_Client_Exception;
 
 /**
  * Class LongLat
@@ -23,12 +30,12 @@ class LongLat extends AbstractDeliveryOptions
     private $localeResolver;
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
     /**
-     * @var \Magento\Checkout\Model\Cart
+     * @var Cart
      */
     public $cart;
 
@@ -40,23 +47,24 @@ class LongLat extends AbstractDeliveryOptions
      * Services constructor.
      *
      * @param Context $context
-     * @param Session $checkoutSession
+     * @param LocaleResolver $localeResolver
      * @param CarrierConfig $carrierConfig
+     * @param Logger $logger
+     * @param Cart $cart
+     * @param StoreManagerInterface $storeManager
+     * @param CurrencyInterface $currencyInterface
      */
     public function __construct(
         Context $context,
-        Session $checkoutSession,
         LocaleResolver $localeResolver,
         CarrierConfig $carrierConfig,
-        \Montapacking\MontaCheckout\Logger\Logger $logger,
-        \Magento\Checkout\Model\Cart $cart,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
+        Logger $logger,
+        Cart $cart,
+        StoreManagerInterface $storeManager,
+        CurrencyInterface $currencyInterface
     )
     {
         $this->_logger = $logger;
-
-        $this->checkoutSession = $checkoutSession;
         $this->localeResolver = $localeResolver;
         $this->cart = $cart;
         $this->storeManager = $storeManager;
@@ -72,8 +80,8 @@ class LongLat extends AbstractDeliveryOptions
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
-     * @throws \Zend_Http_Client_Exception
+     * @return ResponseInterface|ResultInterface
+     * @throws Zend_Http_Client_Exception
      */
     public function execute()
     {
@@ -133,7 +141,7 @@ class LongLat extends AbstractDeliveryOptions
             $longlat = $request->getParam('longlat') ? trim($request->getParam('longlat')) : "";
 
             if ($longlat == 'false') {
-                $oApi = $this->generateApi($request, $language, $this->_logger, false);
+                $oApi = $this->generateApi($request, $language, $this->_logger);
             } else {
                 $oApi = $this->generateApi($request, $language, $this->_logger, true);
             }

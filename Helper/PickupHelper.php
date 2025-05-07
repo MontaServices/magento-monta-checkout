@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 use IntlDateFormatter;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
+use Montapacking\MontaCheckout\Logger\Logger;
 
 /**
  * Class PickupHelper
@@ -18,7 +19,7 @@ class PickupHelper
     private $localeResolver;
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
@@ -28,7 +29,7 @@ class PickupHelper
      */
     public function __construct(
         LocaleResolver $localeResolver,
-        \Montapacking\MontaCheckout\Logger\Logger $logger
+        Logger $logger
     )
     {
         $this->_logger = $logger;

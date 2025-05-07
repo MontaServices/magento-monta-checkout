@@ -7,6 +7,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\CurrencyInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
 use Monta\CheckoutApiWrapper\Objects\Settings;
@@ -34,9 +35,9 @@ abstract class AbstractDeliveryOptions extends Action
     public function __construct(
         Context $context,
         CarrierConfig $carrierConfig,
-        \Magento\Checkout\Model\Cart $cart,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
+        Cart $cart,
+        StoreManagerInterface $storeManager,
+        CurrencyInterface $currencyInterface
     )
     {
         $this->carrierConfig = $carrierConfig;
@@ -232,7 +233,7 @@ abstract class AbstractDeliveryOptions extends Action
 
 
         if ($frames['StoreLocation'] != null) {
-            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
             $imageName = null;
             if (isset($imageForStoreCollect)) {
                 $imageName = $imageForStoreCollect;

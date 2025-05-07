@@ -4,7 +4,9 @@ namespace Montapacking\MontaCheckout\Model\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
 use Magento\Framework\Module\Manager;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 abstract class AbstractConfigProvider
 {
@@ -25,13 +27,13 @@ abstract class AbstractConfigProvider
     public function __construct(
         ScopeConfig $scopeConfig,
         Manager $moduleManager,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager
     )
     {
         $this->scopeConfig = $scopeConfig;
         $this->moduleManager = $moduleManager;
         $this->storeManager = $storeManager;
-        $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
     }
 
     /**

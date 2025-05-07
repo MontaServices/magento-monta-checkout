@@ -7,6 +7,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface as ShippingAssignmentApi;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total as QuoteAddressTotal;
+use Magento\Store\Model\ScopeInterface;
 use Montapacking\MontaCheckout\Logger\Logger;
 
 class Shipping
@@ -14,7 +15,7 @@ class Shipping
     private $scopeConfig;
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
@@ -53,7 +54,7 @@ class Shipping
         $address = $shipping->getAddress();
         $rates = $address->getAllShippingRates();
 
-        $fee = $this->scopeConfig->getValue('carriers/montapacking/price', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $fee = $this->scopeConfig->getValue('carriers/montapacking/price', ScopeInterface::SCOPE_STORE);
 
         if (!$rates) {
             return $result;

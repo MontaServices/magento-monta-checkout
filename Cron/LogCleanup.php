@@ -10,12 +10,12 @@ class LogCleanup
 {
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
     /**
-     * @var \Magento\Framework\Filesystem\DriverInterface
+     * @var DriverInterface
      */
     protected $_driver;
 

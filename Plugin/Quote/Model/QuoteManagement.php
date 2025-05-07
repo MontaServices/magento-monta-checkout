@@ -2,6 +2,7 @@
 
 namespace Montapacking\MontaCheckout\Plugin\Quote\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -39,7 +40,7 @@ class QuoteManagement
      * @param $subject
      * @param $cartId
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     // @codingStandardsIgnoreLine
     public function beforePlaceOrder($subject, $cartId)
@@ -76,7 +77,7 @@ class QuoteManagement
      * @param $quoteId
      *
      * @return string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     // @codingStandardsIgnoreLine
     public function afterPlaceOrder($subject, $orderId, $quoteId)

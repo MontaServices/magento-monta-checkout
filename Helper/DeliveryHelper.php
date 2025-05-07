@@ -3,6 +3,7 @@
 namespace Montapacking\MontaCheckout\Helper;
 
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
+use Montapacking\MontaCheckout\Logger\Logger;
 
 /**
  * Class DeliveryHelper
@@ -15,7 +16,7 @@ class DeliveryHelper
     private $localeResolver;
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
@@ -25,7 +26,7 @@ class DeliveryHelper
      */
     public function __construct(
         LocaleResolver $localeResolver,
-        \Montapacking\MontaCheckout\Logger\Logger $logger
+        Logger $logger
     )
     {
         $this->_logger = $logger;

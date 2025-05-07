@@ -2,10 +2,11 @@
 
 namespace Montapacking\MontaCheckout\Block;
 
+use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier;
 
-class Checkout extends \Magento\Framework\View\Element\Template
+class Checkout extends Template
 {
     /**
      * @var Carrier
