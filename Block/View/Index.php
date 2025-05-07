@@ -25,13 +25,14 @@ class Index extends Template
     protected $request;
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Montapacking\MontaCheckout\Helper\Data $logDataHelper
+     * @param Context $context
+     * @param Data $logDataHelper
      * @param array $data
+     * @param Request|null $request
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Montapacking\MontaCheckout\Helper\Data $logDataHelper,
+        Context $context,
+        Data $logDataHelper,
         array $data = [],
         Request $request = null
     )
@@ -115,7 +116,6 @@ class Index extends Template
     /**
      * Get clear URL
      *
-     * @param int $start
      * @return string
      */
     public function getClearUrl(): string
@@ -145,7 +145,7 @@ class Index extends Template
     public function getStarts($max = 10)
     {
         $start = $this->getStart() - $this->getLimit() * 2;
-        $start = $start > 0 ? $start : 0;
+        $start = max($start, 0);
         if ($start > $this->getLimit() * 3) {
             $step = ceil($start / 4);
             $step -= $step % $this->getLimit();

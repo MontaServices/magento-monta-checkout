@@ -43,8 +43,7 @@ class OrderRepositoryPlugin
     {
         $orderComment = $order->getData(self::FIELD_NAME);
 
-        $extensionAttributes = $order->getExtensionAttributes();
-        $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
+        $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
         $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
         $order->setExtensionAttributes($extensionAttributes);
 
@@ -64,8 +63,7 @@ class OrderRepositoryPlugin
             $orderComment = $order->getData(self::FIELD_NAME);
 
 
-            $extensionAttributes = $order->getExtensionAttributes();
-            $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
+            $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
             $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
 
             $extensionAttributes->setMontapackingMontacheckoutData($orderComment);

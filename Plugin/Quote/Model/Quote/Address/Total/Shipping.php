@@ -149,9 +149,7 @@ class Shipping
             return null;
         }
 
-        $option = json_decode($option);
-
-        return $option;
+        return json_decode($option);
     }
 
     private function adjustTotals($name, $code, $address, $total, $fee, $description)

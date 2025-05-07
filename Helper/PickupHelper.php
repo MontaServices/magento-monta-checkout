@@ -107,7 +107,7 @@ class PickupHelper
 
                         $extra_code = "";
 
-                        $arr = array();
+                        $arr = [];
                         foreach ($option->optionsWithValue as $key => $value) {
                             $extra_code = $key . "_" . $value;
                             if (trim($extra_code)) {

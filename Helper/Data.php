@@ -99,25 +99,15 @@ class Data extends AbstractHelper
         });
 
         //limit the amount of log data $maxNumOfLogs
-        $logFileData = array_slice($logFileData, 0, $maxNumOfLogs);
-
-        return $logFileData;
+        return array_slice($logFileData, 0, $maxNumOfLogs);
     }
 
     public function getLastLinesOfFile($fileName, $numOfLines)
     {
         $path = $this->getPath();
-        $fullPath = $path . $fileName;
-        //exec('tail -' . $numOfLines . ' ' . $fullPath, $output);
-        //return implode($output);
 
         $lines = $this->tailExec($fileName, $numOfLines);
-        $data = "";
-        foreach ($lines as $line) {
-            $data .= $line;
-        }
-
-        return $data;
+        return implode('', $lines);
     }
 
     public function tailExec($file, $lines)

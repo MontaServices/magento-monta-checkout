@@ -23,9 +23,6 @@ use Zend_Http_Client_Exception;
  */
 class LongLat extends AbstractDeliveryOptions
 {
-    /** @var Session $checkoutSession */
-    private $checkoutSession;
-
     /** @var LocaleResolver $scopeConfig */
     private $localeResolver;
 
@@ -149,8 +146,6 @@ class LongLat extends AbstractDeliveryOptions
 
             //            $shippers = $oApi->getShippers();
             //            $shippers = $oApi['PickupOptions'];
-
-            $dbg = $oApi;
 
             $arr = [];
 

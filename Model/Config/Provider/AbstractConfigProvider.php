@@ -23,6 +23,7 @@ abstract class AbstractConfigProvider
      *
      * @param ScopeConfig $scopeConfig
      * @param Manager $moduleManager
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         ScopeConfig $scopeConfig,
@@ -33,7 +34,6 @@ abstract class AbstractConfigProvider
         $this->scopeConfig = $scopeConfig;
         $this->moduleManager = $moduleManager;
         $this->storeManager = $storeManager;
-        $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
     }
 
     /**

@@ -24,6 +24,8 @@ class QuoteManagement
      * QuoteManagement constructor.
      *
      * @param CartRepositoryInterface $cartRepository
+     * @param OrderRepositoryInterface $orderRepository
+     * @param ResolverInterface $localeResolver
      */
     public function __construct(
         CartRepositoryInterface $cartRepository,
@@ -47,7 +49,6 @@ class QuoteManagement
     {
         $quote = $this->cartRepository->getActive($cartId);
         $shippingAddress = $quote->getShippingAddress();
-        $billingAddress = $quote->getBillingAddress();
         $deliveryOption = $shippingAddress->getMontapackingMontacheckoutData();
 
         if (!$deliveryOption) {
@@ -68,6 +69,7 @@ class QuoteManagement
                 $shippingAddress->setCountryId($newAddress->country);
             }
         } catch (\JsonException $exception) {
+            // catch and ignore
         }
     }
 
@@ -208,6 +210,7 @@ class QuoteManagement
                     $order->setMontapackingMontacheckoutData($deliveryOption);
                     $order->save();
                 } catch (\Exception $e) {
+                    // catch and ignore
                 }
             }
         } catch (\Exception $e) {

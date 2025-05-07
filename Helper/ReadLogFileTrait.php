@@ -67,6 +67,7 @@ trait ReadLogFileTrait
     private function fileReader(): \Closure
     {
         return function ($file) {
+            // TODO replace with str_contains
             if (false !== strpos($file, '../')) {
                 throw new Exception('LFI protection. Parent directory is prohibited to use.');
             }

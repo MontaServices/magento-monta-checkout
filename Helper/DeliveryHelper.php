@@ -177,9 +177,7 @@ class DeliveryHelper
 //
 //        return $items;
 
-
         $items = (object)$frames;
-        $itemsArray = [];
 //        $items[] = $frames;
 
         $curr = '€';
@@ -193,7 +191,6 @@ class DeliveryHelper
         if ($language == 'DE') {
             $hour_string = " Uhr";
         }
-
 
 //        $freeShippingCouponCode = self::checkFreeShippingCouponCodes();
 
@@ -218,16 +215,6 @@ class DeliveryHelper
                     $image_code = trim(str_replace(",", "_", implode(",", $options->codes)));
                 }
 
-
-                if ($frameItem->from == null) {
-//                    $frameItem->from  = date("Y-m-d", time() + 86400);
-//                    $frameItem->to  = date("Y-m-d", time() + 86400);
-
-//                    $frameItem->from = "2023-06-20T00:00";
-//                    $frameItem->to = "2023-06-20T00:00";
-//                    $frameItem->date = "2023-06-20T00:00";
-                }
-
                 $evening = '';
                 $extras = [];
 
@@ -247,7 +234,6 @@ class DeliveryHelper
                     }
                 }
 
-
                 $frameItem->code = $options->code;
 //                $frameItem->date = date('d-m-Y', strtotime($options->date));
 //                $frameItem->datename = translate(date("l", strtotime($options->date)));
@@ -258,47 +244,24 @@ class DeliveryHelper
                 $options->ships_on = "";
 
                 if ($frameItem->type == 'DeliveryDay') {
-                    $type_text = 'delivered';
-
                     $from = date('d-m-Y', strtotime($frameItem->from));
                     $options->date = $from;
 
-//                    if (date('H:i', strtotime($from)) != '00:00') {
                     $hours = date('H:i', strtotime($options->from)) . " - " . date('H:i', strtotime($options->to)) . $hour_string;
                     $options->displayname = $options->displayName . " | " . $hours . $evening;
-//                    }
                 } elseif ($frameItem->type) {
-                    $type_text = 'ShippingDay';
-
                     // Todo: Use translation line code
                     //$options->ships_on = "(" . translate('ships on', 'montapacking-checkout') . " " . date("d-m-Y", strtotime($options->date)) . " " . translate('from the Netherlands', 'montapacking-checkout') . ")";
                     $options->ships_on = "( Ships on" . date("d-m-Y", strtotime($options->date)) . " From the Netherlands )";
-
 
                     $from = date('d-m-Y', strtotime($options->date));
                     $options->date = $from;
                 }
 
-
-//                $frameOptions = [];
-//                $created_option = self::calculateOptions($frameItem, $options, $curr, 'PostNL Pakket |  12:00 - 14:30 uur', '12:00', '14:30', $extras, '12:00-14:30'); //phpcs:ignore
-//
-//                if (null !== $created_option) {
-//
-//                    $frameOptions[] = $created_option;
-//                    if (!isset($items[$from])) {
-//                        $items[$from] = [];
-//                    }
-//                }
-
-
                 $frameItem->date = date('d-m-Y', strtotime($options->date));
 
                 // Todo: Use translation line code
                 $frameItem->datename = date("l", strtotime($options->date));
-
-//                $options->type_text = translate($type_text, 'montapacking-checkout');
-//                $options->displayname = $options->displayName . "PostNL Pakket |  12:00 - 14:30 uur" . $evening;
 
                 $options->price = $curr . ' ' . number_format($options->price_raw, 2, ',', '');
 
@@ -328,10 +291,8 @@ class DeliveryHelper
         $extras = [];
         if (count($extra_values) > 0) {
             foreach ($extra_values as $extra) {
-                $language = strtoupper(strstr($this->localeResolver->getLocale(), '_', true));
-
                 ## Extra optie toevoegen
-                $extras[] = (array)[
+                $extras[] = [
                     'code' => $extra->code,
                     'name' => __($extra->code),
                     'price_currency' => $curr,
@@ -374,7 +335,7 @@ class DeliveryHelper
             $image_code = trim(str_replace(",", "_", implode(",", $option->codes)));
         }
 
-        $options = (object)[
+        return (object)[
             'code' => $option->code,
             'codes' => $option->codes,
             'type' => $frame->type,
@@ -398,7 +359,5 @@ class DeliveryHelper
             'is_sustainable' => $option->isSustainable,
             'discount_percentage' => $option->discountPercentage
         ];
-
-        return $options;
     }
 }

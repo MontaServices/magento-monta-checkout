@@ -190,6 +190,7 @@
             // Add Handlebars helper for handling URL output
             Handlebars.registerHelper('niceURL', function(url) {
                 if (url) {
+                    // TODO split URI into parts and extract scheme that way
                     return url.replace('https://', '').replace('http://', '');
                 }
             });

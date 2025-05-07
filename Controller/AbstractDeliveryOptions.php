@@ -66,7 +66,7 @@ abstract class AbstractDeliveryOptions extends Action
 
     /**
      * @param string $data
-     * @param null $code
+     * @param ?string|int $code
      *
      * @return mixed
      */
@@ -141,7 +141,6 @@ abstract class AbstractDeliveryOptions extends Action
         $currentStore = $this->storeManager->getStore();
         $currentCurrencyCode = $currentStore->getCurrentCurrency()->getCode();
         $currencySymbol = $this->currency->getCurrency($currentCurrencyCode)->getSymbol();
-        $currencyRate = $this->storeManager->getStore()->getCurrentCurrencyRate();
 
         /**
          * Retrieve Order Information
@@ -176,7 +175,6 @@ abstract class AbstractDeliveryOptions extends Action
         $priceExcl = $quote->getSubtotal();
 
         if ($quote->getSubtotalInclTax() > 0) {
-            $priceIncl = $quote->getSubtotalInclTax();
             $priceIncl = $quote->getSubtotalInclTax();
         } else if ($quote->getShippingAddress()->getSubtotalInclTax() > 0) {
             $priceIncl = $quote->getShippingAddress()->getSubtotalInclTax();
