@@ -13,6 +13,7 @@ abstract class AbstractLog extends System
      * @var FileFactory
      */
     protected $fileFactory;
+
     public function __construct(Context $context, FileFactory $fileFactory)
     {
         $this->fileFactory = $fileFactory;
@@ -23,13 +24,13 @@ abstract class AbstractLog extends System
     {
         $filePath = $this->getFilePathWithFile($this->getRequest()->getParam('file'));
 
-        $filter   = new Zend_Filter_BaseName();
+        $filter = new Zend_Filter_BaseName();
         $fileName = $filter->filter($filePath);
         try {
             return $this->fileFactory->create(
                 $fileName,
                 [
-                    'type'  => 'filename',
+                    'type' => 'filename',
                     'value' => $filePath
                 ]
             );

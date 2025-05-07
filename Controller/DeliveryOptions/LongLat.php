@@ -5,11 +5,9 @@ namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
-use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
-
-use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
-
 use Montapacking\MontaCheckout\Api_REMOVETHIS\MontapackingShipping as MontpackingApi;
+use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
+use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
 
 /**
  * Class LongLat
@@ -41,8 +39,8 @@ class LongLat extends AbstractDeliveryOptions
     /**
      * Services constructor.
      *
-     * @param Context       $context
-     * @param Session       $checkoutSession
+     * @param Context $context
+     * @param Session $checkoutSession
      * @param CarrierConfig $carrierConfig
      */
     public function __construct(
@@ -54,7 +52,8 @@ class LongLat extends AbstractDeliveryOptions
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Locale\CurrencyInterface $currencyInterface
-    ) {
+    )
+    {
         $this->_logger = $logger;
 
         $this->checkoutSession = $checkoutSession;
@@ -86,50 +85,48 @@ class LongLat extends AbstractDeliveryOptions
         }
 
 
-//        try {
-//            $longlat = $request->getParam('longlat') ? trim($request->getParam('longlat')) : "";
-//
-//            if ($longlat == 'false') {
-//                $oApi = $this->generateApi($request, $language, $this->_logger, false);
-//            } else{
-//                $oApi = $this->generateApi($request, $language, $this->_logger, true);
-//            }
-//
-//            $dbg = $oApi;
-//            $shippers = $oApi->getShippers();
-//
-//            $arr = [];
-//
-//            $arr['longitude'] = $oApi->address->longitude;
-//            $arr['latitude'] = $oApi->address->latitude;
-//            $arr['language'] = $language;
-//            $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
-//            $arr['shippers'] = $shippers;
-//
-//            if ($shippers != null) {
-//                $arr['hasconnection'] = 'true';
-//            } else {
-//                $arr['hasconnection'] = 'false';
-//            }
-//
-//        } catch (Exception $e) {
-//
-//            $arr = [];
-//            $arr['longitude'] = 0;
-//            $arr['latitude'] = 0;
-//            $arr['language'] = $language;
-//            $arr['hasconnection'] = 'false';
-//            $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
-//
-//            $context = ['source' => 'Montapacking Checkout'];
-//            $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
-//
-//        }
+        //        try {
+        //            $longlat = $request->getParam('longlat') ? trim($request->getParam('longlat')) : "";
+        //
+        //            if ($longlat == 'false') {
+        //                $oApi = $this->generateApi($request, $language, $this->_logger, false);
+        //            } else{
+        //                $oApi = $this->generateApi($request, $language, $this->_logger, true);
+        //            }
+        //
+        //            $dbg = $oApi;
+        //            $shippers = $oApi->getShippers();
+        //
+        //            $arr = [];
+        //
+        //            $arr['longitude'] = $oApi->address->longitude;
+        //            $arr['latitude'] = $oApi->address->latitude;
+        //            $arr['language'] = $language;
+        //            $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
+        //            $arr['shippers'] = $shippers;
+        //
+        //            if ($shippers != null) {
+        //                $arr['hasconnection'] = 'true';
+        //            } else {
+        //                $arr['hasconnection'] = 'false';
+        //            }
+        //
+        //        } catch (Exception $e) {
+        //
+        //            $arr = [];
+        //            $arr['longitude'] = 0;
+        //            $arr['latitude'] = 0;
+        //            $arr['language'] = $language;
+        //            $arr['hasconnection'] = 'false';
+        //            $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
+        //
+        //            $context = ['source' => 'Montapacking Checkout'];
+        //            $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
+        //
+        //        }
 
 
-            /* Copy paste */
-
-
+        /* Copy paste */
 
 
         try {
@@ -137,13 +134,13 @@ class LongLat extends AbstractDeliveryOptions
 
             if ($longlat == 'false') {
                 $oApi = $this->generateApi($request, $language, $this->_logger, false);
-            } else{
+            } else {
                 $oApi = $this->generateApi($request, $language, $this->_logger, true);
             }
 
 
-//            $shippers = $oApi->getShippers();
-//            $shippers = $oApi['PickupOptions'];
+            //            $shippers = $oApi->getShippers();
+            //            $shippers = $oApi['PickupOptions'];
 
             $dbg = $oApi;
 
@@ -152,14 +149,14 @@ class LongLat extends AbstractDeliveryOptions
             $arr['longitude'] = $oApi->address->longitude;
             $arr['latitude'] = $oApi->address->latitude;
             $arr['language'] = $language;
-//            $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
-//            $arr['shippers'] = $shippers;
+            //            $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
+            //            $arr['shippers'] = $shippers;
 
-//            if ($shippers != null) {
-//                $arr['hasconnection'] = 'true';
-//            } else {
-//                $arr['hasconnection'] = 'false';
-//            }
+            //            if ($shippers != null) {
+            //                $arr['hasconnection'] = 'true';
+            //            } else {
+            //                $arr['hasconnection'] = 'false';
+            //            }
 
         } catch (Exception $e) {
             $arr = [];

@@ -3,14 +3,14 @@
 namespace Montapacking\MontaCheckout\Controller;
 
 use Magento\Checkout\Model\Cart;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\CurrencyInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
 use Monta\CheckoutApiWrapper\Objects\Settings;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
-use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
 
 abstract class AbstractDeliveryOptions extends Action
 {
@@ -32,8 +32,8 @@ abstract class AbstractDeliveryOptions extends Action
      * @param CurrencyInterface $currencyInterface
      */
     public function __construct(
-        Context                      $context,
-        CarrierConfig                $carrierConfig,
+        Context $context,
+        CarrierConfig $carrierConfig,
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Locale\CurrencyInterface $currencyInterface
@@ -189,17 +189,15 @@ abstract class AbstractDeliveryOptions extends Action
         $bAllProductsAvailable = true;
 
         foreach ($items as $item) {
-
             if (!$leadingstockmontapacking) {
                 $stockItem = $item->getProduct()->getExtensionAttributes()->getStockItem();
 
                 if ($stockItem->getQty() <= 0 || $stockItem->getQty() < $item->getQty()) {
-
                     $bAllProductsAvailable = false;
                 }
             }
 
-            if($leadingstockmontapacking) {
+            if ($leadingstockmontapacking) {
                 $oApi->addProduct(
                     (string)$item->getSku(),
                     (int)$item->getQty(),
@@ -219,7 +217,6 @@ abstract class AbstractDeliveryOptions extends Action
                     (float)$item->getData('price_incl_tax') ?: 0
                 );
             }
-
         }
 
         if (false === $bAllProductsAvailable || $disabledeliverydays) {
@@ -229,14 +226,12 @@ abstract class AbstractDeliveryOptions extends Action
         $frames = $oApi->getShippingOptions();
 
         if ($disabledeliverydays) {
-
             unset($frames['DeliveryOptions']);
             $frames['DeliveryOptions'] = [];
         }
 
 
         if ($frames['StoreLocation'] != null) {
-
             $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
             $imageName = null;
             if (isset($imageForStoreCollect)) {
@@ -251,7 +246,7 @@ abstract class AbstractDeliveryOptions extends Action
 
         foreach ($frames['PickupOptions'] as $item) {
             if ($item->code !== "AFH") {
-                $item->imageName  = null;
+                $item->imageName = null;
             }
 
             $item->distanceMeters = round($item->distanceMeters / 1000, 2);

@@ -2,20 +2,18 @@
 
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
+use Carbon\Carbon;
 use Exception;
 use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
+use Monta\MontaProcessing\NumberGenerator;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
-
 use Montapacking\MontaCheckout\Helper\DeliveryHelper;
 use Montapacking\MontaCheckout\Helper\PickupHelper;
 use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
-
-use Carbon\Carbon;
-use Monta\MontaProcessing\NumberGenerator;
 
 /**
  * Class Delivery
@@ -68,21 +66,21 @@ class Delivery extends AbstractDeliveryOptions
      * @param DeliveryHelper $deliveryHelper
      */
     public function __construct(
-        Context         $context,
-        Session         $checkoutSession,
-        LocaleResolver  $localeResolver,
-        CarrierConfig   $carrierConfig,
-        Logger          $logger,
-        Cart            $cart,
-        PickupHelper    $pickupHelper,
-        DeliveryHelper  $deliveryHelper,
+        Context $context,
+        Session $checkoutSession,
+        LocaleResolver $localeResolver,
+        CarrierConfig $carrierConfig,
+        Logger $logger,
+        Cart $cart,
+        PickupHelper $pickupHelper,
+        DeliveryHelper $deliveryHelper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Locale\CurrencyInterface $currencyInterface
     )
     {
-//        $tomorrow = Carbon::now()->addDay();
-//        $processingstuff = new NumberGenerator();
-//        print_r($processingstuff->Generate(0, 100)); die();
+        //        $tomorrow = Carbon::now()->addDay();
+        //        $processingstuff = new NumberGenerator();
+        //        print_r($processingstuff->Generate(0, 100)); die();
 
         $this->_logger = $logger;
         $this->checkoutSession = $checkoutSession;
@@ -119,11 +117,10 @@ class Delivery extends AbstractDeliveryOptions
             $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
             $AFHImage_basepath = $mediaUrl . 'Images/';
 
-            $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'],  $oApi['CustomerLocation'], $oApi['StandardShipper']]);
+            $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper']]);
 
-            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'],$AFHImage_basepath ]);
+            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'], $AFHImage_basepath]);
         } catch (Exception $e) {
-
             $context = ['source' => 'Montapacking Checkout'];
             $this->_logger->critical(json_encode($e->getMessage()), $context); //phpcs:ignore
             $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
