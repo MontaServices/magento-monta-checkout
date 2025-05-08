@@ -24,7 +24,7 @@ abstract class AbstractConfigProvider
      */
     public function __construct(
         ScopeConfig $scopeConfig,
-        Manager $moduleManager,
+        Manager $moduleManager
     )
     {
         $this->scopeConfig = $scopeConfig;
