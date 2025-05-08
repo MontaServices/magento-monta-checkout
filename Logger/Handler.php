@@ -1,6 +1,6 @@
 <?php
 
-namespace Montapacking\Montacheckout\Logger;
+namespace Montapacking\MontaCheckout\Logger;
 
 use Magento\Framework\Logger\Handler\Base;
 use Monolog\Logger;
