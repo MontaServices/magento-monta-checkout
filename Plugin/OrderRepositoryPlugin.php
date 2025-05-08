@@ -63,13 +63,13 @@ class OrderRepositoryPlugin
     {
         $orders = $searchResult->getItems();
 
+        // TODO is pass-by-reference still necessary if Order object can be altered?
         foreach ($orders as &$order) {
             $orderComment = $order->getData(self::FIELD_NAME);
 
             $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
             $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
 
-            $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
             $order->setExtensionAttributes($extensionAttributes);
         }
 
