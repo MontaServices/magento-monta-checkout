@@ -87,24 +87,9 @@ class PickupHelper
                         }
 
                         // Shipper optie toevoegen
-
-                        $description = [];
-                        $description_storelocator = [];
-                        if (trim($option->description)) {
-                            $description[] = $option->description;
-                            $description_storelocator[] = $option->description;
-                        }
-
-                        if (trim($frame->description->DistanceMeters)) {
-                            $distance = round($frame->description->DistanceMeters / 1000, 2);
-                            $description[] = str_replace(".", ",", $distance) . " km";
-                        }
-
-                        $description = implode(" | ", $description);
-
+                        $description = $this->getDescriptions($option, $frame);
+                        $description_storelocator = $this->getDescriptionStoreLocator($option);
                         $marker_id++;
-
-                        $extra_code = "";
 
                         $arr = [];
                         foreach ($option->optionsWithValue as $key => $value) {
@@ -193,24 +178,9 @@ class PickupHelper
                         }
 
                         // Shipper optie toevoegen
-
-                        $description = [];
-                        $description_storelocator = [];
-                        if (trim($option->description)) {
-                            $description[] = $option->description;
-                            $description_storelocator[] = $option->description;
-                        }
-
-                        if (trim($frame->description->DistanceMeters)) {
-                            $distance = round($frame->description->DistanceMeters / 1000, 2);
-                            $description[] = str_replace(".", ",", $distance) . " km";
-                        }
-
-                        $description = implode(" | ", $description);
-
+                        $description = $this->getDescriptions($option, $frame);
+                        $description_storelocator = $this->getDescriptionStoreLocator($option);
                         $marker_id++;
-
-                        $extra_code = "";
 
                         $arr = array();
                         foreach ($option->optionsWithValue as $key => $value) {
@@ -273,7 +243,7 @@ class PickupHelper
         return $items;
     }
 
-    function formatLanguage(DateTime $dt, string $format, string $language = 'en'): string
+    public function formatLanguage(DateTime $dt, string $format, string $language = 'en'): string
     {
         $curTz = $dt->getTimezone();
         if ($curTz->getName() === 'Z') {
@@ -303,5 +273,36 @@ class PickupHelper
         }
 
         return $strDate;
+    }
+
+    /**
+     * @param $option
+     * @return string[]
+     */
+    protected function getDescriptionStoreLocator($option)
+    {
+        $description_storelocator = [];
+        if (trim($option->description)) {
+            $description_storelocator[] = $option->description;
+        }
+        return $description_storelocator;
+    }
+
+    /**
+     * @param $option
+     * @param $frame
+     * @return string
+     */
+    protected function getDescriptions($option, $frame)
+    {
+        $description = [];
+        if (trim($option->description)) {
+            $description[] = $option->description;
+        }
+        if (trim($frame->description->DistanceMeters)) {
+            $distance = round($frame->description->DistanceMeters / 1000, 2);
+            $description[] = str_replace(".", ",", $distance) . " km";
+        }
+        return implode(" | ", $description);
     }
 }
