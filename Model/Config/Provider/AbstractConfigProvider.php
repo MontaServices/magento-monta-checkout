@@ -4,9 +4,7 @@ namespace Montapacking\MontaCheckout\Model\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
 use Magento\Framework\Module\Manager;
-use Magento\Framework\UrlInterface;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 abstract class AbstractConfigProvider
 {

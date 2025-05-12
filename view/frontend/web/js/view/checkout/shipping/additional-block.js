@@ -255,7 +255,7 @@ define(
                                     } else {
 
                                         let found = false;
-                                        let selectedPreferred = { loading: true }
+                                        let selectedPreferred = {loading: true}
                                         for (let i = 0; i < objectArray.length && !found; i++) {
                                             const parentObject = objectArray[i];
                                             const options = parentObject.options;
@@ -263,15 +263,25 @@ define(
                                             for (let j = 0; j < options.length; j++) {
                                                 if (options[j].isPreferred) {
 
-                                                    selectedPreferred = { 'loading': false, parent: i, shipper: options[j], shipperIndex: j }
+                                                    selectedPreferred = {
+                                                        'loading': false,
+                                                        parent: i,
+                                                        shipper: options[j],
+                                                        shipperIndex: j
+                                                    }
 
                                                     found = true;
                                                     break;
                                                 }
                                             }
 
-                                            if(!found) {
-                                                selectedPreferred = { 'loading': false, parent: 0, shipper: options[0], shipperIndex: 0 }
+                                            if (!found) {
+                                                selectedPreferred = {
+                                                    'loading': false,
+                                                    parent: 0,
+                                                    shipper: options[0],
+                                                    shipperIndex: 0
+                                                }
                                             }
                                         }
 
@@ -293,7 +303,7 @@ define(
                                         indexOfDay = distinctFilteredItems.indexOf(distinctFilteredItems.find(x => x.date === this.preferredShipper.date));
                                     }
 
-                                    $('#slider-content ol li:nth-child(' + (indexOfDay-1) + ')').trigger("click");
+                                    $('#slider-content ol li:nth-child(' + (indexOfDay - 1) + ')').trigger("click");
                                 }
                                 // only standardshipper is enabled
                             } else if (services[3] !== null) {
@@ -640,7 +650,7 @@ define(
                 createPriceText: function (priceFormatted, elementToColorGreenWhenFree = "") {
                     var price_text = priceFormatted;
 
-                    if(elementToColorGreenWhenFree != ""){
+                    if (elementToColorGreenWhenFree != "") {
                         elementToColorGreenWhenFree.removeClass('color-green');
                     }
 
@@ -908,7 +918,7 @@ define(
                             var price_text = self.createPriceText(priceFormatted)
 
                             if ($(this).find("span.cropped_image_class").text() === "AFH" && $(this).find("span.cropped_img_name").text()) {
-                                image = self.afhimageBaseURL +  $(this).find("span.cropped_img_name").text();
+                                image = self.afhimageBaseURL + $(this).find("span.cropped_img_name").text();
                             } else {
                                 image = site_url + '/images/' + $(this).find("span.cropped_image_class").text() + '.png';
                             }

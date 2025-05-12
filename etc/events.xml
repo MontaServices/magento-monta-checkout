@@ -2,6 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="sales_order_load_after">
-        <observer name="montapacking_montacheckout_data" instance="Montapacking\MontaCheckout\Observer\Sales\OrderLoadAfter" />
+        <observer name="montapacking_montacheckout_data"
+                  instance="Montapacking\MontaCheckout\Observer\Sales\OrderLoadAfter"/>
     </event>
 </config>

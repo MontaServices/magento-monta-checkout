@@ -3,7 +3,6 @@
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
 use Magento\Checkout\Model\Cart;
-use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;

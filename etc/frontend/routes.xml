@@ -13,10 +13,11 @@
  * @copyright   Copyright (c) 2020 Montapacking B.V.. All rights reserved. (http://www.monta.nl)
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
-	<router id="standard">
-		<route frontName="montacheckout" id="montacheckout">
-			<module name="Montapacking_MontaCheckout"/>
-		</route>
-	</router>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route frontName="montacheckout" id="montacheckout">
+            <module name="Montapacking_MontaCheckout"/>
+        </route>
+    </router>
 </config>

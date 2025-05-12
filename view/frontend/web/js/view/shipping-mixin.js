@@ -1,9 +1,9 @@
 /*global alert*/
 define(
     [
-    'jquery',
-    'Magento_Checkout/js/model/quote',
-    'mage/translate'
+        'jquery',
+        'Magento_Checkout/js/model/quote',
+        'mage/translate'
     ], function (
         $,
         quote,
@@ -17,7 +17,7 @@ define(
                     validateShippingInformation: function () {
                         var originalResult = this._super();
 
-                        if(quote.shippingMethod() == null) {
+                        if (quote.shippingMethod() == null) {
                             return false;
                         }
 
@@ -32,12 +32,9 @@ define(
                         var checkoutConfig = window.checkoutConfig;
 
 
-                        if($("input.montapacking_delivery_option").length == 0 && $("input.initialPickupRadio").length == 0)
-                        {
+                        if ($("input.montapacking_delivery_option").length == 0 && $("input.initialPickupRadio").length == 0) {
                             return originalResult;
-                        }
-                        else
-                        {
+                        } else {
                             var checkedOptionDelivery = $('input.montapacking_delivery_option:checked').val();
                             var checkedOptionPickup = $('input.initialPickupRadio:checked').val();
 

@@ -3,7 +3,6 @@ namespace Montapacking\MontaCheckout\Controller\Adminhtml\View;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action

@@ -1,6 +1,10 @@
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <add id="Montapacking_MontaCheckout::logs" title="Log Viewer" module="Montapacking_MontaCheckout" sortOrder="90" parent="Magento_Backend::system" resource="Magento_Backend::system" />
-        <add id="Montapacking_MontaCheckout::report_logs" title="View Logs" module="Montapacking_MontaCheckout" sortOrder="3" parent="Montapacking_MontaCheckout::logs" action="logviewer/grid/index" resource="Magento_Backend::system"/>
+        <add id="Montapacking_MontaCheckout::logs" title="Log Viewer" module="Montapacking_MontaCheckout" sortOrder="90"
+             parent="Magento_Backend::system" resource="Magento_Backend::system"/>
+        <add id="Montapacking_MontaCheckout::report_logs" title="View Logs" module="Montapacking_MontaCheckout"
+             sortOrder="3" parent="Montapacking_MontaCheckout::logs" action="logviewer/grid/index"
+             resource="Magento_Backend::system"/>
     </menu>
 </config>
