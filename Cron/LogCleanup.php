@@ -53,7 +53,7 @@ class LogCleanup
                 }
             }
             $this->_driver->filePutContents($path, implode(PHP_EOL, $line_array));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->_logger->error("Something went wrong removing logs older than 30 days");
         }
         return $this;

@@ -5,6 +5,7 @@ namespace Montapacking\MontaCheckout\Helper;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Exception\FileSystemException;
 
 class Data extends AbstractHelper
 {
@@ -28,6 +29,7 @@ class Data extends AbstractHelper
      * Get path to var/log directory
      *
      * @return string
+     * @throws FileSystemException
      */
     public function getPath()
     {
@@ -44,7 +46,7 @@ class Data extends AbstractHelper
         array_splice($list, 0, 2);
 
         $output = [];
-        foreach ($list as $index => $file) {
+        foreach ($list as $file) {
             if (is_dir($path . DIRECTORY_SEPARATOR . $file)) {
                 foreach ($this->getLogFiles($path . DIRECTORY_SEPARATOR . $file) as $childFile) {
                     $output[] = $file . DIRECTORY_SEPARATOR . $childFile;
@@ -77,6 +79,7 @@ class Data extends AbstractHelper
 
     /**
      * @return array
+     * @throws FileSystemException
      */
     public function buildLogData()
     {
@@ -103,8 +106,6 @@ class Data extends AbstractHelper
 
     public function getLastLinesOfFile($fileName, $numOfLines)
     {
-        $path = $this->getPath();
-
         $lines = $this->tailExec($fileName, $numOfLines);
         return implode('', $lines);
     }

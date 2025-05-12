@@ -2,6 +2,7 @@
 
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
@@ -9,11 +10,9 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Locale\CurrencyInterface;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
 use Magento\Store\Model\StoreManagerInterface;
-use Montapacking\MontaCheckout\Api_REMOVETHIS\MontapackingShipping as MontpackingApi;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
 use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
-use Zend_Http_Client_Exception;
 
 /**
  * Class LongLat
@@ -77,7 +76,7 @@ class LongLat extends AbstractDeliveryOptions
 
     /**
      * @return ResponseInterface|ResultInterface
-     * @throws Zend_Http_Client_Exception
+     * @throws \Exception|GuzzleException
      */
     public function execute()
     {
@@ -102,7 +101,7 @@ class LongLat extends AbstractDeliveryOptions
             $arr['longitude'] = $oApi->address->longitude;
             $arr['latitude'] = $oApi->address->latitude;
             $arr['language'] = $language;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $arr = [];
             $arr['longitude'] = 0;
             $arr['latitude'] = 0;

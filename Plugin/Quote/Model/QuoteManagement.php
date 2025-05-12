@@ -197,18 +197,14 @@ class QuoteManagement
                 if (!$deliveryOption) {
                     return $orderId;
                 }
-
-                $order->setMontapackingMontacheckoutData($deliveryOption);
-                $order->save();
             } else {
                 // Pickup/on-date flow
                 if (!$deliveryOption) {
                     return $orderId;
                 }
-
-                $order->setMontapackingMontacheckoutData($deliveryOption);
-                $order->save();
             }
+            $order->setMontapackingMontacheckoutData($deliveryOption);
+            $order->save();
         } catch (\Exception $e) {
             //                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
         }

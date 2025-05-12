@@ -84,6 +84,17 @@ abstract class AbstractDeliveryOptions extends Action
         );
     }
 
+    /**
+     * @param RequestInterface $request
+     * @param $language
+     * @param $logger
+     * @param $use_googlekey
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Magento\Framework\Currency\Exception\CurrencyException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function generateApi(RequestInterface $request, $language, $logger = null, $use_googlekey = false)
     {
         $street = $request->getParam('street', '');
@@ -231,7 +242,6 @@ abstract class AbstractDeliveryOptions extends Action
         }
 
         if ($frames['StoreLocation'] != null) {
-            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
             $imageName = null;
             if (isset($imageForStoreCollect)) {
                 $imageName = $imageForStoreCollect;

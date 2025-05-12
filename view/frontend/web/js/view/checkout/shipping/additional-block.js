@@ -510,7 +510,6 @@ define(
 
                     if (date === '01-01-1970') {
                         date = '';
-                        date_text = '';
                     }
 
                     const time_from = $(this).parents(".delivery-option").find(".cropped_time_from").text();

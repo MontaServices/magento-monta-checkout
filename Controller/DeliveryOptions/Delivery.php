@@ -2,8 +2,8 @@
 
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
-use Carbon\Carbon;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
@@ -13,7 +13,6 @@ use Magento\Framework\Locale\CurrencyInterface;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Monta\MontaProcessing\NumberGenerator;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
 use Montapacking\MontaCheckout\Helper\DeliveryHelper;
 use Montapacking\MontaCheckout\Helper\PickupHelper;
@@ -102,6 +101,7 @@ class Delivery extends AbstractDeliveryOptions
 
     /**
      * @return ResponseInterface|ResultInterface
+     * @throws GuzzleException
      */
     public function execute()
     {

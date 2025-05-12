@@ -54,7 +54,7 @@ class DeliveryHelper
         }
 
         foreach ($items as $frameItem) {
-            foreach ($frameItem->options as $key => $options) {
+            foreach ($frameItem->options as $options) {
                 if ($options->from != null && (date("Y-m-d", strtotime($options->from)) == date("Y-m-d") && $frameItem->code != 'SameDayDelivery')) {
                     return null;
                 }

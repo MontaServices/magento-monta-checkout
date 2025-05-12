@@ -2,6 +2,7 @@
 
 namespace Montapacking\MontaCheckout\Block\View;
 
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\HTTP\PhpEnvironment\Request;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -29,6 +30,7 @@ class Index extends Template
      * @param Data $logDataHelper
      * @param array $data
      * @param Request|null $request
+     * @throws FileSystemException
      */
     public function __construct(
         Context $context,
@@ -173,6 +175,7 @@ class Index extends Template
      * Get full path to log file
      *
      * @return string
+     * @throws FileSystemException
      */
     private function logFile(): string
     {
