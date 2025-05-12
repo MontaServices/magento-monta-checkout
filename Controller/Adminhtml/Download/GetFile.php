@@ -3,8 +3,12 @@ namespace Montapacking\MontaCheckout\Controller\Adminhtml\Download;
 
 class GetFile extends AbstractLog
 {
-    protected function getFilePathWithFile($fileName)
+    /**
+     * @param $filename
+     * @return string
+     */
+    protected function getFilePathWithFile($filename)
     {
-        return 'var/log/' . $fileName;
+        return 'var/log/' . $filename;
     }
 }

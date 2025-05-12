@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Framework\Filesystem\DriverInterface" type="Magento\Framework\Filesystem\Driver\File" />
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Framework\Filesystem\DriverInterface" type="Magento\Framework\Filesystem\Driver\File"/>
 
     <type name="Magento\Quote\Model\ShippingAddressManagement">
-        <plugin name="montapacking_montacheckout_shipping_address_management_before_assign" type="Montapacking\MontaCheckout\Plugin\Quote\Model\ShippingAddressManagement" sortOrder="100" />
+        <plugin name="montapacking_montacheckout_shipping_address_management_before_assign"
+                type="Montapacking\MontaCheckout\Plugin\Quote\Model\ShippingAddressManagement" sortOrder="100"/>
     </type>
 
     <type name="Magento\Quote\Model\Quote\Address\Total\Shipping">
-        <plugin name="montapacking_montacheckout_shipping_after_collect" type="Montapacking\MontaCheckout\Plugin\Quote\Model\Quote\Address\Total\Shipping" sortOrder="100" />
+        <plugin name="montapacking_montacheckout_shipping_after_collect"
+                type="Montapacking\MontaCheckout\Plugin\Quote\Model\Quote\Address\Total\Shipping" sortOrder="100"/>
     </type>
 
     <type name="Magento\Quote\Model\QuoteManagement">
-        <plugin name="montapacking_montacheckout_quote_management_before_place_order" type="Montapacking\MontaCheckout\Plugin\Quote\Model\QuoteManagement" sortOrder="100" />
+        <plugin name="montapacking_montacheckout_quote_management_before_place_order"
+                type="Montapacking\MontaCheckout\Plugin\Quote\Model\QuoteManagement" sortOrder="100"/>
     </type>
 
     <type name="Magento\Quote\Model\QuoteManagement">
-        <plugin name="montapacking_montacheckout_quote_management_after_place_order" type="Montapacking\MontaCheckout\Plugin\Quote\Model\QuoteManagement" sortOrder="100" />
+        <plugin name="montapacking_montacheckout_quote_management_after_place_order"
+                type="Montapacking\MontaCheckout\Plugin\Quote\Model\QuoteManagement" sortOrder="100"/>
     </type>
 
 
     <type name="Magento\Sales\Api\OrderRepositoryInterface">
         <plugin name="montapacking_montacheckout_data_extension_attribute"
-                type="Montapacking\MontaCheckout\Plugin\OrderRepositoryPlugin" />
+                type="Montapacking\MontaCheckout\Plugin\OrderRepositoryPlugin"/>
     </type>
 
     <type name="Montapacking\MontaCheckout\Logger\Handler">

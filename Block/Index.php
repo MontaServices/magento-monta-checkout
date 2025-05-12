@@ -1,23 +1,26 @@
 <?php
 namespace Montapacking\MontaCheckout\Block;
 
-class Index extends \Magento\Framework\View\Element\Template
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Montapacking\MontaCheckout\Helper\Data;
+
+class Index extends Template
 {
-    /**
-     * @var \Montapacking\MontaCheckout\Helper\Data
-     */
+    /** @var Data $logDataHelper */
     protected $logDataHelper;
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Montapacking\MontaCheckout\Helper\Data $logDataHelper
+     * @param Context $context
+     * @param Data $logDataHelper
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Montapacking\MontaCheckout\Helper\Data $logDataHelper,
+        Context $context,
+        Data $logDataHelper,
         array $data = []
-    ) {
+    )
+    {
         $this->logDataHelper = $logDataHelper;
         parent::__construct($context, $data);
     }

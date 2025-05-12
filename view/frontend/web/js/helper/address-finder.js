@@ -130,7 +130,6 @@ define(
                 if (customer.isLoggedIn() && shippingAddress && quoteStreet.length > 0) {
                     address = {
                         street: quoteStreet,
-                        city: shippingAddress.city,
                         postcode: shippingAddress.postcode,
                         city: shippingAddress.city,
                         lastname: shippingAddress.lastname,

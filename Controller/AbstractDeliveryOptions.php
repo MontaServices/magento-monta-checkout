@@ -3,24 +3,23 @@
 namespace Montapacking\MontaCheckout\Controller;
 
 use Magento\Checkout\Model\Cart;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\CurrencyInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
 use Monta\CheckoutApiWrapper\Objects\Settings;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
-use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
 
 abstract class AbstractDeliveryOptions extends Action
 {
-    /** @var $carrierConfig CarrierConfig */
     private $carrierConfig;
 
     public $cart;
     protected $storeManager;
     protected $currency;
-
 
     /**
      * AbstractDeliveryOptions constructor.
@@ -32,11 +31,11 @@ abstract class AbstractDeliveryOptions extends Action
      * @param CurrencyInterface $currencyInterface
      */
     public function __construct(
-        Context                      $context,
-        CarrierConfig                $carrierConfig,
-        \Magento\Checkout\Model\Cart $cart,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
+        Context $context,
+        CarrierConfig $carrierConfig,
+        Cart $cart,
+        StoreManagerInterface $storeManager,
+        CurrencyInterface $currencyInterface
     )
     {
         $this->carrierConfig = $carrierConfig;
@@ -58,6 +57,9 @@ abstract class AbstractDeliveryOptions extends Action
         return $this->carrierConfig;
     }
 
+    /**
+     * @return Cart
+     */
     public function getCart()
     {
         return $this->cart;
@@ -65,7 +67,7 @@ abstract class AbstractDeliveryOptions extends Action
 
     /**
      * @param string $data
-     * @param null $code
+     * @param ?string|int $code
      *
      * @return mixed
      */
@@ -82,6 +84,17 @@ abstract class AbstractDeliveryOptions extends Action
         );
     }
 
+    /**
+     * @param RequestInterface $request
+     * @param $language
+     * @param $logger
+     * @param $use_googlekey
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Magento\Framework\Currency\Exception\CurrencyException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function generateApi(RequestInterface $request, $language, $logger = null, $use_googlekey = false)
     {
         $street = $request->getParam('street', '');
@@ -103,7 +116,7 @@ abstract class AbstractDeliveryOptions extends Action
 
         $postcode = str_replace(" ", "", $postcode);
 
-        // check is ZIPCODE valid for dutch customers
+        // check is ZIPCODE valid for Dutch customers
         if ($country == 'NL') {
             if (!preg_match("/^\W*[1-9]{1}[0-9]{3}\W*[a-zA-Z]{2}\W*$/", $postcode)) {
                 $postcode = '';
@@ -140,7 +153,6 @@ abstract class AbstractDeliveryOptions extends Action
         $currentStore = $this->storeManager->getStore();
         $currentCurrencyCode = $currentStore->getCurrentCurrency()->getCode();
         $currencySymbol = $this->currency->getCurrency($currentCurrencyCode)->getSymbol();
-        $currencyRate = $this->storeManager->getStore()->getCurrentCurrencyRate();
 
         /**
          * Retrieve Order Information
@@ -176,7 +188,6 @@ abstract class AbstractDeliveryOptions extends Action
 
         if ($quote->getSubtotalInclTax() > 0) {
             $priceIncl = $quote->getSubtotalInclTax();
-            $priceIncl = $quote->getSubtotalInclTax();
         } else if ($quote->getShippingAddress()->getSubtotalInclTax() > 0) {
             $priceIncl = $quote->getShippingAddress()->getSubtotalInclTax();
             $priceExcl = $quote->getShippingAddress()->getSubtotal();
@@ -189,17 +200,15 @@ abstract class AbstractDeliveryOptions extends Action
         $bAllProductsAvailable = true;
 
         foreach ($items as $item) {
-
             if (!$leadingstockmontapacking) {
                 $stockItem = $item->getProduct()->getExtensionAttributes()->getStockItem();
 
                 if ($stockItem->getQty() <= 0 || $stockItem->getQty() < $item->getQty()) {
-
                     $bAllProductsAvailable = false;
                 }
             }
 
-            if($leadingstockmontapacking) {
+            if ($leadingstockmontapacking) {
                 $oApi->addProduct(
                     (string)$item->getSku(),
                     (int)$item->getQty(),
@@ -219,7 +228,6 @@ abstract class AbstractDeliveryOptions extends Action
                     (float)$item->getData('price_incl_tax') ?: 0
                 );
             }
-
         }
 
         if (false === $bAllProductsAvailable || $disabledeliverydays) {
@@ -229,15 +237,11 @@ abstract class AbstractDeliveryOptions extends Action
         $frames = $oApi->getShippingOptions();
 
         if ($disabledeliverydays) {
-
             unset($frames['DeliveryOptions']);
             $frames['DeliveryOptions'] = [];
         }
 
-
         if ($frames['StoreLocation'] != null) {
-
-            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
             $imageName = null;
             if (isset($imageForStoreCollect)) {
                 $imageName = $imageForStoreCollect;
@@ -251,7 +255,7 @@ abstract class AbstractDeliveryOptions extends Action
 
         foreach ($frames['PickupOptions'] as $item) {
             if ($item->code !== "AFH") {
-                $item->imageName  = null;
+                $item->imageName = null;
             }
 
             $item->distanceMeters = round($item->distanceMeters / 1000, 2);
