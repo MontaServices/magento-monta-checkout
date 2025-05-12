@@ -21,14 +21,14 @@ abstract class AbstractDeliveryOptions extends Action
      * @param CarrierConfig $carrierConfig
      * @param Cart $cart
      * @param StoreManagerInterface $storeManager
-     * @param CurrencyInterface $currencyInterface
+     * @param CurrencyInterface $currency
      */
     public function __construct(
         Context $context,
         protected readonly CarrierConfig $carrierConfig,
-        public readonly Cart $cart,
-        protected readonly StoreManagerInterface $storeManager,
-        protected readonly CurrencyInterface $currency
+        public Cart $cart,
+        protected StoreManagerInterface $storeManager,
+        protected CurrencyInterface $currency
     )
     {
         parent::__construct($context);

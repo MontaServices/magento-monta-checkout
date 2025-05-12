@@ -37,9 +37,9 @@ class LongLat extends AbstractDeliveryOptions
         protected readonly LocaleResolver $localeResolver,
         CarrierConfig $carrierConfig,
         protected readonly Logger $logger,
-        public readonly Cart $cart,
-        protected readonly StoreManagerInterface $storeManager,
-        protected readonly CurrencyInterface $currency
+        public Cart $cart,
+        protected StoreManagerInterface $storeManager,
+        protected CurrencyInterface $currency
     )
     {
         parent::__construct(

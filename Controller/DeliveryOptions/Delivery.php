@@ -40,9 +40,9 @@ class Delivery extends AbstractDeliveryOptions
         protected readonly LocaleResolver $localeResolver,
         CarrierConfig $carrierConfig,
         protected readonly Logger $logger,
-        public readonly Cart $cart,
-        protected readonly StoreManagerInterface $storeManager,
-        protected readonly CurrencyInterface $currencyInterface
+        public Cart $cart,
+        protected StoreManagerInterface $storeManager,
+        protected CurrencyInterface $currencyInterface
     )
     {
         parent::__construct(
