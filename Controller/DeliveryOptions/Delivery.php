@@ -14,8 +14,6 @@ use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
-use Montapacking\MontaCheckout\Helper\DeliveryHelper;
-use Montapacking\MontaCheckout\Helper\PickupHelper;
 use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
 
@@ -33,8 +31,6 @@ class Delivery extends AbstractDeliveryOptions
      * @param CarrierConfig $carrierConfig
      * @param Logger $logger
      * @param Cart $cart
-     * @param PickupHelper $pickupHelper
-     * @param DeliveryHelper $deliveryHelper
      * @param StoreManagerInterface $storeManager
      * @param CurrencyInterface $currencyInterface
      */
@@ -45,8 +41,6 @@ class Delivery extends AbstractDeliveryOptions
         CarrierConfig $carrierConfig,
         protected readonly Logger $logger,
         public readonly Cart $cart,
-        protected readonly PickupHelper $pickupHelper,
-        protected readonly DeliveryHelper $deliveryHelper,
         protected readonly StoreManagerInterface $storeManager,
         protected readonly CurrencyInterface $currencyInterface
     )
