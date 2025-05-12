@@ -26,36 +26,6 @@ use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
  */
 class Delivery extends AbstractDeliveryOptions
 {
-    /** @var Session $checkoutSession */
-    private $checkoutSession;
-
-    /** @var LocaleResolver $scopeConfig */
-    private $localeResolver;
-
-    /**
-     * @var Logger
-     */
-    protected $_logger;
-
-    /**
-     * @var Cart
-     */
-    public $cart;
-
-    /**
-     * @var PickupHelper
-     */
-    protected $pickupHelper;
-
-    /**
-     * @var DeliveryHelper
-     */
-    protected $deliveryHelper;
-
-    protected $storeManager;
-
-    protected $currency;
-
     /**
      * @param Context $context
      * @param Session $checkoutSession
@@ -70,26 +40,17 @@ class Delivery extends AbstractDeliveryOptions
      */
     public function __construct(
         Context $context,
-        Session $checkoutSession,
-        LocaleResolver $localeResolver,
+        protected readonly Session $checkoutSession,
+        protected readonly LocaleResolver $localeResolver,
         CarrierConfig $carrierConfig,
-        Logger $logger,
-        Cart $cart,
-        PickupHelper $pickupHelper,
-        DeliveryHelper $deliveryHelper,
-        StoreManagerInterface $storeManager,
-        CurrencyInterface $currencyInterface
+        protected readonly Logger $logger,
+        public readonly Cart $cart,
+        protected readonly PickupHelper $pickupHelper,
+        protected readonly DeliveryHelper $deliveryHelper,
+        protected readonly StoreManagerInterface $storeManager,
+        protected readonly CurrencyInterface $currencyInterface
     )
     {
-        $this->_logger = $logger;
-        $this->checkoutSession = $checkoutSession;
-        $this->localeResolver = $localeResolver;
-        $this->cart = $cart;
-        $this->pickupHelper = $pickupHelper;
-        $this->deliveryHelper = $deliveryHelper;
-        $this->storeManager = $storeManager;
-        $this->currency = $currencyInterface;
-
         parent::__construct(
             $context,
             $carrierConfig,
@@ -113,7 +74,7 @@ class Delivery extends AbstractDeliveryOptions
         }
 
         try {
-            $oApi = $this->generateApi($request, $language, $this->_logger, true);
+            $oApi = $this->generateApi($request, $language, $this->logger, true);
             $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
             $AFHImage_basepath = $mediaUrl . 'Images/';
 
@@ -122,8 +83,8 @@ class Delivery extends AbstractDeliveryOptions
             return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'], $AFHImage_basepath]);
         } catch (Exception $e) {
             $context = ['source' => 'Montapacking Checkout'];
-            $this->_logger->critical(json_encode($e->getMessage()), $context); //phpcs:ignore
-            $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
+            $this->logger->critical(json_encode($e->getMessage()), $context); //phpcs:ignore
+            $this->logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
             return $this->jsonResponse(json_encode([]));
         }
     }

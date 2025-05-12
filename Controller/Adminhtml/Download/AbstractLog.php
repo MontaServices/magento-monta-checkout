@@ -10,17 +10,13 @@ use Magento\Framework\Exception\NotFoundException;
 abstract class AbstractLog extends System
 {
     /**
-     * @var FileFactory
-     */
-    protected $fileFactory;
-
-    /**
      * @param Context $context
      * @param FileFactory $fileFactory
      */
-    public function __construct(Context $context, FileFactory $fileFactory)
+    public function __construct(
+        Context $context,
+        protected readonly FileFactory $fileFactory)
     {
-        $this->fileFactory = $fileFactory;
         parent::__construct($context);
     }
 

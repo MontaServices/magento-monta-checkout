@@ -18,20 +18,13 @@ class OrderRepositoryPlugin
     const FIELD_NAME = 'montapacking_montacheckout_data';
 
     /**
-     * Order Extension Attributes Factory
-     *
-     * @var OrderExtensionFactory
-     */
-    protected $extensionFactory;
-
-    /**
      * OrderRepositoryPlugin constructor
      *
      * @param OrderExtensionFactory $extensionFactory
      */
-    public function __construct(OrderExtensionFactory $extensionFactory)
+    public function __construct(
+        protected readonly OrderExtensionFactory $extensionFactory)
     {
-        $this->extensionFactory = $extensionFactory;
     }
 
     /**

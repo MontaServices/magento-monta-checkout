@@ -16,16 +16,6 @@ class Index extends Template
     }
 
     /**
-     * @var Data
-     */
-    protected $logDataHelper;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
      * @param Context $context
      * @param Data $logDataHelper
      * @param array $data
@@ -34,13 +24,11 @@ class Index extends Template
      */
     public function __construct(
         Context $context,
-        Data $logDataHelper,
+        protected readonly Data $logDataHelper,
         array $data = [],
-        Request $request = null
+        protected readonly ?Request $request = null
     )
     {
-        $this->request = $request;
-        $this->logDataHelper = $logDataHelper;
         parent::__construct($context, $data);
         if ($this->request != null) {
             $params = $this->request->getParams();
@@ -55,15 +43,11 @@ class Index extends Template
         }
     }
 
-    public function getLogFile()
-    {
-        return $this->logDataHelper->getLastLinesOfFile($this->getFileName(), 10);
-    }
-
     /**
      * Get logs
      *
      * @return array
+     * @throws FileSystemException
      */
     public function getLogFileBlocks(): array
     {

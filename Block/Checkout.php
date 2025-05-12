@@ -8,9 +8,6 @@ use Montapacking\MontaCheckout\Model\Config\Provider\Carrier;
 
 class Checkout extends Template
 {
-    /** @var Carrier $carrier */
-    private $carrier;
-
     /**
      * Constructor.
      *
@@ -19,13 +16,11 @@ class Checkout extends Template
      * @param array $data
      */
     public function __construct(
-        Carrier $carrier,
+        protected readonly Carrier $carrier,
         Context $context,
         array $data = []
     )
     {
-        $this->carrier = $carrier;
-
         parent::__construct($context, $data);
     }
 

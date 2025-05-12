@@ -21,23 +21,6 @@ use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
  */
 class LongLat extends AbstractDeliveryOptions
 {
-    /** @var LocaleResolver $scopeConfig */
-    private $localeResolver;
-
-    /**
-     * @var Logger
-     */
-    protected $_logger;
-
-    /**
-     * @var Cart
-     */
-    public $cart;
-
-    protected $storeManager;
-
-    protected $currency;
-
     /**
      * Services constructor.
      *
@@ -47,30 +30,24 @@ class LongLat extends AbstractDeliveryOptions
      * @param Logger $logger
      * @param Cart $cart
      * @param StoreManagerInterface $storeManager
-     * @param CurrencyInterface $currencyInterface
+     * @param CurrencyInterface $currency
      */
     public function __construct(
         Context $context,
-        LocaleResolver $localeResolver,
+        protected readonly LocaleResolver $localeResolver,
         CarrierConfig $carrierConfig,
-        Logger $logger,
-        Cart $cart,
-        StoreManagerInterface $storeManager,
-        CurrencyInterface $currencyInterface
+        protected readonly Logger $logger,
+        public readonly Cart $cart,
+        protected readonly StoreManagerInterface $storeManager,
+        protected readonly CurrencyInterface $currency
     )
     {
-        $this->_logger = $logger;
-        $this->localeResolver = $localeResolver;
-        $this->cart = $cart;
-        $this->storeManager = $storeManager;
-        $this->currency = $currencyInterface;
-
         parent::__construct(
             $context,
             $carrierConfig,
             $cart,
             $storeManager,
-            $currencyInterface
+            $currency
         );
     }
 
@@ -91,9 +68,9 @@ class LongLat extends AbstractDeliveryOptions
             $longlat = $request->getParam('longlat') ? trim($request->getParam('longlat')) : "";
 
             if ($longlat == 'false') {
-                $oApi = $this->generateApi($request, $language, $this->_logger);
+                $oApi = $this->generateApi($request, $language, $this->logger);
             } else {
-                $oApi = $this->generateApi($request, $language, $this->_logger, true);
+                $oApi = $this->generateApi($request, $language, $this->logger, true);
             }
 
             $arr = [];
@@ -110,7 +87,7 @@ class LongLat extends AbstractDeliveryOptions
             $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
 
             $context = ['source' => 'Montapacking Checkout'];
-            $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
+            $this->logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
         }
 
         return $this->jsonResponse($arr);

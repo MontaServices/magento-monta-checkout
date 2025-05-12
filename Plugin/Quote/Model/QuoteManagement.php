@@ -9,17 +9,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 
 class QuoteManagement
 {
-    /** @var CartRepositoryInterface $cartRepository */
-    private $cartRepository;
-
-    /** @var OrderRepositoryInterface $orderRepository */
-    private $orderRepository;
-
-    /**
-     * @var ResolverInterface
-     */
-    private $localeResolver;
-
     /**
      * QuoteManagement constructor.
      *
@@ -28,14 +17,11 @@ class QuoteManagement
      * @param ResolverInterface $localeResolver
      */
     public function __construct(
-        CartRepositoryInterface $cartRepository,
-        OrderRepositoryInterface $orderRepository,
-        ResolverInterface $localeResolver
+        protected readonly CartRepositoryInterface $cartRepository,
+        protected readonly OrderRepositoryInterface $orderRepository,
+        protected readonly ResolverInterface $localeResolver
     )
     {
-        $this->cartRepository = $cartRepository;
-        $this->orderRepository = $orderRepository;
-        $this->localeResolver = $localeResolver;
     }
 
     /**

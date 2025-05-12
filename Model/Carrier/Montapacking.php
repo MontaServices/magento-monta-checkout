@@ -34,20 +34,6 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
     protected $_code = 'montapacking';
 
     /**
-     * @var ResultFactory
-     */
-    protected $rateResultFactory;
-
-    /**
-     * @var MethodFactory
-     */
-    protected $rateMethodFactory;
-
-    protected $_customLogger;
-
-    protected $_request;
-
-    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
      * @param LoggerInterface $logger
@@ -61,17 +47,13 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
         ScopeConfigInterface $scopeConfig,
         ErrorFactory $rateErrorFactory,
         LoggerInterface $logger,
-        ResultFactory $rateResultFactory,
-        MethodFactory $rateMethodFactory,
-        LoggerInterface $customLogger,
-        RequestInterface $request,
+        protected readonly ResultFactory $rateResultFactory,
+        protected readonly MethodFactory $rateMethodFactory,
+        protected readonly LoggerInterface $customLogger,
+        protected readonly RequestInterface $request,
         array $data = []
     )
     {
-        $this->_request = $request;
-        $this->_customLogger = $customLogger;
-        $this->rateResultFactory = $rateResultFactory;
-        $this->rateMethodFactory = $rateMethodFactory;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 

@@ -7,9 +7,6 @@ use Montapacking\MontaCheckout\Helper\Data;
 
 class Index extends Template
 {
-    /** @var Data $logDataHelper */
-    protected $logDataHelper;
-
     /**
      * @param Context $context
      * @param Data $logDataHelper
@@ -17,11 +14,10 @@ class Index extends Template
      */
     public function __construct(
         Context $context,
-        Data $logDataHelper,
+        protected readonly Data $logDataHelper,
         array $data = []
     )
     {
-        $this->logDataHelper = $logDataHelper;
         parent::__construct($context, $data);
     }
 

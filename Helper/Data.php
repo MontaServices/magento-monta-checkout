@@ -10,19 +10,15 @@ use Magento\Framework\Exception\FileSystemException;
 class Data extends AbstractHelper
 {
     /**
-     * @var DirectoryList
+     * @param Context $context
+     * @param DirectoryList $directoryList
      */
-    protected $directoryList;
-
     public function __construct(
         Context $context,
-        DirectoryList $directoryList
+        protected readonly DirectoryList $directoryList
     )
     {
-        $this->directoryList = $directoryList;
-        parent::__construct(
-            $context
-        );
+        parent::__construct($context);
     }
 
     /**

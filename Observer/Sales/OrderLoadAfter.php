@@ -8,18 +8,19 @@ use Magento\Sales\Api\Data\OrderExtension;
 
 class OrderLoadAfter implements ObserverInterface
 {
-    private $orderExtension;
-
     /**
      * @param OrderExtension $orderExtension
      */
     public function __construct(
-        OrderExtension $orderExtension
+        protected readonly OrderExtension $orderExtension
     )
     {
-        $this->orderExtension = $orderExtension;
     }
 
+    /**
+     * @param Observer $observer
+     * @return void
+     */
     public function execute(Observer $observer)
     {
         $order = $observer->getOrder();

@@ -12,30 +12,17 @@ use Montapacking\MontaCheckout\Logger\Logger;
 
 class Shipping
 {
-    private $scopeConfig;
-
-    /**
-     * @var Logger
-     */
-    protected $_logger;
-
-    /** @var Session $checkoutSession */
-    private $checkoutSession;
-
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param Session $checkoutSession
      * @param Logger $logger
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        Session $checkoutSession,
-        Logger $logger
+        protected readonly ScopeConfigInterface $scopeConfig,
+        protected readonly Session $checkoutSession,
+        protected readonly Logger $logger
     )
     {
-        $this->scopeConfig = $scopeConfig;
-        $this->checkoutSession = $checkoutSession;
-        $this->_logger = $logger;
     }
 
     /**

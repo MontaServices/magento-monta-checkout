@@ -8,12 +8,6 @@ use Magento\Store\Model\ScopeInterface;
 
 abstract class AbstractConfigProvider
 {
-    /** @var ScopeConfig $scopeConfig */
-    private $scopeConfig;
-
-    /** @var Manager $moduleManager */
-    private $moduleManager;
-
     /**
      * AbstractConfigProvider constructor.
      *
@@ -21,12 +15,10 @@ abstract class AbstractConfigProvider
      * @param Manager $moduleManager
      */
     public function __construct(
-        ScopeConfig $scopeConfig,
-        Manager $moduleManager
+        protected readonly ScopeConfig $scopeConfig,
+        protected readonly Manager $moduleManager
     )
     {
-        $this->scopeConfig = $scopeConfig;
-        $this->moduleManager = $moduleManager;
     }
 
     /**
