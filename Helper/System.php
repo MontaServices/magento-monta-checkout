@@ -23,12 +23,13 @@ class System extends AbstractHelper
      *
      * @return string[]
      */
-    public function getDiagnostics()
+    public function getInfo(): array
     {
         $moduleName = $this->_getModuleName();
         return [
             'coreSoftware' => 'Magento',
             'coreVersion' => InstalledVersions::getVersion('magento/product-community-edition'),
+            'frameworkVersion' => InstalledVersions::getVersion('magento/framework'),
             'checkoutApiWrapperVersion' => InstalledVersions::getVersion('monta/checkout-api-wrapper'),
             'moduleName' => $moduleName,
             'moduleVersion' => $this->resource->getDbVersion($moduleName),
