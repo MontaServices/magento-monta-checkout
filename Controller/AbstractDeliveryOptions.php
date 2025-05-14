@@ -177,6 +177,7 @@ abstract class AbstractDeliveryOptions extends Action
         );
 
         $settings->setExcludeShippingDiscount(false);
+        $settings->setSystemInfo($this->systemHelper->getInfo());
 
         $oApi = new MontpackingApi($settings, $language);
         $oApi->setAddress($street, $housenumber, $housenumberaddition, $postcode, $city, $state, $country);
