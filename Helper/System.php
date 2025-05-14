@@ -44,6 +44,11 @@ class System extends AbstractHelper
      */
     protected function getComposerVersion(string $packageName): string
     {
-        return InstalledVersions::getVersion($packageName);
+        try {
+            return InstalledVersions::getVersion($packageName);
+        } catch (\OutOfBoundsException $e) {
+            // When module not installed, catch error and return empty string
+            return "";
+        }
     }
 }
