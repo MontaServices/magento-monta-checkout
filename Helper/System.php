@@ -33,8 +33,6 @@ class System extends AbstractHelper
             Settings::CHECKOUT_API_WRAPPER_VERSION => $this->getComposerVersion('monta/checkout-api-wrapper'),
             Settings::MODULE_NAME => $moduleName,
             Settings::MODULE_VERSION => $this->resource->getDbVersion($moduleName),
-            Settings::PHP_VERSION => PHP_VERSION,
-            Settings::OPERATING_SYSTEM => PHP_OS,
         ];
     }
 
