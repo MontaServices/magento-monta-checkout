@@ -8,6 +8,7 @@ namespace Montapacking\MontaCheckout\Helper;
 use Composer\InstalledVersions;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\Module\ResourceInterface;
+use Monta\CheckoutApiWrapper\Objects\Settings;
 
 class System extends AbstractHelper
 {
@@ -27,14 +28,13 @@ class System extends AbstractHelper
     {
         $moduleName = $this->_getModuleName();
         return [
-            'coreSoftware' => 'Magento',
-            'coreVersion' => $this->getComposerVersion('magento/product-community-edition'),
-            'frameworkVersion' => $this->getComposerVersion('magento/framework'),
-            'checkoutApiWrapperVersion' => $this->getComposerVersion('monta/checkout-api-wrapper'),
-            'moduleName' => $moduleName,
-            'moduleVersion' => $this->resource->getDbVersion($moduleName),
-            'phpVersion' => PHP_VERSION,
-            'operatingSystem' => PHP_OS,
+            Settings::CORE_SOFTWARE => 'Magento',
+            Settings::CORE_VERSION => $this->getComposerVersion('magento/product-community-edition'),
+            Settings::CHECKOUT_API_WRAPPER_VERSION => $this->getComposerVersion('monta/checkout-api-wrapper'),
+            Settings::MODULE_NAME => $moduleName,
+            Settings::MODULE_VERSION => $this->resource->getDbVersion($moduleName),
+            Settings::PHP_VERSION => PHP_VERSION,
+            Settings::OPERATING_SYSTEM => PHP_OS,
         ];
     }
 
