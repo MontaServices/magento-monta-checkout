@@ -28,13 +28,22 @@ class System extends AbstractHelper
         $moduleName = $this->_getModuleName();
         return [
             'coreSoftware' => 'Magento',
-            'coreVersion' => InstalledVersions::getVersion('magento/product-community-edition'),
-            'frameworkVersion' => InstalledVersions::getVersion('magento/framework'),
-            'checkoutApiWrapperVersion' => InstalledVersions::getVersion('monta/checkout-api-wrapper'),
+            'coreVersion' => $this->getComposerVersion('magento/product-community-edition'),
+            'frameworkVersion' => $this->getComposerVersion('magento/framework'),
+            'checkoutApiWrapperVersion' => $this->getComposerVersion('monta/checkout-api-wrapper'),
             'moduleName' => $moduleName,
             'moduleVersion' => $this->resource->getDbVersion($moduleName),
             'phpVersion' => PHP_VERSION,
             'operatingSystem' => PHP_OS,
         ];
+    }
+
+    /**
+     * @param string $packageName
+     * @return string
+     */
+    protected function getComposerVersion(string $packageName): string
+    {
+        return InstalledVersions::getVersion($packageName);
     }
 }
