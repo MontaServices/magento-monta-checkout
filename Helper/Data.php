@@ -1,5 +1,4 @@
 <?php
-
 namespace Montapacking\MontaCheckout\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
@@ -14,29 +13,32 @@ class Data extends AbstractHelper
      */
     protected $directoryList;
 
+    /**
+     * @param Context $context
+     * @param DirectoryList $directoryList
+     */
     public function __construct(
         Context $context,
         DirectoryList $directoryList
     )
     {
         $this->directoryList = $directoryList;
-        parent::__construct(
-            $context
-        );
+        parent::__construct($context);
     }
 
-    /**
-     * Get path to var/log directory
+    /** Get path to requested directory
      *
-     * @return string
+     * @param string $directory
+     * @return string - absolute system path
      * @throws FileSystemException
      */
-    public function getPath()
+    public function getPath($directory = 'log')
     {
-        return $this->directoryList->getPath('log');
+        return $this->directoryList->getPath($directory);
     }
 
     /**
+     * @param $path
      * @return array
      */
     protected function getLogFiles($path)
@@ -60,8 +62,8 @@ class Data extends AbstractHelper
     }
 
     /**
-     * @param     $bytes
-     * @param int $precision
+     * @param $bytes
+     * @param $precision
      * @return string
      */
     protected function filesizeToReadableString($bytes, $precision = 2)
@@ -104,13 +106,23 @@ class Data extends AbstractHelper
         return array_slice($logFileData, 0, $maxNumOfLogs);
     }
 
+    /**
+     * @param $fileName
+     * @param $numOfLines
+     * @return string
+     */
     public function getLastLinesOfFile($fileName, $numOfLines)
     {
         $lines = $this->tailExec($fileName, $numOfLines);
         return implode('', $lines);
     }
 
-    public function tailExec($file, $lines)
+    /**
+     * @param $file
+     * @param $lines
+     * @return array
+     */
+    protected function tailExec($file, $lines)
     {
         //global $fsize;
         $handle = fopen($file, "r");
