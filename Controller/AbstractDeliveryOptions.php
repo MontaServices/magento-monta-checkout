@@ -160,9 +160,9 @@ abstract class AbstractDeliveryOptions extends Action
             $googleapikey,
             $defaultShippingCost,
             $language,
-            $showZeroCostsAsFree,
             $currencySymbol,
-            $showZeroCostsAsFree,
+            false,
+            false,
             $hideDHLPackStations
         );
 
