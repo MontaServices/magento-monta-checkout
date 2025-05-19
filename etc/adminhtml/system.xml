@@ -81,6 +81,12 @@
                     <comment><![CDATA[When disabled no delivery days are shown]]></comment>
                 </field>
 
+                <field id="hidedhlpackstations" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0"  canRestore="1">
+                    <label>Hide DHL Packstations</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[When disabled no DHL Packstations are shown]]></comment>
+                </field>
+
                 <field id="maxpickuppoints" translate="label" type="text" sortOrder="14" showInDefault="1" showInWebsite="0" showInStore="0"  canRestore="1">
                     <label>Max pickup points</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

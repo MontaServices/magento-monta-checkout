@@ -13,6 +13,7 @@ class Carrier extends AbstractConfigProvider
     const XPATH_CARRIER_DISABLEPICKUPPOINTS = 'carriers/montapacking/disablepickuppoints';
     const XPATH_CARRIER_MAXPICKUPPOINTS = 'carriers/montapacking/maxpickuppoints';
     const XPATH_CARRIER_DISABLEDELIVERYDAYS = 'carriers/montapacking/disabledeliverydays';
+    const XPATH_CARRIER_HIDEDDHLPACKSTATIONS = 'carriers/montapacking/hidedhlpackstations';
     const XPATH_CARRIER_LEADINGSTOCKMONTAPACKING = 'carriers/montapacking/leadingstockmontapacking';
     const XPATH_CARRIER_SHOWZEROCOSTSASFREE = 'carriers/montapacking/showzerocostsasfree';
     const XPATH_CARRIER_IMAGEFORSTORECOLLECT = 'carriers/montapacking/imageForStoreCollect';
@@ -81,6 +82,14 @@ class Carrier extends AbstractConfigProvider
     public function getDisableDeliveryDays()
     {
         return $this->getConfigValue(self::XPATH_CARRIER_DISABLEDELIVERYDAYS);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHideDHLPackStations()
+    {
+        return $this->getConfigValue(self::XPATH_CARRIER_HIDEDDHLPACKSTATIONS);
     }
 
     /**
