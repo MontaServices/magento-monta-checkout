@@ -1,9 +1,10 @@
 <?xml version="1.0" ?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
-	<group id="default">
-		<job instance="Montapacking\MontaCheckout\Cron\LogCleanup" method="execute" name="Montapacking_MontaCheckout_LogCleanup">
-			<!--<schedule>0 0 * * *</schedule> -->
-			<schedule> * * * * * </schedule>
-		</job>
-	</group>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job instance="Montapacking\MontaCheckout\Cron\LogCleanup" method="execute"
+             name="Montapacking_MontaCheckout_LogCleanup">
+            <schedule>* * * * *</schedule>
+        </job>
+    </group>
 </config>

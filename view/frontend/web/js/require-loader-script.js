@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var apiKeyElement = document.getElementById('google-maps-api');
     var apiKey = apiKeyElement ? apiKeyElement.getAttribute('data-api-key') : '';
 

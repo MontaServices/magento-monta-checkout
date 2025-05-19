@@ -11,8 +11,7 @@ class OrderLoadAfter implements ObserverInterface
     private $orderExtension;
 
     /**
-     * OrderLoadAfter constructor.
-     *
+     * @param OrderExtension $orderExtension
      */
     public function __construct(
         OrderExtension $orderExtension
@@ -23,16 +22,12 @@ class OrderLoadAfter implements ObserverInterface
 
     public function execute(Observer $observer)
     {
-
         $order = $observer->getOrder();
 
         $extensionAttributes = $order->getExtensionAttributes();
 
-
         if ($extensionAttributes === null) {
-
             $extensionAttributes = $this->orderExtension;
-
         }
 
         $attr = $order->getData('montapacking_montacheckout_data');

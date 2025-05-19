@@ -1,16 +1,13 @@
 <?php
 
-namespace Montapacking\Montacheckout\Logger;
+namespace Montapacking\MontaCheckout\Logger;
 
+use Magento\Framework\Logger\Handler\Base;
 use Monolog\Logger;
 
-class Handler extends \Magento\Framework\Logger\Handler\Base
+class Handler extends Base
 {
-    /**
-     * Logging level
-     *
-     * @var int
-     */
+    /** @var int $loggerType - Logging level */
     protected $loggerType = Logger::INFO;
 
     /**

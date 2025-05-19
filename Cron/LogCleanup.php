@@ -10,12 +10,12 @@ class LogCleanup
 {
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
     /**
-     * @var \Magento\Framework\Filesystem\DriverInterface
+     * @var DriverInterface
      */
     protected $_driver;
 
@@ -53,7 +53,7 @@ class LogCleanup
                 }
             }
             $this->_driver->filePutContents($path, implode(PHP_EOL, $line_array));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->_logger->error("Something went wrong removing logs older than 30 days");
         }
         return $this;

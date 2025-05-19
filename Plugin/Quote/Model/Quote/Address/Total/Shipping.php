@@ -4,9 +4,10 @@ namespace Montapacking\MontaCheckout\Plugin\Quote\Model\Quote\Address\Total;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Quote\Model\Quote;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface as ShippingAssignmentApi;
+use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total as QuoteAddressTotal;
+use Magento\Store\Model\ScopeInterface;
 use Montapacking\MontaCheckout\Logger\Logger;
 
 class Shipping
@@ -14,17 +15,17 @@ class Shipping
     private $scopeConfig;
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
-
 
     /** @var Session $checkoutSession */
     private $checkoutSession;
 
     /**
-     * Shipping constructor.
-     *
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Session $checkoutSession
+     * @param Logger $logger
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -38,13 +39,12 @@ class Shipping
     }
 
     /**
-     * @param                       $subject
-     * @param                       $result
-     * @param Quote                 $quote
+     * @param $subject
+     * @param $result
+     * @param Quote $quote
      * @param ShippingAssignmentApi $shippingAssignment
-     * @param QuoteAddressTotal     $total
-     *
-     * @return void|mixed
+     * @param QuoteAddressTotal $total
+     * @return mixed|void
      */
     // @codingStandardsIgnoreLine
     public function afterCollect($subject, $result, Quote $quote, ShippingAssignmentApi $shippingAssignment, QuoteAddressTotal $total)
@@ -53,7 +53,7 @@ class Shipping
         $address = $shipping->getAddress();
         $rates = $address->getAllShippingRates();
 
-        $fee = $this->scopeConfig->getValue('carriers/montapacking/price', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $fee = $this->scopeConfig->getValue('carriers/montapacking/price', ScopeInterface::SCOPE_STORE);
 
         if (!$rates) {
             return $result;
@@ -62,7 +62,6 @@ class Shipping
         if (empty($rates)) {
             return $result;
         }
-
 
         $deliveryOption = $this->getDeliveryOption($address);
 
@@ -78,7 +77,7 @@ class Shipping
             return $result;
         }
 
-        if(!$this->checkoutSession->getLatestShipping()) {
+        if (!$this->checkoutSession->getLatestShipping()) {
             return $result;
         }
 
@@ -92,9 +91,9 @@ class Shipping
 
         if ($deliveryOptionType == 'delivery') {
             if ($deliveryOptionAdditionalInfo->code == "MultipleShipper_ShippingDayUnknown") {
-                if(isset($deliveryOptionAdditionalInfo->price)){
-					$fee = $deliveryOptionAdditionalInfo->price;
-				}
+                if (isset($deliveryOptionAdditionalInfo->price)) {
+                    $fee = $deliveryOptionAdditionalInfo->price;
+                }
             } else {
                 foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
                     foreach ($timeframe->options as $option) {
@@ -148,14 +147,11 @@ class Shipping
             return null;
         }
 
-        $option = json_decode($option);
-
-        return $option;
+        return json_decode($option);
     }
 
     private function adjustTotals($name, $code, $address, $total, $fee, $description)
     {
-
         $total->setTotalAmount($code, $fee);
         $total->setBaseTotalAmount($code, $fee);
         $total->setBaseShippingAmount($fee);

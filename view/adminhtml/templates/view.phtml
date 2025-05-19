@@ -1,7 +1,7 @@
 <?php /** @var $block \Montapacking\MontaCheckout\Block\View\Index */ ?>
 
 <?php
-    $count_lines = $block->countLines();
+$count_lines = $block->countLines();
 ?>
 <section class="admin__page-section">
     <div class="admin__page-section-content">
@@ -16,11 +16,11 @@
         <div class="admin__page-section-item-content startfrom" style="padding-bottom: 10px; float: left">
             <span class="label"><?= /* @noEscape */ __('Page no.:') ?></span>
             <?php
-                $i = 0;
-                $pagenumber = 0;
+            $i = 0;
+            $pagenumber = 0;
             ?>
             <?php
-                $block_added = false;
+            $block_added = false;
             foreach ($block->getStarts() as $start) :
                 if ($start >= $count_lines) {
                     break;
@@ -28,12 +28,13 @@
                 $pagenumber++;
                 ?>
                 <?php if ($start == $block->getStart()) : ?>
-                    <span><strong><?= /* @noEscape */ $pagenumber ?></strong></span>
-                <?php else :
-                    $block_added = true;
-                    ?>
-                    <a href="<?=  /* @noEscape */ $block->getStartUrl($start); ?>"><?= /* @noEscape */ $pagenumber ?></a>
-                <?php endif; ?>
+                <span><strong><?= /* @noEscape */ $pagenumber ?></strong></span>
+            <?php else :
+                $block_added = true;
+                ?>
+                <a href="<?= /* @noEscape */
+                $block->getStartUrl($start); ?>"><?= /* @noEscape */ $pagenumber ?></a>
+            <?php endif; ?>
             <?php endforeach; ?>
         </div>
 
@@ -45,9 +46,10 @@
                 }
                 ?>
                 <?php if ($limit == $block->getLimit()) : ?>
-                <span><strong><?=  /* @noEscape */ $limit ?></strong></span>
+                <span><strong><?= /* @noEscape */ $limit ?></strong></span>
             <?php else : ?>
-                <a href="<?=  /* @noEscape */ $block->getLimitUrl($limit); ?>"><?=  /* @noEscape */ $limit ?></a>
+                <a href="<?= /* @noEscape */
+                $block->getLimitUrl($limit); ?>"><?= /* @noEscape */ $limit ?></a>
             <?php endif; ?>
             <?php endforeach; ?>
         </div>
@@ -55,24 +57,24 @@
         <div style="clear:both"></div>
 
         <?php if (false === $block_added) { ?>
-        <style>
-            .startfrom {
-                display: none;
-            }
+            <style>
+                .startfrom {
+                    display: none;
+                }
 
 
-        </style>
+            </style>
         <?php } ?>
 
 
         <div class="admin__page-section-item-content">
             <table style="width:100%; background:black;color:#2EC029; !important">
-            <?php foreach ($block->getLogFileBlocks() as $time => $logBlock) : ?>
-                <tr>
-                    <td style="vertical-align: top; width: 200px; padding-left: 10px; padding-top:2px; padding-bottom: 2px; font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;">
-                        <?=  /* @noEscape */ $time; ?>
-                    </td>
-                    <td style="vertical-align: top; font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;">
+                <?php foreach ($block->getLogFileBlocks() as $time => $logBlock) : ?>
+                    <tr>
+                        <td style="vertical-align: top; width: 200px; padding-left: 10px; padding-top:2px; padding-bottom: 2px; font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;">
+                            <?= /* @noEscape */ $time; ?>
+                        </td>
+                        <td style="vertical-align: top; font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;">
 
                             <?php
 
@@ -81,15 +83,16 @@
                             $value = str_replace("[]", "", $value);
 
                             ?>
-                        <?= /* @noEscape */ trim(str_replace("MontapackingLogger.NOTICE: ", "", $value));?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+                            <?= /* @noEscape */trim(str_replace("MontapackingLogger.NOTICE: ", "", $value)); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
                 <?php if (!count($block->getLogFileBlocks())) { ?>
 
                     <tr>
                         <td style="vertical-align: top; width: 200px; padding-left: 10px; padding-top:2px; padding-bottom: 2px; font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;">
-                            <?=  /* @noEscape */ __('No logs available yet') ?>
+                            <?= /* @noEscape */
+                            __('No logs available yet') ?>
                         </td>
                     </tr>
 
@@ -98,7 +101,8 @@
         </div>
 
         <div class="admin__page-section-item-content startfrom" style="padding-top: 10px;">
-            <span class="label"><?=  /* @noEscape */ __('Page no.:') ?></span>
+            <span class="label"><?= /* @noEscape */
+                __('Page no.:') ?></span>
             <?php
             $i = 0;
             $pagenumber = 0;
@@ -110,10 +114,11 @@
                 $pagenumber++;
                 ?>
                 <?php if ($start == $block->getStart()) : ?>
-                    <span><strong><?=  /* @noEscape */ $pagenumber ?></strong></span>
-                <?php else : ?>
-                    <a href="<?=  /* @noEscape */ $block->getStartUrl($start); ?>"><?=  /* @noEscape */ $pagenumber ?></a>
-                <?php endif; ?>
+                <span><strong><?= /* @noEscape */ $pagenumber ?></strong></span>
+            <?php else : ?>
+                <a href="<?= /* @noEscape */
+                $block->getStartUrl($start); ?>"><?= /* @noEscape */ $pagenumber ?></a>
+            <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>

@@ -2,14 +2,13 @@
 
 namespace Montapacking\MontaCheckout\Block;
 
+use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier;
 
-class Checkout extends \Magento\Framework\View\Element\Template
+class Checkout extends Template
 {
-    /**
-     * @var Carrier
-     */
+    /** @var Carrier $carrier */
     private $carrier;
 
     /**
@@ -17,20 +16,21 @@ class Checkout extends \Magento\Framework\View\Element\Template
      *
      * @param Carrier $carrier
      * @param Context $context
-     * @param array   $data
+     * @param array $data
      */
     public function __construct(
         Carrier $carrier,
         Context $context,
         array $data = []
-    ) {
+    )
+    {
         $this->carrier = $carrier;
 
         parent::__construct($context, $data);
     }
 
     /**
-     * Return true if the google maps api key has been filled
+     * Return true if the Google Maps api key has been filled
      *
      * @return bool
      */
@@ -40,7 +40,7 @@ class Checkout extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Returns the google maps api key in string format, might return empty string
+     * Returns the Google Maps api key in string format, might return empty string
      *
      * @return string
      */

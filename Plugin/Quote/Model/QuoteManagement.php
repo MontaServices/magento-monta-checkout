@@ -2,10 +2,10 @@
 
 namespace Montapacking\MontaCheckout\Plugin\Quote\Model;
 
-use DateTimeZone;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Framework\Locale\ResolverInterface;
 
 class QuoteManagement
 {
@@ -24,12 +24,15 @@ class QuoteManagement
      * QuoteManagement constructor.
      *
      * @param CartRepositoryInterface $cartRepository
+     * @param OrderRepositoryInterface $orderRepository
+     * @param ResolverInterface $localeResolver
      */
     public function __construct(
         CartRepositoryInterface $cartRepository,
         OrderRepositoryInterface $orderRepository,
         ResolverInterface $localeResolver
-    ) {
+    )
+    {
         $this->cartRepository = $cartRepository;
         $this->orderRepository = $orderRepository;
         $this->localeResolver = $localeResolver;
@@ -39,14 +42,13 @@ class QuoteManagement
      * @param $subject
      * @param $cartId
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     // @codingStandardsIgnoreLine
     public function beforePlaceOrder($subject, $cartId)
     {
         $quote = $this->cartRepository->getActive($cartId);
         $shippingAddress = $quote->getShippingAddress();
-        $billingAddress = $quote->getBillingAddress();
         $deliveryOption = $shippingAddress->getMontapackingMontacheckoutData();
 
         if (!$deliveryOption) {
@@ -66,7 +68,8 @@ class QuoteManagement
                 $shippingAddress->setCity($newAddress->city);
                 $shippingAddress->setCountryId($newAddress->country);
             }
-        } catch(\JsonException $exception) {
+        } catch (\JsonException $exception) {
+            // catch and ignore
         }
     }
 
@@ -76,7 +79,7 @@ class QuoteManagement
      * @param $quoteId
      *
      * @return string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     // @codingStandardsIgnoreLine
     public function afterPlaceOrder($subject, $orderId, $quoteId)
@@ -92,9 +95,9 @@ class QuoteManagement
         $deliveryOption = $address->getMontapackingMontacheckoutData();
 
         try {
+            // Delivery
             $date_stripped_obj = json_decode($deliveryOption);
             if (isset($date_stripped_obj->additional_info[0]->date)) {
-
                 $date_stripped = $date_stripped_obj->additional_info[0]->date;
                 // Stap 1: Achterhaal de huidige locale (bijv. 'de_DE' of 'nl_NL')
                 $locale = $this->localeResolver->getLocale();
@@ -185,7 +188,7 @@ class QuoteManagement
                 $datetime->setTimezone(new \DateTimeZone('UTC'));
 
                 // Stap 5: Formatteer de datum zoals gewenst
-                $formattedDate = $datetime->format('d-m-Y'); // Of een ander formaat zoals 'd-m-Y H:i:s'
+                $formattedDate = $datetime->format('Y-m-d'); // Of een ander formaat zoals 'd-m-Y H:i:s'
 
                 // Opslaan in JSON
                 $date_stripped_obj->additional_info[0]->date = $formattedDate;
@@ -194,13 +197,16 @@ class QuoteManagement
                 if (!$deliveryOption) {
                     return $orderId;
                 }
-
-                $order->setMontapackingMontacheckoutData($deliveryOption);
-                $order->save();
-
+            } else {
+                // Pickup/on-date flow
+                if (!$deliveryOption) {
+                    return $orderId;
+                }
             }
+            $order->setMontapackingMontacheckoutData($deliveryOption);
+            $order->save();
         } catch (\Exception $e) {
-//                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
+            //                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
         }
 
         return $orderId;

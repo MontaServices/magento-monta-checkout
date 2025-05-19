@@ -14,23 +14,19 @@ abstract class AbstractConfigProvider
     /** @var Manager $moduleManager */
     private $moduleManager;
 
-    private $storeManager;
-
     /**
      * AbstractConfigProvider constructor.
      *
      * @param ScopeConfig $scopeConfig
-     * @param Manager     $moduleManager
+     * @param Manager $moduleManager
      */
     public function __construct(
         ScopeConfig $scopeConfig,
-        Manager $moduleManager,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
-    ) {
+        Manager $moduleManager
+    )
+    {
         $this->scopeConfig = $scopeConfig;
         $this->moduleManager = $moduleManager;
-        $this->storeManager = $storeManager;
-        $mediaUrl = $this ->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
     }
 
     /**
@@ -41,8 +37,6 @@ abstract class AbstractConfigProvider
     public function getConfigValue($path)
     {
         return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE);
-
-
     }
 
     /**

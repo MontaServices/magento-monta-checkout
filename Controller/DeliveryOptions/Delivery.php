@@ -3,19 +3,21 @@
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Locale\CurrencyInterface;
 use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
-
 use Montapacking\MontaCheckout\Helper\DeliveryHelper;
 use Montapacking\MontaCheckout\Helper\PickupHelper;
 use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
-
-use Carbon\Carbon;
-use Monta\MontaProcessing\NumberGenerator;
 
 /**
  * Class Delivery
@@ -31,22 +33,22 @@ class Delivery extends AbstractDeliveryOptions
     private $localeResolver;
 
     /**
-     * @var \Montapacking\MontaCheckout\Logger\Logger
+     * @var Logger
      */
     protected $_logger;
 
     /**
-     * @var \Magento\Checkout\Model\Cart
+     * @var Cart
      */
     public $cart;
 
     /**
-     * @var \Montapacking\MontaCheckout\Helper\PickupHelper
+     * @var PickupHelper
      */
     protected $pickupHelper;
 
     /**
-     * @var \Montapacking\MontaCheckout\Helper\DeliveryHelper
+     * @var DeliveryHelper
      */
     protected $deliveryHelper;
 
@@ -54,10 +56,7 @@ class Delivery extends AbstractDeliveryOptions
 
     protected $currency;
 
-
     /**
-     * Services constructor.
-     *
      * @param Context $context
      * @param Session $checkoutSession
      * @param LocaleResolver $localeResolver
@@ -66,24 +65,22 @@ class Delivery extends AbstractDeliveryOptions
      * @param Cart $cart
      * @param PickupHelper $pickupHelper
      * @param DeliveryHelper $deliveryHelper
+     * @param StoreManagerInterface $storeManager
+     * @param CurrencyInterface $currencyInterface
      */
     public function __construct(
-        Context         $context,
-        Session         $checkoutSession,
-        LocaleResolver  $localeResolver,
-        CarrierConfig   $carrierConfig,
-        Logger          $logger,
-        Cart            $cart,
-        PickupHelper    $pickupHelper,
-        DeliveryHelper  $deliveryHelper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Locale\CurrencyInterface $currencyInterface
+        Context $context,
+        Session $checkoutSession,
+        LocaleResolver $localeResolver,
+        CarrierConfig $carrierConfig,
+        Logger $logger,
+        Cart $cart,
+        PickupHelper $pickupHelper,
+        DeliveryHelper $deliveryHelper,
+        StoreManagerInterface $storeManager,
+        CurrencyInterface $currencyInterface
     )
     {
-//        $tomorrow = Carbon::now()->addDay();
-//        $processingstuff = new NumberGenerator();
-//        print_r($processingstuff->Generate(0, 100)); die();
-
         $this->_logger = $logger;
         $this->checkoutSession = $checkoutSession;
         $this->localeResolver = $localeResolver;
@@ -103,7 +100,8 @@ class Delivery extends AbstractDeliveryOptions
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface|ResultInterface
+     * @throws GuzzleException
      */
     public function execute()
     {
@@ -116,14 +114,13 @@ class Delivery extends AbstractDeliveryOptions
 
         try {
             $oApi = $this->generateApi($request, $language, $this->_logger, true);
-            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
             $AFHImage_basepath = $mediaUrl . 'Images/';
 
-            $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'],  $oApi['CustomerLocation'], $oApi['StandardShipper']]);
+            $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper']]);
 
-            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'],$AFHImage_basepath ]);
+            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'], $AFHImage_basepath]);
         } catch (Exception $e) {
-
             $context = ['source' => 'Montapacking Checkout'];
             $this->_logger->critical(json_encode($e->getMessage()), $context); //phpcs:ignore
             $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore

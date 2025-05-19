@@ -5,6 +5,7 @@ namespace Montapacking\MontaCheckout\Helper;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Exception\FileSystemException;
 
 class Data extends AbstractHelper
 {
@@ -28,6 +29,7 @@ class Data extends AbstractHelper
      * Get path to var/log directory
      *
      * @return string
+     * @throws FileSystemException
      */
     public function getPath()
     {
@@ -44,7 +46,7 @@ class Data extends AbstractHelper
         array_splice($list, 0, 2);
 
         $output = [];
-        foreach ($list as $index => $file) {
+        foreach ($list as $file) {
             if (is_dir($path . DIRECTORY_SEPARATOR . $file)) {
                 foreach ($this->getLogFiles($path . DIRECTORY_SEPARATOR . $file) as $childFile) {
                     $output[] = $file . DIRECTORY_SEPARATOR . $childFile;
@@ -60,7 +62,6 @@ class Data extends AbstractHelper
     /**
      * @param     $bytes
      * @param int $precision
-     *
      * @return string
      */
     protected function filesizeToReadableString($bytes, $precision = 2)
@@ -78,6 +79,7 @@ class Data extends AbstractHelper
 
     /**
      * @return array
+     * @throws FileSystemException
      */
     public function buildLogData()
     {
@@ -99,25 +101,13 @@ class Data extends AbstractHelper
         });
 
         //limit the amount of log data $maxNumOfLogs
-        $logFileData = array_slice($logFileData, 0, $maxNumOfLogs);
-
-        return $logFileData;
+        return array_slice($logFileData, 0, $maxNumOfLogs);
     }
 
     public function getLastLinesOfFile($fileName, $numOfLines)
     {
-        $path = $this->getPath();
-        $fullPath = $path . $fileName;
-        //exec('tail -' . $numOfLines . ' ' . $fullPath, $output);
-        //return implode($output);
-
         $lines = $this->tailExec($fileName, $numOfLines);
-        $data = "";
-        foreach ($lines as $line) {
-            $data .= $line;
-        }
-
-        return $data;
+        return implode('', $lines);
     }
 
     public function tailExec($file, $lines)
