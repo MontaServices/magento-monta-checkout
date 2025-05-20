@@ -145,6 +145,7 @@ abstract class AbstractDeliveryOptions extends Action
 
         $leadingstockmontapacking = $this->getCarrierConfig()->getLeadingStockMontapacking();
         $disabledeliverydays = $this->getCarrierConfig()->getDisableDeliveryDays();
+        $hideDHLPackStations = $this->getCarrierConfig()->getHideDHLPackStations();
         $disabledPickupPoints = $this->getCarrierConfig()->getDisablePickupPoints();
         $defaultShippingCost = $this->getCarrierConfig()->getPrice();
         $maxPickupPoints = $this->getCarrierConfig()->getMaxpickuppoints() ?: 4;
@@ -173,7 +174,8 @@ abstract class AbstractDeliveryOptions extends Action
             $language,
             $currencySymbol,
             false,
-            $showZeroCostsAsFree
+            $showZeroCostsAsFree,
+            $hideDHLPackStations,
         );
 
         $settings->setExcludeShippingDiscount(false);
