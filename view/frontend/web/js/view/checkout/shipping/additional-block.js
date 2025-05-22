@@ -689,7 +689,7 @@ define(
                     const openingtimes_html = $(this).parents(".pickup-option").find(".table-container .table").clone().html();
                     let total_price = parseFloat(price);
 
-                    const n = code_pickup.includes("_packStation");
+                    const n = code_pickup.includes("_packStation") || code_pickup.includes("PackingStationCode_");
 
                     if (n) {
                         $("#PCPostNummer").removeClass("displaynone");
