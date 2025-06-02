@@ -148,7 +148,7 @@ abstract class AbstractDeliveryOptions extends Action
         $hideDHLPackStations = $this->getCarrierConfig()->getHideDHLPackStations();
         $disabledPickupPoints = $this->getCarrierConfig()->getDisablePickupPoints();
         $defaultShippingCost = $this->getCarrierConfig()->getPrice();
-        $maxPickupPoints = $this->getCarrierConfig()->getMaxpickuppoints() ?: 4;
+        $maxPickupPoints = $this->getCarrierConfig()->getMaxPickupPoints() ?: 4;
         $showZeroCostsAsFree = $this->getCarrierConfig()->getShowZeroCostsAsFree() ?: false;
 
         $currentStore = $this->storeManager->getStore();
@@ -160,9 +160,6 @@ abstract class AbstractDeliveryOptions extends Action
          */
         $cart = $this->getCart();
 
-        /**
-         * Todo: Fix to make dynamic from Magento settings later
-         */
         $settings = new Settings(
             $webshop,
             $username,
