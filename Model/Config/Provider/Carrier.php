@@ -25,7 +25,7 @@ class Carrier extends AbstractConfigProvider
      */
     public function isCarrierActive()
     {
-        return $this->getConfigValue(self::XPATH_CARRIER_ACTIVE);
+        return (bool)$this->getConfigValue(self::XPATH_CARRIER_ACTIVE);
     }
 
     /**
@@ -89,7 +89,8 @@ class Carrier extends AbstractConfigProvider
      */
     public function getHideDHLPackStations()
     {
-        return $this->getConfigValue(self::XPATH_CARRIER_HIDEDDHLPACKSTATIONS);
+        // Cast to boolean for type safety (if config path is absent, returns NULL)
+        return (bool)$this->getConfigValue(self::XPATH_CARRIER_HIDEDDHLPACKSTATIONS);
     }
 
     /**
@@ -113,7 +114,7 @@ class Carrier extends AbstractConfigProvider
      */
     public function getMaxPickupPoints()
     {
-        return $this->getConfigValue(self::XPATH_CARRIER_MAXPICKUPPOINTS);
+        return (int)$this->getConfigValue(self::XPATH_CARRIER_MAXPICKUPPOINTS);
     }
 
     /**
