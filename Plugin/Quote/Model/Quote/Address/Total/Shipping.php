@@ -94,17 +94,21 @@ class Shipping
                 } else {
                     // Fallback to avoid null index pointer
                     foreach ($latestShipping[0] ?? [] as $timeframe) {
+                        // Find selected option from timeframe's options
                         foreach ($timeframe->options as $option) {
                             if ($option->code == $deliveryOptionAdditionalInfo->code) {
                                 $selectedOptionFromCache = $option;
                                 $fee = $selectedOptionFromCache->price;
+                                break; // Jump out of loop, match found
                             }
                         }
                     }
                 }
 
+                //Shipping method name is saved in name
                 $method_title = $deliveryOptionAdditionalInfo->name;
 
+                // Construct shipping description based on parts
                 $desc = [];
                 if (trim($deliveryOptionAdditionalInfo->date)) {
                     $desc[] = $deliveryOptionAdditionalInfo->date;
@@ -126,6 +130,7 @@ class Shipping
                     }
                 }
 
+                // Glue description back together
                 $desc = implode(" | ", $desc);
                 break;
             default:

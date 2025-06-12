@@ -39,53 +39,47 @@ class QuoteManagement
     }
 
     /**
-     * @param $subject
+     * @param \Magento\Quote\Model\QuoteManagement $subject
      * @param $cartId
-     *
+     * @return void
      * @throws NoSuchEntityException
      */
-    // @codingStandardsIgnoreLine
-    public function beforePlaceOrder($subject, $cartId)
+    public function beforePlaceOrder(\Magento\Quote\Model\QuoteManagement $subject, $cartId)
     {
         $quote = $this->cartRepository->getActive($cartId);
         $shippingAddress = $quote->getShippingAddress();
         $deliveryOption = $shippingAddress->getMontapackingMontacheckoutData();
 
-        if (!$deliveryOption) {
-            return;
-        }
+        if ($deliveryOption) {
+            try {
+                $deliveryOption = json_decode($deliveryOption);
+                if ($deliveryOption->type == 'pickup') {
+                    $newAddress = $deliveryOption->additional_info[0];
 
-        try {
-            $deliveryOption = json_decode($deliveryOption);
-            $type = $deliveryOption->type;
-
-            if ($type == 'pickup') {
-                $newAddress = $deliveryOption->additional_info[0];
-
-                $shippingAddress->setStreet($newAddress->street . ' ' . $newAddress->housenumber);
-                $shippingAddress->setCompany($newAddress->company);
-                $shippingAddress->setPostcode($newAddress->postal);
-                $shippingAddress->setCity($newAddress->city);
-                $shippingAddress->setCountryId($newAddress->country);
+                    $shippingAddress->setStreet($newAddress->street . ' ' . $newAddress->housenumber);
+                    $shippingAddress->setCompany($newAddress->company);
+                    $shippingAddress->setPostcode($newAddress->postal);
+                    $shippingAddress->setCity($newAddress->city);
+                    $shippingAddress->setCountryId($newAddress->country);
+                }
+            } catch (\JsonException $exception) {
+                // catch and ignore, maybe log something with json_last_error()
             }
-        } catch (\JsonException $exception) {
-            // catch and ignore
         }
     }
 
     /**
-     * @param $subject
+     * @param \Magento\Quote\Model\QuoteManagement $subject
      * @param $orderId
      * @param $quoteId
-     *
-     * @return string
+     * @return mixed
      * @throws NoSuchEntityException
      */
-    // @codingStandardsIgnoreLine
-    public function afterPlaceOrder($subject, $orderId, $quoteId)
+    public function afterPlaceOrder(\Magento\Quote\Model\QuoteManagement $subject, $orderId, $quoteId)
     {
         $order = $this->orderRepository->get($orderId);
 
+        // Skip running again when Order already set
         if ($order->getMontapackingMontacheckoutData()) {
             return $orderId;
         }
@@ -185,6 +179,7 @@ class QuoteManagement
                 }
 
                 // Stap 4: Zet de tijdzone van het DateTime-object om naar UTC
+                // TODO this might push the datetime into yesterday when timezone is ahead of UTC
                 $datetime->setTimezone(new \DateTimeZone('UTC'));
 
                 // Stap 5: Formatteer de datum zoals gewenst
