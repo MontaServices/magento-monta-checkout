@@ -73,7 +73,8 @@ class Shipping
         $deliveryOptionDetails = $deliveryOption->details[0];
         $deliveryOptionAdditionalInfo = $deliveryOption->additional_info[0];
 
-        if (!$this->checkoutSession->getLatestShipping()) {
+        $latestShipping = $this->checkoutSession->getLatestShipping();
+        if (!$latestShipping) {
             return $result;
         }
 
@@ -91,7 +92,8 @@ class Shipping
                         $fee = $deliveryOptionAdditionalInfo->price;
                     }
                 } else {
-                    foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
+                    // Fallback to avoid null index pointer
+                    foreach ($latestShipping[0] ?? [] as $timeframe) {
                         foreach ($timeframe->options as $option) {
                             if ($option->code == $deliveryOptionAdditionalInfo->code) {
                                 $selectedOptionFromCache = $option;
