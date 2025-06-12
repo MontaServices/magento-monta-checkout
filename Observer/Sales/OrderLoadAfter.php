@@ -22,7 +22,7 @@ class OrderLoadAfter implements ObserverInterface
     }
 
     /** Pass Monta Checkout data from Order field to ExtensionAttributes
-     *
+     * TODO duplicate code in OrderRepositoryPlugin::extendOrder()
      * @param Observer $observer
      * @return void
      */

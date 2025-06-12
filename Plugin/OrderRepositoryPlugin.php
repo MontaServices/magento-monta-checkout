@@ -14,6 +14,7 @@ class OrderRepositoryPlugin
 {
     /**
      * Order Comment field name
+     * TODO use this constant throughout project where value is repeated
      */
     const FIELD_NAME = 'montapacking_montacheckout_data';
 
@@ -43,13 +44,7 @@ class OrderRepositoryPlugin
      */
     public function afterGet(OrderRepositoryInterface $subject, OrderInterface $order)
     {
-        $orderComment = $order->getData(self::FIELD_NAME);
-
-        $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
-        $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
-        $order->setExtensionAttributes($extensionAttributes);
-
-        return $order;
+        return $this->extendOrder($order);
     }
 
     /**
@@ -63,16 +58,27 @@ class OrderRepositoryPlugin
     {
         $orders = $searchResult->getItems();
 
-        // TODO is pass-by-reference still necessary if Order object can be altered?
         foreach ($orders as &$order) {
-            $orderComment = $order->getData(self::FIELD_NAME);
-
-            $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
-            $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
-
-            $order->setExtensionAttributes($extensionAttributes);
+            $this->extendOrder($order);
         }
 
         return $searchResult;
+    }
+
+    /** Copy data from Order record to ExtensionAttribute for public access
+     *  TODO this does the same as \Montapacking\MontaCheckout\Observer\Sales\OrderLoadAfter
+     * @param OrderInterface $order
+     * @return OrderInterface
+     */
+    protected function extendOrder(OrderInterface $order)
+    {
+        $orderComment = $order->getData(self::FIELD_NAME);
+
+        $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
+        $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
+
+        $order->setExtensionAttributes($extensionAttributes);
+
+        return $order;
     }
 }
