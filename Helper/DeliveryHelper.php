@@ -9,6 +9,7 @@ use Montapacking\MontaCheckout\Logger\Logger;
  * Class DeliveryHelper
  *
  * @package Montapacking\MontaCheckout\Helper\DeliveryHelper
+ * @deprecated - No usages found anywhere in project
  */
 class DeliveryHelper
 {
@@ -36,6 +37,7 @@ class DeliveryHelper
     /**
      * @param $frames
      * @return array
+     * @deprecated - Not referenced anywhere
      */
     public function formatShippingOptions($frames)
     {

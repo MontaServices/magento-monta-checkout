@@ -12,6 +12,7 @@ use Montapacking\MontaCheckout\Logger\Logger;
  * Class PickupHelper
  *
  * @package Montapacking\MontaCheckout\Helper\PickupHelper
+ * @deprecated - Not referenced anywhere
  */
 class PickupHelper
 {
@@ -39,6 +40,7 @@ class PickupHelper
     /**
      * @param $frames
      * @return array
+     * @deprecated - Not referenced anywhere
      */
     public function formatPickupOptions($frames)
     {
