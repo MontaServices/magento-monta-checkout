@@ -93,6 +93,10 @@ class QuoteManagement
             $date_stripped_obj = json_decode($deliveryOption);
             if (isset($date_stripped_obj->additional_info[0]->date)) {
                 $date_stripped = $date_stripped_obj->additional_info[0]->date;
+                // Instantiate datetime at noon to avoid timezone switching into yesterday
+                // TODO use the actual additional_info[0]->time range set by user
+                $date_stripped .= " 12:00:00";
+
                 // Stap 1: Achterhaal de huidige locale (bijv. 'de_DE' of 'nl_NL')
                 $locale = $this->localeResolver->getLocale();
 
@@ -179,11 +183,10 @@ class QuoteManagement
                 }
 
                 // Stap 4: Zet de tijdzone van het DateTime-object om naar UTC
-                // TODO this might push the datetime into yesterday when timezone is ahead of UTC
                 $datetime->setTimezone(new \DateTimeZone('UTC'));
 
                 // Stap 5: Formatteer de datum zoals gewenst
-                $formattedDate = $datetime->format('Y-m-d'); // Of een ander formaat zoals 'd-m-Y H:i:s'
+                $formattedDate = $datetime->format('Y-m-d H:i:s');
 
                 // Opslaan in JSON
                 $date_stripped_obj->additional_info[0]->date = $formattedDate;
