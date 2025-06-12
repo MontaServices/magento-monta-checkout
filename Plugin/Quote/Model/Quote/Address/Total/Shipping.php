@@ -73,62 +73,61 @@ class Shipping
         $deliveryOptionDetails = $deliveryOption->details[0];
         $deliveryOptionAdditionalInfo = $deliveryOption->additional_info[0];
 
-        if ($deliveryOptionType != 'pickup' && $deliveryOptionType != 'delivery') {
-            return $result;
-        }
-
         if (!$this->checkoutSession->getLatestShipping()) {
             return $result;
         }
 
-        if ($deliveryOptionType == 'pickup') {
-            $method_title = $deliveryOptionAdditionalInfo->company;
+        switch ($deliveryOptionType) {
+            case 'pickup':
+                $method_title = $deliveryOptionAdditionalInfo->company;
 
-            $desc = explode("|", $deliveryOptionAdditionalInfo->description);
-            $desc = $desc[0];
-            $fee = $deliveryOptionAdditionalInfo->price;
-        }
-
-        if ($deliveryOptionType == 'delivery') {
-            if ($deliveryOptionAdditionalInfo->code == "MultipleShipper_ShippingDayUnknown") {
-                if (isset($deliveryOptionAdditionalInfo->price)) {
-                    $fee = $deliveryOptionAdditionalInfo->price;
-                }
-            } else {
-                foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
-                    foreach ($timeframe->options as $option) {
-                        if ($option->code == $deliveryOptionAdditionalInfo->code) {
-                            $selectedOptionFromCache = $option;
-                            $fee = $selectedOptionFromCache->price;
+                $desc = explode("|", $deliveryOptionAdditionalInfo->description);
+                $desc = $desc[0];
+                $fee = $deliveryOptionAdditionalInfo->price;
+                break;
+            case 'delivery':
+                if ($deliveryOptionAdditionalInfo->code == "MultipleShipper_ShippingDayUnknown") {
+                    if (isset($deliveryOptionAdditionalInfo->price)) {
+                        $fee = $deliveryOptionAdditionalInfo->price;
+                    }
+                } else {
+                    foreach ($this->checkoutSession->getLatestShipping()[0] as $timeframe) {
+                        foreach ($timeframe->options as $option) {
+                            if ($option->code == $deliveryOptionAdditionalInfo->code) {
+                                $selectedOptionFromCache = $option;
+                                $fee = $selectedOptionFromCache->price;
+                            }
                         }
                     }
                 }
-            }
 
-            $method_title = $deliveryOptionAdditionalInfo->name;
+                $method_title = $deliveryOptionAdditionalInfo->name;
 
-            $desc = [];
-            if (trim($deliveryOptionAdditionalInfo->date)) {
-                $desc[] = $deliveryOptionAdditionalInfo->date;
-            }
+                $desc = [];
+                if (trim($deliveryOptionAdditionalInfo->date)) {
+                    $desc[] = $deliveryOptionAdditionalInfo->date;
+                }
 
-            if (trim($deliveryOptionAdditionalInfo->time)) {
-                $desc[] = $deliveryOptionAdditionalInfo->time;
-            }
+                if (trim($deliveryOptionAdditionalInfo->time)) {
+                    $desc[] = $deliveryOptionAdditionalInfo->time;
+                }
 
-            // extra options
-            if (isset($deliveryOptionDetails->options)) {
-                foreach ($deliveryOptionDetails->options as $value) {
-                    $desc[] = $value;
-                    foreach ($selectedOptionFromCache->deliveryOptions as $extra) {
-                        if ($extra->code == $value) {
-                            $fee += $extra->price;
+                // extra options
+                if (isset($deliveryOptionDetails->options)) {
+                    foreach ($deliveryOptionDetails->options as $value) {
+                        $desc[] = $value;
+                        foreach ($selectedOptionFromCache->deliveryOptions as $extra) {
+                            if ($extra->code == $value) {
+                                $fee += $extra->price;
+                            }
                         }
                     }
                 }
-            }
 
-            $desc = implode(" | ", $desc);
+                $desc = implode(" | ", $desc);
+                break;
+            default:
+                return $result;
         }
 
         $this->adjustTotals($method_title, $subject->getCode(), $address, $total, $fee, $desc);
