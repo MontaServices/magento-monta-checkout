@@ -7,17 +7,21 @@ namespace Montapacking\MontaCheckout\Helper;
 
 use Composer\InstalledVersions;
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Module\ResourceInterface;
 use Monta\CheckoutApiWrapper\Objects\Settings;
 
 class System extends AbstractHelper
 {
     /**
+     * @param Context $context
      * @param ResourceInterface $resource
      */
     public function __construct(
+        Context $context,
         protected readonly ResourceInterface $resource)
     {
+        parent::__construct($context);
     }
 
     /** Collect system information
