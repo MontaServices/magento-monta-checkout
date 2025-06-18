@@ -8,7 +8,11 @@
                 <value id="maps_google_main" type="host">maps.google.com</value>
             </values>
         </policy>
-
+        <policy id="connect-src">
+            <values>
+                <value id="maps_google_apis" type="host">maps.googleapis.com</value>
+            </values>
+        </policy>
         <policy id="img-src">
             <values>
                 <value id="maps_gstatic_main" type="host">maps.gstatic.com</value>

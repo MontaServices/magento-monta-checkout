@@ -1563,6 +1563,10 @@
                 }
             }
 
+            if (this.settings.defaultLat == 0) {
+                console.warn("Failed to initialize map, address is not properly geocoded.");
+            }
+
             // The address needs to be determined for the directions link
             var r = new this.reverseGoogleGeocode(this);
             var latlng = new google.maps.LatLng(this.settings.defaultLat, this.settings.defaultLng);
