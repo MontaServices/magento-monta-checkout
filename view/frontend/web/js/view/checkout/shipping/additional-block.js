@@ -801,14 +801,14 @@ define(
                             <div class="bh-sl-container">
                                 <div class="bh-sl-filters-container">
                                     <div class="storelocator-top-bar-container">
-                                        <button type="button" click="closePopup" translate="'Use selection'" class="select-item FAKECLASSHERE displaynone"></button>
+                                        <button type="button" click="closePopup" data-bind="i18n: 'Use selection'" class="select-item FAKECLASSHERE displaynone"></button>
                                         <ul id="category-filters" class="bh-sl-filters"></ul>
                                         <div class="storelocator-postcode-search-container">
                                             <p class="storelocator-postcode-search-label" translate="'Postal Code'">Postcode</p>
                                             <input type="text" class="input-text storelocator-postcode-search-input" id="storelocator-postcode-search-input"/>
-                                            <button type="button" class="storelocator-postcode-search-button" id="storelocator-postcode-search-button" translate="'Search'"></button>
+                                            <button type="button" class="storelocator-postcode-search-button" id="storelocator-postcode-search-button" data-bind="i18n: 'Search'"></button>
                                         </div>
-                                        <button type="button" click="closePopup" translate="'x'" class="select-item close-item"></button>
+                                        <button type="button" click="closePopup" data-bind="i18n: 'x'" class="select-item close-item"></button>
                                     </div>
                                 </div>
                                 <div id="bh-sl-map-container" class="bh-sl-map-container">
