@@ -61,6 +61,7 @@ define(
 
                     let urlPrefix = '';
 
+                    // TODO simply trim trailing slash lmao
                     if (url.includes('/nl/')) {
                         urlPrefix = '/nl';
                     }
