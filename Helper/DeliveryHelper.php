@@ -19,7 +19,7 @@ class DeliveryHelper
     /**
      * @var Logger
      */
-    protected $_logger;
+    protected $logger;
 
     /**
      * @param LocaleResolver $localeResolver
@@ -30,7 +30,7 @@ class DeliveryHelper
         Logger $logger
     )
     {
-        $this->_logger = $logger;
+        $this->logger = $logger;
         $this->localeResolver = $localeResolver;
     }
 

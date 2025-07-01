@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
 class Montapacking extends AbstractCarrier implements CarrierInterface
 {
     /**
-     * @var string
+     * @var string $_code - extend from parent
      */
     protected $_code = 'montapacking';
 
@@ -43,9 +43,9 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
      */
     protected $rateMethodFactory;
 
-    protected $_customLogger;
+    protected $customLogger;
 
-    protected $_request;
+    protected $request;
 
     /**
      * @param ScopeConfigInterface $scopeConfig
@@ -68,8 +68,8 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
         array $data = []
     )
     {
-        $this->_request = $request;
-        $this->_customLogger = $customLogger;
+        $this->request = $request;
+        $this->customLogger = $customLogger;
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);

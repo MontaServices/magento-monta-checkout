@@ -28,7 +28,7 @@ class LongLat extends AbstractDeliveryOptions
     /**
      * @var Logger
      */
-    protected $_logger;
+    protected $logger;
 
     /**
      * @var Cart
@@ -62,7 +62,7 @@ class LongLat extends AbstractDeliveryOptions
         System $systemHelper,
     )
     {
-        $this->_logger = $logger;
+        $this->logger = $logger;
         $this->localeResolver = $localeResolver;
         $this->cart = $cart;
         $this->storeManager = $storeManager;
@@ -95,9 +95,10 @@ class LongLat extends AbstractDeliveryOptions
             $longlat = $request->getParam('longlat') ? trim($request->getParam('longlat')) : "";
 
             if ($longlat == 'false') {
-                $oApi = $this->generateApi($request, $language, $this->_logger);
+                $oApi = $this->generateApi($request, $language);
             } else {
-                $oApi = $this->generateApi($request, $language, $this->_logger, true);
+                // TODO merge duplicate code, just pass expression directly
+                $oApi = $this->generateApi($request, $language, true);
             }
 
             $arr = [];
@@ -114,7 +115,7 @@ class LongLat extends AbstractDeliveryOptions
             $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
 
             $context = ['source' => 'Montapacking Checkout'];
-            $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
+            $this->logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
         }
 
         return $this->jsonResponse($arr);

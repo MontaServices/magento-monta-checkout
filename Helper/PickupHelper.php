@@ -22,7 +22,7 @@ class PickupHelper
     /**
      * @var Logger
      */
-    protected $_logger;
+    protected $logger;
 
     /**
      * @param LocaleResolver $localeResolver
@@ -33,7 +33,7 @@ class PickupHelper
         Logger $logger
     )
     {
-        $this->_logger = $logger;
+        $this->logger = $logger;
         $this->localeResolver = $localeResolver;
     }
 
