@@ -176,10 +176,10 @@ class QuoteManagement
                 $timeZone = $timeZoneMap[$locale] ?? 'UTC'; // Valt terug op UTC als de locale niet bekend is
 
                 // Stap 3: Maak een DateTime-object met de juiste tijdzone
-                $datetime = new \DateTime($date_stripped, new \DateTimeZone($timeZone));
-
-                if ($datetime === false) {
-                    throw new \Exception('Ongeldige datum ontvangen: ' . $date_stripped);
+                try {
+                    $datetime = new \DateTime($date_stripped, new \DateTimeZone($timeZone));
+                } catch (\Exception $e) {
+                    throw new \Exception("Ongeldige datum ontvangen: " . var_export($date_stripped, true));
                 }
 
                 // Stap 4: Zet de tijdzone van het DateTime-object om naar UTC
