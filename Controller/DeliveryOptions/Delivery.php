@@ -36,7 +36,7 @@ class Delivery extends AbstractDeliveryOptions
     /**
      * @var Logger
      */
-    protected $_logger;
+    protected $logger;
 
     /**
      * @var Cart
@@ -84,7 +84,7 @@ class Delivery extends AbstractDeliveryOptions
         System $systemHelper,
     )
     {
-        $this->_logger = $logger;
+        $this->logger = $logger;
         $this->checkoutSession = $checkoutSession;
         $this->localeResolver = $localeResolver;
         $this->cart = $cart;
@@ -117,7 +117,7 @@ class Delivery extends AbstractDeliveryOptions
         }
 
         try {
-            $oApi = $this->generateApi($request, $language, $this->_logger, true);
+            $oApi = $this->generateApi($request, $language, true);
             $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
             $AFHImage_basepath = $mediaUrl . 'Images/';
 
@@ -126,8 +126,8 @@ class Delivery extends AbstractDeliveryOptions
             return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'], $AFHImage_basepath]);
         } catch (Exception $e) {
             $context = ['source' => 'Montapacking Checkout'];
-            $this->_logger->critical(json_encode($e->getMessage()), $context); //phpcs:ignore
-            $this->_logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
+            $this->logger->critical(json_encode($e->getMessage()), $context); //phpcs:ignore
+            $this->logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
             return $this->jsonResponse(json_encode([]));
         }
     }

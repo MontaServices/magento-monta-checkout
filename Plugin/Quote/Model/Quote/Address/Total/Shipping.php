@@ -17,7 +17,7 @@ class Shipping
     /**
      * @var Logger
      */
-    protected $_logger;
+    protected $logger;
 
     /** @var Session $checkoutSession */
     private $checkoutSession;
@@ -35,7 +35,7 @@ class Shipping
     {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutSession = $checkoutSession;
-        $this->_logger = $logger;
+        $this->logger = $logger;
     }
 
     /**
