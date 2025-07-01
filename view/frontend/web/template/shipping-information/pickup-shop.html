@@ -1,60 +1,43 @@
-<div class="shipping-information" data-bind="visible: isSelected() == true">
+<div class="shipping-information" visible="isSelected() == true">
 
-    <!-- ko if: parcelShopAddress() && parcelShopAddress().company-->
-    <div class="pickup-shop-address">
+    <div if="parcelShopAddress() && parcelShopAddress().company" class="pickup-shop-address">
         <div class="shipping-information-title">
-            <span data-bind="i18n: 'Pick-up address'"></span>
+            <span translate="'Pick-up address'"></span>
         </div>
         <div class="shipping-information-content">
-            <strong data-bind="text: parcelShopAddress().company"></strong>
+            <strong text="parcelShopAddress().company"></strong>
 
-            <!-- ko if: parcelShopAddress().description -->
-            <p>
-                <i><span data-bind="text: parcelShopAddress().description"></span></i>
+            <p if="parcelShopAddress().description">
+                <i><span text="parcelShopAddress().description"></span></i>
             </p>
-            <!-- /ko -->
             <p>
-                <span data-bind="text: parcelShopAddress().street + ' ' + parcelShopAddress().housenumber"></span><br />
-                <span data-bind="text: parcelShopAddress().postal"></span>
-                <span data-bind="text: parcelShopAddress().city + ' (' + parcelShopAddress().country + ')' "></span>
+                <span text="parcelShopAddress().street + ' ' + parcelShopAddress().housenumber"></span><br/>
+                <span text="parcelShopAddress().postal"></span>
+                <span text="parcelShopAddress().city + ' (' + parcelShopAddress().country + ')' "></span>
             </p>
 
         </div>
     </div>
-    <!-- /ko -->
 </div>
 
 
-<div class="shipping-information" data-bind="visible: isSelected() == false">
+<div class="shipping-information" visible="isSelected() == false">
 
     <div class="pickup-shop-address">
         <div class="shipping-information-title">
-            <span data-bind="i18n: 'Delivery Information'"></span>
+            <span translate="'Delivery Information'"></span>
         </div>
         <div class="shipping-information-content">
-
-
-            <!-- ko if: deliveryInformation-->
-            <strong data-bind="text: deliveryInformation().name"></strong>
-
-            <!-- /ko -->
-
-            <!-- ko if: deliveryInformation().date -->
-            <p>
+            <strong if="deliveryInformation" text="deliveryInformation().name"></strong>
+            <p if="deliveryInformation().date">
                 <i>
-                    <span data-bind="text: deliveryInformation().date"></span>
-
-                    <!-- ko if: deliveryInformation().time && deliveryInformation().time != '00:00-00:00' -->
-                    <span data-bind="text: ' | '+deliveryInformation().time"></span>
-                    <!-- /ko -->
+                    <span text="deliveryInformation().date"></span>
+                    <span if="showDeliveryTime()" text="' | '+deliveryInformation().time"></span>
                 </i>
             </p>
-            <!-- /ko -->
             <p>
-            <div data-bind="foreach: deliveryOptions()">
-
-                <span data-bind="text: $data"></span><br />
-
+            <div each="deliveryOptions()">
+                <span text="$data"></span><br/>
             </div>
             </p>
         </div>

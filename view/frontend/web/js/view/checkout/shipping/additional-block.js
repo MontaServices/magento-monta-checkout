@@ -61,6 +61,7 @@ define(
 
                     let urlPrefix = '';
 
+                    // TODO simply trim trailing slash lmao
                     if (url.includes('/nl/')) {
                         urlPrefix = '/nl';
                     }
@@ -794,6 +795,7 @@ define(
                     $("body").prepend('<div id="modular-container"/>');
                     $("body").prepend('<div id="modular-background"/>');
 
+                    // TODO move HTML to separate template
                     const html = `<div id="storelocator_container">
                         <div class="container">
                             <div class="bh-sl-container">
@@ -802,7 +804,7 @@ define(
                                         <button type="button" data-bind="click: closePopup, i18n: 'Use selection'" class="select-item FAKECLASSHERE displaynone"></button>
                                         <ul id="category-filters" class="bh-sl-filters"></ul>
                                         <div class="storelocator-postcode-search-container">
-                                            <p class="storelocator-postcode-search-label" data-bind="i18n: 'Postal Code'">Postcode</p>
+                                            <p class="storelocator-postcode-search-label" translate="'Postal Code'">Postcode</p>
                                             <input type="text" class="input-text storelocator-postcode-search-input" id="storelocator-postcode-search-input"/>
                                             <button type="button" class="storelocator-postcode-search-button" id="storelocator-postcode-search-button" data-bind="i18n: 'Search'"></button>
                                         </div>
