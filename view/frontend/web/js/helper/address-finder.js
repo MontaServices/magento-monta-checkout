@@ -68,21 +68,16 @@ define(
             		countryCheck = $("select[name*='country_id']").val();
             	}
 
-                if ($("input[name*='postalCode']").length > 0 && countryCheck == "NL") {
+                // If Dutch zipcode has "postalcode" field
+                let zipcodeSelector = 'postcode';
+                if (countryCheck == 'NL' && $("input[name*='postalCode']").length > 0) {
+                    zipcodeSelector = 'postalCode';
+                }
 
-                    if ($("input[name*='postalCode']").length > 0 && $("#montapacking-plugin").length) {
-                        var success = true; // do something to check the state
-                    } else {
-                        var success = false; // do something to check the state
-                    }
-
+                if ($("input[name*='" + zipcodeSelector + "']").length > 0 && $("#montapacking-plugin").length) {
+                    var success = true; // do something to check the state
                 } else {
-
-                    if ($("input[name*='postcode']").length > 0 && $("#montapacking-plugin").length) {
-                        var success = true; // do something to check the state
-                    } else {
-                        var success = false; // do something to check the state
-                    }
+                    var success = false; // do something to check the state
                 }
 
 

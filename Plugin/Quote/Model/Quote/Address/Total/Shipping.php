@@ -8,16 +8,10 @@ use Magento\Quote\Api\Data\ShippingAssignmentInterface as ShippingAssignmentApi;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total as QuoteAddressTotal;
 use Magento\Store\Model\ScopeInterface;
-use Montapacking\MontaCheckout\Logger\Logger;
 
 class Shipping
 {
     private $scopeConfig;
-
-    /**
-     * @var Logger
-     */
-    protected $logger;
 
     /** @var Session $checkoutSession */
     private $checkoutSession;
@@ -25,17 +19,14 @@ class Shipping
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param Session $checkoutSession
-     * @param Logger $logger
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         Session $checkoutSession,
-        Logger $logger
     )
     {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutSession = $checkoutSession;
-        $this->logger = $logger;
     }
 
     /**

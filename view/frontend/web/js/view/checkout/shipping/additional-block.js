@@ -536,7 +536,6 @@ define(
                     $(".delivery-information").find(".montapacking-delivery-information-full-displayname").html(name);
 
                     $(".delivery-information").find(".montapacking-delivery-information-company").html(name);
-                    $(".delivery-information").find(".montapacking-delivery-information-company").html(name);
                     $(".delivery-information").find(".montapacking-delivery-information-date").html(date_string);
 
                     if (date === '') {
