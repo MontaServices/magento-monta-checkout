@@ -191,20 +191,14 @@ class QuoteManagement
                 // Opslaan in JSON
                 $date_stripped_obj->additional_info[0]->date = $formattedDate;
                 $deliveryOption = json_encode($date_stripped_obj);
-
-                if (!$deliveryOption) {
-                    return $orderId;
-                }
-            } else {
-                // Pickup/on-date flow
-                if (!$deliveryOption) {
-                    return $orderId;
-                }
             }
-            $order->setMontapackingMontacheckoutData($deliveryOption);
-            $order->save();
+            // Update Order with data
+            if ($deliveryOption) {
+                $order->setMontapackingMontacheckoutData($deliveryOption);
+                $order->save();
+            }
         } catch (\Exception $e) {
-            //                $this->logger->error('Error while processing Monta Delivery Date conversation to timezone: ' . $e->getMessage());
+            // Catch and ignore exception
         }
 
         return $orderId;

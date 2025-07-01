@@ -69,16 +69,14 @@ class PickupHelper
             foreach ($frames as $nr_temp => $frame) {
                 $nr = $nr_temp + 1;
 
+                $selected = null;
+                // Loop trough options
+                // Lowest price
+                $lowest = 9999999;
+                // Shipper opties ophalen
+                $options = null;
                 // Alleen als er van en tot tijd bekend is (skipped nu DPD en UPS)
                 if ($frame->from != '' && $frame->to != '') {
-                    // Loop trough options
-                    $selected = null;
-
-                    // Lowest price
-                    $lowest = 9999999;
-
-                    // Shipper opties ophalen
-                    $options = null;
                     foreach ($frame->options as $onr => $option) {
                         $from = $option->from;
                         $to = $option->to;
@@ -165,14 +163,6 @@ class PickupHelper
                         ];
                     }
                 } else {
-                    // Loop trough options
-                    $selected = null;
-
-                    // Lowest price
-                    $lowest = 9999999;
-
-                    // Shipper opties ophalen
-                    $options = null;
                     foreach ($frame->options as $onr => $option) {
                         // Check of maximale besteltijd voorbij is
                         if (($option->date == null || time() < strtotime($option->date)) && $selected == null) {
