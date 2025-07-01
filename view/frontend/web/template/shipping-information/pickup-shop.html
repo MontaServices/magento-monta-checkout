@@ -32,8 +32,7 @@
             <p if="deliveryInformation().date">
                 <i>
                     <span text="deliveryInformation().date"></span>
-                    <span if="deliveryInformation().time && deliveryInformation().time != '00:00-00:00'"
-                          text="' | '+deliveryInformation().time"></span>
+                    <span if="showDeliveryTime()" text="' | '+deliveryInformation().time"></span>
                 </i>
             </p>
             <p>

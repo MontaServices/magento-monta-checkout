@@ -19,6 +19,10 @@ define(
                     deliveryOptions: ko.observableArray([]),
                 },
 
+                showDeliveryTime: function () {
+                    return (this.deliveryInformation().time && this.deliveryInformation().time !== '00:00-00:00');
+                },
+
                 initObservable: function () {
                     var self = this;
 
