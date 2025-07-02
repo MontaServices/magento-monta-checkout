@@ -3,17 +3,9 @@
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
 use GuzzleHttp\Exception\GuzzleException;
-use Magento\Checkout\Model\Cart;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Locale\CurrencyInterface;
-use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
-use Magento\Store\Model\StoreManagerInterface;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
-use Montapacking\MontaCheckout\Helper\System;
-use Montapacking\MontaCheckout\Logger\Logger;
-use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
 
 /**
  * Class LongLat
@@ -22,62 +14,6 @@ use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
  */
 class LongLat extends AbstractDeliveryOptions
 {
-    /** @var LocaleResolver $scopeConfig */
-    private $localeResolver;
-
-    /**
-     * @var Logger
-     */
-    protected $logger;
-
-    /**
-     * @var Cart
-     */
-    public $cart;
-
-    protected $storeManager;
-
-    protected $currency;
-
-    /**
-     * Services constructor.
-     *
-     * @param Context $context
-     * @param LocaleResolver $localeResolver
-     * @param CarrierConfig $carrierConfig
-     * @param Logger $logger
-     * @param Cart $cart
-     * @param StoreManagerInterface $storeManager
-     * @param CurrencyInterface $currencyInterface
-     * @param System $systemHelper
-     */
-    public function __construct(
-        Context $context,
-        LocaleResolver $localeResolver,
-        CarrierConfig $carrierConfig,
-        Logger $logger,
-        Cart $cart,
-        StoreManagerInterface $storeManager,
-        CurrencyInterface $currencyInterface,
-        System $systemHelper,
-    )
-    {
-        $this->logger = $logger;
-        $this->localeResolver = $localeResolver;
-        $this->cart = $cart;
-        $this->storeManager = $storeManager;
-        $this->currency = $currencyInterface;
-
-        parent::__construct(
-            $context,
-            $carrierConfig,
-            $cart,
-            $storeManager,
-            $currencyInterface,
-            $systemHelper
-        );
-    }
-
     /**
      * @return ResponseInterface|ResultInterface
      * @throws \Exception|GuzzleException

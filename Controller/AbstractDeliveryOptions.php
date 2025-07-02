@@ -3,49 +3,50 @@
 namespace Montapacking\MontaCheckout\Controller;
 
 use Magento\Checkout\Model\Cart;
+use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\CurrencyInterface;
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Monta\CheckoutApiWrapper\MontapackingShipping as MontpackingApi;
+use Monta\CheckoutApiWrapper\MontapackingShipping as MontapackingApi;
 use Monta\CheckoutApiWrapper\Objects\Settings;
+use Montapacking\MontaCheckout\Helper\DeliveryHelper;
+use Montapacking\MontaCheckout\Helper\PickupHelper;
 use Montapacking\MontaCheckout\Helper\System;
+use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
 
 abstract class AbstractDeliveryOptions extends Action
 {
-    private $carrierConfig;
-
-    public $cart;
-    protected $storeManager;
-    protected $currency;
-
     /**
-     * AbstractDeliveryOptions constructor.
-     *
      * @param Context $context
      * @param CarrierConfig $carrierConfig
      * @param Cart $cart
+     * @param Session $checkoutSession
      * @param StoreManagerInterface $storeManager
-     * @param CurrencyInterface $currencyInterface
+     * @param CurrencyInterface $currency
+     * @param ResolverInterface $localeResolver
      * @param System $systemHelper
+     * @param Logger $logger
+     * @param PickupHelper $pickupHelper
+     * @param DeliveryHelper $deliveryHelper
      */
     public function __construct(
         Context $context,
-        CarrierConfig $carrierConfig,
-        Cart $cart,
-        StoreManagerInterface $storeManager,
-        CurrencyInterface $currencyInterface,
+        protected readonly CarrierConfig $carrierConfig,
+        public readonly Cart $cart,
+        protected readonly Session $checkoutSession,
+        protected readonly StoreManagerInterface $storeManager,
+        protected readonly CurrencyInterface $currency,
+        protected readonly ResolverInterface $localeResolver,
         protected readonly System $systemHelper,
+        protected readonly Logger $logger,
+        protected readonly PickupHelper $pickupHelper, // TODO, deprecated and not used
+        protected readonly DeliveryHelper $deliveryHelper,
     )
     {
-        $this->carrierConfig = $carrierConfig;
-
-        $this->cart = $cart;
-        $this->storeManager = $storeManager;
-        $this->currency = $currencyInterface;
-
         parent::__construct($context);
     }
 
@@ -177,7 +178,7 @@ abstract class AbstractDeliveryOptions extends Action
         $settings->setExcludeShippingDiscount(false);
         $settings->setSystemInfo($this->systemHelper->getInfo());
 
-        $oApi = new MontpackingApi($settings, $language);
+        $oApi = new MontapackingApi($settings, $language);
         $oApi->setAddress($street, $housenumber, $housenumberaddition, $postcode, $city, $state, $country);
 
         $quote = $cart->getQuote();
