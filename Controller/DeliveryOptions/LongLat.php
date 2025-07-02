@@ -21,18 +21,7 @@ class LongLat extends AbstractDeliveryOptions
     public function execute()
     {
         $request = $this->getRequest();
-        $language = strtoupper(strstr($this->localeResolver->getLocale(), '_', true));
-
-        switch ($language) {
-            case 'NL':
-            case 'BE':
-            case 'DE':
-                // Do nothing
-                break;
-            default:
-                // Any locale that's not one of those, fallback to English
-                $language = 'EN';
-        }
+        $language = $this->getLanguage();
 
         // instantiate response array
         $arr = [];

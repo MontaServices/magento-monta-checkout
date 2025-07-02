@@ -23,12 +23,7 @@ class Delivery extends AbstractDeliveryOptions
     public function execute()
     {
         $request = $this->getRequest();
-        $language = strtoupper(strstr($this->localeResolver->getLocale(), '_', true));
-
-        if ($language != 'NL' && $language != 'BE' && $language != 'DE') {
-            $language = 'EN';
-        }
-
+        $language = $this->getLanguage();
         try {
             $oApi = $this->generateApi(
                 request: $request,

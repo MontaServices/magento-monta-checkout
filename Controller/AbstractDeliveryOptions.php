@@ -263,4 +263,31 @@ abstract class AbstractDeliveryOptions extends Action
 
         return $frames;
     }
+
+    /**
+     * @return string
+     */
+    protected function getLanguage()
+    {
+        // Extract ISO2 country code from current local
+        $language = strtoupper(
+            strstr(
+                haystack: $this->localeResolver->getLocale(),
+                needle: '_',
+                before_needle: true,
+            )
+        );
+
+        switch ($language) {
+            case 'NL':
+            case 'BE':
+            case 'DE':
+                // Do nothing
+                break;
+            default:
+                // Any locale that's not one of those, fallback to English
+                $language = 'EN';
+        }
+        return $language;
+    }
 }
