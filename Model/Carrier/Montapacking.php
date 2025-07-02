@@ -24,6 +24,7 @@ use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\Result;
 use Magento\Shipping\Model\Rate\ResultFactory;
+use Montapacking\MontaCheckout\Helper\Order;
 use Psr\Log\LoggerInterface;
 
 class Montapacking extends AbstractCarrier implements CarrierInterface
@@ -98,13 +99,13 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
         $formpostdata = json_decode(file_get_contents('php://input'), true);
 
         // quickfix for onepagecheckout
-        if (isset($formpostdata["shippingAddress"]["extension_attributes"]["montapacking_montacheckout_data"])) {
-            $json = json_decode($formpostdata["shippingAddress"]["extension_attributes"]["montapacking_montacheckout_data"]);
+        if (isset($formpostdata["shippingAddress"]["extension_attributes"][Order::FIELD_NAME])) {
+            $json = json_decode($formpostdata["shippingAddress"]["extension_attributes"][Order::FIELD_NAME]);
             $amount = $json->additional_info[0]->total_price;
 
             if ($quote != null) {
                 $address = $quote->getShippingAddress();
-                $address->setMontapackingMontacheckoutData($formpostdata["shippingAddress"]["extension_attributes"]["montapacking_montacheckout_data"]);
+                $address->setMontapackingMontacheckoutData($formpostdata["shippingAddress"]["extension_attributes"][Order::FIELD_NAME]);
                 $address->save();
             }
         }

@@ -13,12 +13,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 class OrderRepositoryPlugin
 {
     /**
-     * Order Comment field name
-     * TODO use this constant throughout project where value is repeated
-     */
-    const FIELD_NAME = 'montapacking_montacheckout_data';
-
-    /**
      * OrderRepositoryPlugin constructor
      *
      * @param OrderExtensionFactory $extensionFactory
