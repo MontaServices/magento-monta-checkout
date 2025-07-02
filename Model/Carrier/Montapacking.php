@@ -24,6 +24,7 @@ use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\Result;
 use Magento\Shipping\Model\Rate\ResultFactory;
+use Montapacking\MontaCheckout\Helper\Order;
 use Psr\Log\LoggerInterface;
 
 class Montapacking extends AbstractCarrier implements CarrierInterface
@@ -32,20 +33,6 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
      * @var string $_code - extend from parent
      */
     protected $_code = 'montapacking';
-
-    /**
-     * @var ResultFactory
-     */
-    protected $rateResultFactory;
-
-    /**
-     * @var MethodFactory
-     */
-    protected $rateMethodFactory;
-
-    protected $customLogger;
-
-    protected $request;
 
     /**
      * @param ScopeConfigInterface $scopeConfig
@@ -61,17 +48,13 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
         ScopeConfigInterface $scopeConfig,
         ErrorFactory $rateErrorFactory,
         LoggerInterface $logger,
-        ResultFactory $rateResultFactory,
-        MethodFactory $rateMethodFactory,
-        LoggerInterface $customLogger,
-        RequestInterface $request,
+        protected readonly ResultFactory $rateResultFactory,
+        protected readonly MethodFactory $rateMethodFactory,
+        protected readonly LoggerInterface $customLogger,
+        protected readonly RequestInterface $request,
         array $data = []
     )
     {
-        $this->request = $request;
-        $this->customLogger = $customLogger;
-        $this->rateResultFactory = $rateResultFactory;
-        $this->rateMethodFactory = $rateMethodFactory;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -116,13 +99,13 @@ class Montapacking extends AbstractCarrier implements CarrierInterface
         $formpostdata = json_decode(file_get_contents('php://input'), true);
 
         // quickfix for onepagecheckout
-        if (isset($formpostdata["shippingAddress"]["extension_attributes"]["montapacking_montacheckout_data"])) {
-            $json = json_decode($formpostdata["shippingAddress"]["extension_attributes"]["montapacking_montacheckout_data"]);
+        if (isset($formpostdata["shippingAddress"]["extension_attributes"][Order::FIELD_NAME])) {
+            $json = json_decode($formpostdata["shippingAddress"]["extension_attributes"][Order::FIELD_NAME]);
             $amount = $json->additional_info[0]->total_price;
 
             if ($quote != null) {
                 $address = $quote->getShippingAddress();
-                $address->setMontapackingMontacheckoutData($formpostdata["shippingAddress"]["extension_attributes"]["montapacking_montacheckout_data"]);
+                $address->setMontapackingMontacheckoutData($formpostdata["shippingAddress"]["extension_attributes"][Order::FIELD_NAME]);
                 $address->save();
             }
         }

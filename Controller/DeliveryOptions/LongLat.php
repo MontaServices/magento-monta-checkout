@@ -3,17 +3,9 @@
 namespace Montapacking\MontaCheckout\Controller\DeliveryOptions;
 
 use GuzzleHttp\Exception\GuzzleException;
-use Magento\Checkout\Model\Cart;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Locale\CurrencyInterface;
-use Magento\Framework\Locale\ResolverInterface as LocaleResolver;
-use Magento\Store\Model\StoreManagerInterface;
 use Montapacking\MontaCheckout\Controller\AbstractDeliveryOptions;
-use Montapacking\MontaCheckout\Helper\System;
-use Montapacking\MontaCheckout\Logger\Logger;
-use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
 
 /**
  * Class LongLat
@@ -22,62 +14,6 @@ use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
  */
 class LongLat extends AbstractDeliveryOptions
 {
-    /** @var LocaleResolver $scopeConfig */
-    private $localeResolver;
-
-    /**
-     * @var Logger
-     */
-    protected $logger;
-
-    /**
-     * @var Cart
-     */
-    public $cart;
-
-    protected $storeManager;
-
-    protected $currency;
-
-    /**
-     * Services constructor.
-     *
-     * @param Context $context
-     * @param LocaleResolver $localeResolver
-     * @param CarrierConfig $carrierConfig
-     * @param Logger $logger
-     * @param Cart $cart
-     * @param StoreManagerInterface $storeManager
-     * @param CurrencyInterface $currencyInterface
-     * @param System $systemHelper
-     */
-    public function __construct(
-        Context $context,
-        LocaleResolver $localeResolver,
-        CarrierConfig $carrierConfig,
-        Logger $logger,
-        Cart $cart,
-        StoreManagerInterface $storeManager,
-        CurrencyInterface $currencyInterface,
-        System $systemHelper,
-    )
-    {
-        $this->logger = $logger;
-        $this->localeResolver = $localeResolver;
-        $this->cart = $cart;
-        $this->storeManager = $storeManager;
-        $this->currency = $currencyInterface;
-
-        parent::__construct(
-            $context,
-            $carrierConfig,
-            $cart,
-            $storeManager,
-            $currencyInterface,
-            $systemHelper
-        );
-    }
-
     /**
      * @return ResponseInterface|ResultInterface
      * @throws \Exception|GuzzleException
@@ -85,37 +21,32 @@ class LongLat extends AbstractDeliveryOptions
     public function execute()
     {
         $request = $this->getRequest();
-        $language = strtoupper(strstr($this->localeResolver->getLocale(), '_', true));
+        $language = $this->getLanguage();
 
-        if ($language != 'NL' && $language != 'BE' && $language != 'DE') {
-            $language = 'EN';
-        }
+        // instantiate response array
+        $arr = [];
+        $arr['longitude'] = 0;
+        $arr['latitude'] = 0;
+        $arr['language'] = $language;
 
         try {
-            $longlat = $request->getParam('longlat') ? trim($request->getParam('longlat')) : "";
+            $longlat = trim($request->getParam(key: 'longlat', defaultValue: ""));
 
-            if ($longlat == 'false') {
-                $oApi = $this->generateApi($request, $language);
-            } else {
-                // TODO merge duplicate code, just pass expression directly
-                $oApi = $this->generateApi($request, $language, true);
-            }
-
-            $arr = [];
+            $oApi = $this->generateApi(
+                request: $request,
+                language: $language,
+                use_googlekey: ($longlat == 'false')
+            );
 
             $arr['longitude'] = $oApi->address->longitude;
             $arr['latitude'] = $oApi->address->latitude;
-            $arr['language'] = $language;
         } catch (\Exception $e) {
-            $arr = [];
-            $arr['longitude'] = 0;
-            $arr['latitude'] = 0;
-            $arr['language'] = $language;
             $arr['hasconnection'] = 'false';
             $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
 
             $context = ['source' => 'Montapacking Checkout'];
-            $this->logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
+            $this->logger->critical($e->getMessage(), $context);
+            $this->logger->critical("Webshop was unable to connect to Montapacking REST api", $context); //phpcs:ignore
         }
 
         return $this->jsonResponse($arr);
