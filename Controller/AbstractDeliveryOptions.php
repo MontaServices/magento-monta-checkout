@@ -12,8 +12,6 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Monta\CheckoutApiWrapper\MontapackingShipping as MontapackingApi;
 use Monta\CheckoutApiWrapper\Objects\Settings;
-use Montapacking\MontaCheckout\Helper\DeliveryHelper;
-use Montapacking\MontaCheckout\Helper\PickupHelper;
 use Montapacking\MontaCheckout\Helper\System;
 use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
@@ -30,8 +28,6 @@ abstract class AbstractDeliveryOptions extends Action
      * @param ResolverInterface $localeResolver
      * @param System $systemHelper
      * @param Logger $logger
-     * @param PickupHelper $pickupHelper
-     * @param DeliveryHelper $deliveryHelper
      */
     public function __construct(
         Context $context,
@@ -42,9 +38,7 @@ abstract class AbstractDeliveryOptions extends Action
         protected readonly CurrencyInterface $currency,
         protected readonly ResolverInterface $localeResolver,
         protected readonly System $systemHelper,
-        protected readonly Logger $logger,
-        protected readonly PickupHelper $pickupHelper, // TODO, deprecated and not used
-        protected readonly DeliveryHelper $deliveryHelper,
+        protected readonly Logger $logger
     )
     {
         parent::__construct($context);
