@@ -8,17 +8,13 @@ use Magento\Sales\Api\Data\OrderExtensionFactory;
 
 class OrderLoadAfter implements ObserverInterface
 {
-    /** @var OrderExtensionFactory - TODO Replace with promoted property from constructor for PHP 8 */
-    protected $orderExtensionFactory;
-
     /**
      * @param OrderExtensionFactory $orderExtensionFactory
      */
     public function __construct(
-        OrderExtensionFactory $orderExtensionFactory
+        protected readonly OrderExtensionFactory $orderExtensionFactory
     )
     {
-        $this->orderExtensionFactory = $orderExtensionFactory;
     }
 
     /** Pass Monta Checkout data from Order field to ExtensionAttributes

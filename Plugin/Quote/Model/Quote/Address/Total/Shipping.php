@@ -11,22 +11,15 @@ use Magento\Store\Model\ScopeInterface;
 
 class Shipping
 {
-    private $scopeConfig;
-
-    /** @var Session $checkoutSession */
-    private $checkoutSession;
-
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param Session $checkoutSession
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        Session $checkoutSession,
+        protected readonly ScopeConfigInterface $scopeConfig,
+        protected readonly Session $checkoutSession,
     )
     {
-        $this->scopeConfig = $scopeConfig;
-        $this->checkoutSession = $checkoutSession;
     }
 
     /**
