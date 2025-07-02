@@ -30,13 +30,29 @@ class Delivery extends AbstractDeliveryOptions
         }
 
         try {
-            $oApi = $this->generateApi($request, $language, true);
+            $oApi = $this->generateApi(
+                request: $request,
+                language: $language,
+                use_googlekey: true
+            );
             $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
             $AFHImage_basepath = $mediaUrl . 'Images/';
 
-            $this->checkoutSession->setLatestShipping([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper']]);
-
-            return $this->jsonResponse([$oApi['DeliveryOptions'], $oApi['PickupOptions'], $oApi['CustomerLocation'], $oApi['StandardShipper'], $AFHImage_basepath]);
+            $this->checkoutSession->setLatestShipping(
+                [
+                    $oApi['DeliveryOptions'],
+                    $oApi['PickupOptions'],
+                    $oApi['CustomerLocation'],
+                    $oApi['StandardShipper']
+                ]);
+            return $this->jsonResponse(
+                [
+                    $oApi['DeliveryOptions'],
+                    $oApi['PickupOptions'],
+                    $oApi['CustomerLocation'],
+                    $oApi['StandardShipper'],
+                    $AFHImage_basepath,
+                ]);
         } catch (Exception $e) {
             $context = ['source' => 'Montapacking Checkout'];
             $this->logger->critical(json_encode($e->getMessage()), $context); //phpcs:ignore

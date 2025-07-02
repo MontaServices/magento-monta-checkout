@@ -23,35 +23,41 @@ class LongLat extends AbstractDeliveryOptions
         $request = $this->getRequest();
         $language = strtoupper(strstr($this->localeResolver->getLocale(), '_', true));
 
-        if ($language != 'NL' && $language != 'BE' && $language != 'DE') {
-            $language = 'EN';
+        switch ($language) {
+            case 'NL':
+            case 'BE':
+            case 'DE':
+                // Do nothing
+                break;
+            default:
+                // Any locale that's not one of those, fallback to English
+                $language = 'EN';
         }
 
+        // instantiate response array
+        $arr = [];
+        $arr['longitude'] = 0;
+        $arr['latitude'] = 0;
+        $arr['language'] = $language;
+
         try {
-            $longlat = $request->getParam('longlat') ? trim($request->getParam('longlat')) : "";
+            $longlat = trim($request->getParam(key: 'longlat', defaultValue: ""));
 
-            if ($longlat == 'false') {
-                $oApi = $this->generateApi($request, $language);
-            } else {
-                // TODO merge duplicate code, just pass expression directly
-                $oApi = $this->generateApi($request, $language, true);
-            }
-
-            $arr = [];
+            $oApi = $this->generateApi(
+                request: $request,
+                language: $language,
+                use_googlekey: ($longlat == 'false')
+            );
 
             $arr['longitude'] = $oApi->address->longitude;
             $arr['latitude'] = $oApi->address->latitude;
-            $arr['language'] = $language;
         } catch (\Exception $e) {
-            $arr = [];
-            $arr['longitude'] = 0;
-            $arr['latitude'] = 0;
-            $arr['language'] = $language;
             $arr['hasconnection'] = 'false';
             $arr['googleapikey'] = $this->getCarrierConfig()->getGoogleApiKey();
 
             $context = ['source' => 'Montapacking Checkout'];
-            $this->logger->critical("Webshop was unable to connect to Montapacking REST api. Please contact Montapacking", $context); //phpcs:ignore
+            $this->logger->critical($e->getMessage(), $context);
+            $this->logger->critical("Webshop was unable to connect to Montapacking REST api", $context); //phpcs:ignore
         }
 
         return $this->jsonResponse($arr);
