@@ -4,21 +4,21 @@ namespace Montapacking\MontaCheckout\Observer\Sales;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Sales\Api\Data\OrderExtensionFactory;
+use Montapacking\MontaCheckout\Helper\Order;
 
 class OrderLoadAfter implements ObserverInterface
 {
     /**
-     * @param OrderExtensionFactory $orderExtensionFactory
+     * @param Order $orderHelper
      */
     public function __construct(
-        protected readonly OrderExtensionFactory $orderExtensionFactory
+        protected readonly Order $orderHelper,
     )
     {
     }
 
     /** Pass Monta Checkout data from Order field to ExtensionAttributes
-     * TODO duplicate code in OrderRepositoryPlugin::extendOrder()
+     *
      * @param Observer $observer
      * @return void
      */
@@ -26,13 +26,6 @@ class OrderLoadAfter implements ObserverInterface
     {
         $order = $observer->getOrder();
 
-        // Get ExtensionAttributes from Order or instantiate new
-        $extensionAttributes = $order->getExtensionAttributes() ?? $this->orderExtensionFactory->create();
-
-        $attr = $order->getData('montapacking_montacheckout_data');
-
-        $extensionAttributes->setMontapackingMontacheckoutData($attr);
-
-        $order->setExtensionAttributes($extensionAttributes);
+        $this->orderHelper->extendOrder($order);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Montapacking\MontaCheckout\Plugin;
 
-use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderSearchResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Montapacking\MontaCheckout\Helper\Order;
 
 /**
  * Class OrderRepositoryPlugin
@@ -13,12 +13,11 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 class OrderRepositoryPlugin
 {
     /**
-     * OrderRepositoryPlugin constructor
-     *
-     * @param OrderExtensionFactory $extensionFactory
+     * @param Order $orderHelper
      */
     public function __construct(
-        protected readonly OrderExtensionFactory $extensionFactory)
+        protected readonly Order $orderHelper,
+    )
     {
     }
 
@@ -31,7 +30,7 @@ class OrderRepositoryPlugin
      */
     public function afterGet(OrderRepositoryInterface $subject, OrderInterface $order)
     {
-        return $this->extendOrder($order);
+        return $this->orderHelper->extendOrder($order);
     }
 
     /**
@@ -46,26 +45,10 @@ class OrderRepositoryPlugin
         $orders = $searchResult->getItems();
 
         foreach ($orders as &$order) {
-            $this->extendOrder($order);
+            $this->orderHelper->extendOrder($order);
         }
 
         return $searchResult;
     }
 
-    /** Copy data from Order record to ExtensionAttribute for public access
-     *  TODO this does the same as \Montapacking\MontaCheckout\Observer\Sales\OrderLoadAfter
-     * @param OrderInterface $order
-     * @return OrderInterface
-     */
-    protected function extendOrder(OrderInterface $order)
-    {
-        $orderComment = $order->getData(self::FIELD_NAME);
-
-        $extensionAttributes = $order->getExtensionAttributes() ?? $this->extensionFactory->create();
-        $extensionAttributes->setMontapackingMontacheckoutData($orderComment);
-
-        $order->setExtensionAttributes($extensionAttributes);
-
-        return $order;
-    }
 }
