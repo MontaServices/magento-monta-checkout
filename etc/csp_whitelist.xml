@@ -5,6 +5,7 @@
         <policy id="script-src">
             <values>
                 <value id="googleapis_main" type="host">*.googleapis.com</value>
+                <!--TODO deprecated, use maps.googleapis.com which is the V3 standard-->
                 <value id="maps_google_main" type="host">maps.google.com</value>
             </values>
         </policy>
@@ -16,6 +17,7 @@
         <policy id="img-src">
             <values>
                 <value id="maps_gstatic_main" type="host">maps.gstatic.com</value>
+                <!--TODO deprecated, use maps.googleapis.com which is the V3 standard-->
                 <value id="maps_google_main" type="host">maps.google.com</value>
                 <value id="googleapis_main" type="host">*.googleapis.com</value>
             </values>

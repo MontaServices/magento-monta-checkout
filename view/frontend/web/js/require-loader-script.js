@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     require.config({
         paths: {
             'Handlebars': 'Montapacking_MontaCheckout/js/view/checkout/shipping/handlebars.min',
+            // TODO deprecated, use maps.googleapis.com which is the V3 standard
             'google': 'https://maps.google.com/maps/api/js?key=' + apiKey,
             'storeLocator': 'Montapacking_MontaCheckout/js/view/checkout/shipping/jquery.storelocator',
         },
