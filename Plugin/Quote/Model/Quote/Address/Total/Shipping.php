@@ -94,11 +94,11 @@ class Shipping
 
                 // Construct shipping description based on parts
                 $desc = [];
-                if (trim($deliveryOptionAdditionalInfo->date)) {
+                if (trim((string)$deliveryOptionAdditionalInfo->date)) {
                     $desc[] = $deliveryOptionAdditionalInfo->date;
                 }
 
-                if (trim($deliveryOptionAdditionalInfo->time)) {
+                if (trim((string)$deliveryOptionAdditionalInfo->time)) {
                     $desc[] = $deliveryOptionAdditionalInfo->time;
                 }
 
@@ -106,6 +106,9 @@ class Shipping
                 if (isset($deliveryOptionDetails->options)) {
                     foreach ($deliveryOptionDetails->options as $value) {
                         $desc[] = $value;
+                        // Filter array for only strings
+                        $desc = array_filter($desc, 'is_string');
+
                         foreach ($selectedOptionFromCache->deliveryOptions as $extra) {
                             if ($extra->code == $value) {
                                 $fee += $extra->price;
