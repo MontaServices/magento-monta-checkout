@@ -26,6 +26,9 @@
         "Official Monta extension",
         "Magento 2"
     ],
+    "suggest": {
+        "monta/my-module": "Projects using Hyva must install Monta's companion module."
+    },
     "autoload": {
         "files": [
             "registration.php"
