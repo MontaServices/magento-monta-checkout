@@ -8,9 +8,10 @@
     <body>
         <referenceContainer name="content">
             <block name="content.montapacking" class="Montapacking\MontaCheckout\Block\Checkout"
+                   ifconfig="montapacking/checkout/default_frontend"
                    template="Montapacking_MontaCheckout::checkout.phtml"/>
         </referenceContainer>
-        <referenceBlock name="checkout.root">
+        <referenceBlock name="checkout.root" ifconfig="montapacking/checkout/default_frontend">
             <arguments>
                 <argument name="jsLayout" xsi:type="array">
                     <item name="components" xsi:type="array">

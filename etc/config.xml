@@ -25,5 +25,10 @@
                 <title>Verzending via Monta</title>
             </montapacking>
         </carriers>
+        <montapacking>
+            <checkout>
+                <default_frontend>1</default_frontend>
+            </checkout>
+        </montapacking>
     </default>
 </config>
