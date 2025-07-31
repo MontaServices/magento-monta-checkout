@@ -4,5 +4,5 @@
 ?>
 
 <?php $apiKey = $block->getGoogleMapsApiKey(); ?>
-<div id="google-maps-api" data-api-key="<?= ($apiKey && strlen($apiKey) == 39) ? $apiKey : "" ?>"></div>
+<div id="google-maps-api" data-api-key="<?= $apiKey ?>"></div>
 <div id="montapacking-config" data-site-url="<?= $block->getViewFileUrl('Montapacking_MontaCheckout') ?>"></div>

@@ -28,6 +28,7 @@ class Checkout extends Template
      * Return true if the Google Maps api key has been filled
      *
      * @return bool
+     * @deprecated - Not referenced anywhere
      */
     public function hasGoogleMapsApiKey()
     {
@@ -39,8 +40,13 @@ class Checkout extends Template
      *
      * @return string
      */
-    public function getGoogleMapsApiKey()
+    public function getGoogleMapsApiKey(): string
     {
-        return $this->carrier->getGoogleApiKey();
+        $apiKey = $this->carrier->getGoogleApiKey();
+        // if empty or not the correct length
+        if (!$apiKey || strlen($apiKey) != 39) {
+            $apiKey = "";
+        }
+        return $apiKey;
     }
 }

@@ -34,6 +34,7 @@ class Carrier extends AbstractConfigProvider
 
     /**
      * @return bool
+     * @deprecated - Not referenced anywhere, suggest using CarrierInterface::isActive()
      */
     public function isCarrierActive()
     {
@@ -91,10 +92,10 @@ class Carrier extends AbstractConfigProvider
     /**
      * @return bool
      */
-    public function getHideDHLPackStations()
+    public function getHideDHLPackStations(): bool
     {
         // Cast to boolean for type safety (if config path is absent, returns NULL)
-        return (bool)$this->getConfigValue(self::XPATH_CARRIER_HIDEDDHLPACKSTATIONS);
+        return boolval($this->getConfigValue(self::XPATH_CARRIER_HIDEDDHLPACKSTATIONS));
     }
 
     /**
