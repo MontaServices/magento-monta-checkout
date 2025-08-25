@@ -231,7 +231,7 @@ abstract class AbstractDeliveryOptions extends Action
             $oApi->setOnstock(false);
         }
 
-        $frames = $oApi->getShippingOptions();
+        $frames = $oApi->getShippingOptions(computeKm: true);
 
         if ($disabledeliverydays) {
             unset($frames['DeliveryOptions']);
@@ -254,8 +254,6 @@ abstract class AbstractDeliveryOptions extends Action
             if ($item->code !== "AFH") {
                 $item->imageName = null;
             }
-
-            $item->distanceMeters = round($item->distanceMeters / 1000, 2);
         }
 
         return $frames;
