@@ -10,8 +10,9 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\CurrencyInterface;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Monta\CheckoutApiWrapper\MontapackingShipping as MontapackingApi;
+use Monta\CheckoutApiWrapper\Objects\PickupPoint;
 use Monta\CheckoutApiWrapper\Objects\Settings;
+use Monta\CheckoutApiWrapper\Service\ApiFactory;
 use Montapacking\MontaCheckout\Helper\System;
 use Montapacking\MontaCheckout\Logger\Logger;
 use Montapacking\MontaCheckout\Model\Config\Provider\Carrier as CarrierConfig;
@@ -21,6 +22,7 @@ abstract class AbstractDeliveryOptions extends Action
     /**
      * @param Context $context
      * @param CarrierConfig $carrierConfig
+     * @param ApiFactory $apiFactory
      * @param Cart $cart
      * @param Session $checkoutSession
      * @param StoreManagerInterface $storeManager
@@ -32,6 +34,7 @@ abstract class AbstractDeliveryOptions extends Action
     public function __construct(
         Context $context,
         protected readonly CarrierConfig $carrierConfig,
+        protected readonly ApiFactory $apiFactory,
         public readonly Cart $cart,
         protected readonly Session $checkoutSession,
         protected readonly StoreManagerInterface $storeManager,
@@ -39,6 +42,7 @@ abstract class AbstractDeliveryOptions extends Action
         protected readonly ResolverInterface $localeResolver,
         protected readonly System $systemHelper,
         protected readonly Logger $logger
+
     )
     {
         parent::__construct($context);
@@ -79,7 +83,8 @@ abstract class AbstractDeliveryOptions extends Action
         );
     }
 
-    /**
+    /** Call API, return frames
+     *
      * @param RequestInterface $request
      * @param ?string $language
      * @param bool $use_googlekey
@@ -169,10 +174,8 @@ abstract class AbstractDeliveryOptions extends Action
             $hideDHLPackStations,
         );
 
-        $settings->setExcludeShippingDiscount(false);
-        $settings->setSystemInfo($this->systemHelper->getInfo());
-
-        $oApi = new MontapackingApi($settings, $language);
+        // Create API with these settings and info
+        $oApi = $this->apiFactory->create($settings, $this->systemHelper->getInfo());
         $oApi->setAddress($street, $housenumber, $housenumberaddition, $postcode, $city, $state, $country);
 
         $quote = $cart->getQuote();
@@ -247,7 +250,7 @@ abstract class AbstractDeliveryOptions extends Action
             $frames['PickupOptions'][] = $frames['StoreLocation'];
         }
 
-        foreach ($frames['PickupOptions'] as $item) {
+        foreach ($frames[PickupPoint::PICKUP_OPTIONS_KEY] as $item) {
             if ($item->code !== "AFH") {
                 $item->imageName = null;
             }
