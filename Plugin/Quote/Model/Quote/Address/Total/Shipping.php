@@ -38,13 +38,13 @@ class Shipping
     {
         $shipping = $shippingAssignment->getShipping();
         $address = $shipping->getAddress();
-        $rates = $address->getAllShippingRates();
 
         // Apply return-early principle to validate some things
         if (!$this->config->isActive()) {
             return $result;
         }
 
+        $rates = $address->getAllShippingRates();
         if (empty($rates)) {
             return $result;
         }
@@ -106,14 +106,15 @@ class Shipping
                 }
 
                 // extra options
-                if (isset($deliveryOptionDetails->options)) {
+                if (!empty($deliveryOptionDetails->options)) {
+                    $extras = $selectedOptionFromCache->deliveryOptions ?? [];
                     foreach ($deliveryOptionDetails->options as $detailOption) {
                         // Append this extra to description
                         $desc[] = $detailOption;
-                        $extras = $selectedOptionFromCache->deliveryOptions ?? [];
 
                         // Apply fee from each extra
                         foreach ($extras as $extra) {
+                            // If this is the selected option
                             if ($extra->code == $detailOption) {
                                 $fee += $extra->price;
                                 // Break loop, match found
@@ -134,11 +135,10 @@ class Shipping
         $this->adjustTotals($method_title, $subject->getCode(), $address, $total, $fee, $desc);
     }
 
-    /** Get stdClass object for chosen delivery option
+    /** Get stdClass object for selected delivery option
      *
      * @param $address
-     *
-     * @return mixed|null
+     * @return \stdClass|null
      */
     private function getDeliveryOption($address)
     {
@@ -160,7 +160,7 @@ class Shipping
      * @param $description
      * @return void
      */
-    private function adjustTotals($name, $code, $address, $total, $fee, $description)
+    private function adjustTotals($name, $code, $address, $total, $fee, $description): void
     {
         $total->setTotalAmount($code, $fee);
         $total->setBaseTotalAmount($code, $fee);
