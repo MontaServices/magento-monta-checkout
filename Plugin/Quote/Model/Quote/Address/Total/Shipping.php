@@ -12,42 +12,30 @@ use Montapacking\MontaCheckout\Logger\Logger;
 
 class Shipping
 {
-    private $scopeConfig;
-
-    /**
-     * @var Logger
-     */
-    protected $_logger;
-
-    /** @var Session $checkoutSession */
-    private $checkoutSession;
-
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param Session $checkoutSession
-     * @param Logger $logger
+     * @param Logger $_logger
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        Session $checkoutSession,
-        Logger $logger
+        protected readonly ScopeConfigInterface $scopeConfig,
+        protected readonly Session $checkoutSession,
+        protected readonly Logger $_logger
     )
     {
-        $this->scopeConfig = $scopeConfig;
-        $this->checkoutSession = $checkoutSession;
-        $this->_logger = $logger;
     }
 
+
     /**
-     * @param $subject
-     * @param $result
+     * @param QuoteAddressTotal\Shipping $subject
+     * @param QuoteAddressTotal\Shipping $result
      * @param Quote $quote
      * @param ShippingAssignmentApi $shippingAssignment
      * @param QuoteAddressTotal $total
-     * @return mixed|void
+     * @return QuoteAddressTotal\Shipping|void
      */
     // @codingStandardsIgnoreLine
-    public function afterCollect($subject, $result, Quote $quote, ShippingAssignmentApi $shippingAssignment, QuoteAddressTotal $total)
+    public function afterCollect(QuoteAddressTotal\Shipping $subject, QuoteAddressTotal\Shipping $result, Quote $quote, ShippingAssignmentApi $shippingAssignment, QuoteAddressTotal $total)
     {
         $shipping = $shippingAssignment->getShipping();
         $address = $shipping->getAddress();
@@ -137,6 +125,7 @@ class Shipping
                 return $result;
         }
 
+        // If code reaches here, delivery option is valid and totals must be calculated
         $this->adjustTotals($method_title, $subject->getCode(), $address, $total, $fee, $desc);
     }
 
