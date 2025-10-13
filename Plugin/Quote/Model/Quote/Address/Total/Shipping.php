@@ -40,32 +40,28 @@ class Shipping
         $address = $shipping->getAddress();
         $rates = $address->getAllShippingRates();
 
-        $fee = $this->config->getPrice();
-
-        if (!$rates) {
-            return $result;
-        }
-
+        // Apply return-early principle to validate some things
         if (empty($rates)) {
             return $result;
         }
 
         $deliveryOption = $this->getDeliveryOption($address);
-
         if (!$deliveryOption) {
             return $result;
         }
-
-        $deliveryOptionType = $deliveryOption->type;
-        $deliveryOptionDetails = $deliveryOption->details[0];
-        $deliveryOptionAdditionalInfo = $deliveryOption->additional_info[0];
 
         $latestShipping = $this->checkoutSession->getLatestShipping();
         if (!$latestShipping) {
             return $result;
         }
 
-        switch ($deliveryOptionType) {
+        // Get fallback fee from carrier config
+        $fee = $this->config->getPrice();
+
+        $deliveryOptionDetails = $deliveryOption->details[0];
+        $deliveryOptionAdditionalInfo = $deliveryOption->additional_info[0];
+
+        switch ($deliveryOption->type) {
             case 'pickup':
                 $method_title = $deliveryOptionAdditionalInfo->company;
 
@@ -107,11 +103,17 @@ class Shipping
 
                 // extra options
                 if (isset($deliveryOptionDetails->options)) {
-                    foreach ($deliveryOptionDetails->options as $value) {
-                        $desc[] = $value;
-                        foreach ($selectedOptionFromCache->deliveryOptions as $extra) {
-                            if ($extra->code == $value) {
+                    foreach ($deliveryOptionDetails->options as $detailOption) {
+                        // Append this extra to description
+                        $desc[] = $detailOption;
+                        $extras = $selectedOptionFromCache->deliveryOptions ?? [];
+
+                        // Apply fee from each extra
+                        foreach ($extras as $extra) {
+                            if ($extra->code == $detailOption) {
                                 $fee += $extra->price;
+                                // Break loop, match found
+                                break;
                             }
                         }
                     }
@@ -124,11 +126,12 @@ class Shipping
                 return $result;
         }
 
-        // If code reaches here, delivery option is valid and totals must be calculated
+        // If code reaches here, delivery option is valid and totals must be adjusted
         $this->adjustTotals($method_title, $subject->getCode(), $address, $total, $fee, $desc);
     }
 
-    /**
+    /** Get stdClass object for chosen delivery option
+     *
      * @param $address
      *
      * @return mixed|null
@@ -144,6 +147,15 @@ class Shipping
         return json_decode($option);
     }
 
+    /**
+     * @param $name
+     * @param $code
+     * @param $address
+     * @param $total
+     * @param $fee
+     * @param $description
+     * @return void
+     */
     private function adjustTotals($name, $code, $address, $total, $fee, $description)
     {
         $total->setTotalAmount($code, $fee);
