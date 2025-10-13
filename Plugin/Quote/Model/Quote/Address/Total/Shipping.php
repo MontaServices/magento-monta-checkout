@@ -3,22 +3,21 @@
 namespace Montapacking\MontaCheckout\Plugin\Quote\Model\Quote\Address\Total;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface as ShippingAssignmentApi;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total as QuoteAddressTotal;
-use Magento\Store\Model\ScopeInterface;
 use Montapacking\MontaCheckout\Logger\Logger;
+use Montapacking\MontaCheckout\Model\Config\Provider\Carrier;
 
 class Shipping
 {
     /**
-     * @param ScopeConfigInterface $scopeConfig
+     * @param Carrier $config
      * @param Session $checkoutSession
      * @param Logger $_logger
      */
     public function __construct(
-        protected readonly ScopeConfigInterface $scopeConfig,
+        protected readonly Carrier $config,
         protected readonly Session $checkoutSession,
         protected readonly Logger $_logger
     )
@@ -41,7 +40,7 @@ class Shipping
         $address = $shipping->getAddress();
         $rates = $address->getAllShippingRates();
 
-        $fee = $this->scopeConfig->getValue('carriers/montapacking/price', ScopeInterface::SCOPE_STORE);
+        $fee = $this->config->getPrice();
 
         if (!$rates) {
             return $result;
