@@ -580,6 +580,15 @@ define(
                             options.push($(this).val());
                         }
                     );
+                    
+                    const isEveningDelivery = (time_from === '17:30' && time_to === '22:00') || 
+                                            (time_from === '17:30' && time_to === '21:30') || 
+                                            (time_from === '18:00' && time_to === '22:00');
+
+                    if (isEveningDelivery) {
+                        options.push('EveningDelivery');
+                        $("ul.montapacking-delivery-information-options").append('<li>Avondbezorging</li>');
+                    }
 
                     $(option_codes).each(
                         function (index, element) {
