@@ -41,7 +41,7 @@ class Shipping
         $rates = $address->getAllShippingRates();
 
         // Apply return-early principle to validate some things
-        if (!$this->config->isCarrierActive()){
+        if (!$this->config->isActive()) {
             return $result;
         }
 
@@ -166,9 +166,11 @@ class Shipping
         $total->setBaseTotalAmount($code, $fee);
         $total->setBaseShippingAmount($fee);
         $total->setShippingAmount($fee);
-        $total->setShippingDescription($name . ' - ' . $description);
-        $total->setShippingMethodTitle($name . ' - ' . $description);
 
-        $address->setShippingDescription($name . ' - ' . $description);
+        $shippingDescription = $name . ' - ' . $description;
+        $total->setShippingDescription($shippingDescription);
+        $total->setShippingMethodTitle($shippingDescription);
+
+        $address->setShippingDescription($shippingDescription);
     }
 }
