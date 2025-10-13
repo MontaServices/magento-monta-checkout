@@ -41,6 +41,10 @@ class Shipping
         $rates = $address->getAllShippingRates();
 
         // Apply return-early principle to validate some things
+        if (!$this->config->isCarrierActive()){
+            return $result;
+        }
+
         if (empty($rates)) {
             return $result;
         }
