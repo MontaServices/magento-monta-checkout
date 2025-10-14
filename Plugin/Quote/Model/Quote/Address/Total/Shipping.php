@@ -3,82 +3,69 @@
 namespace Montapacking\MontaCheckout\Plugin\Quote\Model\Quote\Address\Total;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface as ShippingAssignmentApi;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total as QuoteAddressTotal;
-use Magento\Store\Model\ScopeInterface;
 use Montapacking\MontaCheckout\Logger\Logger;
+use Montapacking\MontaCheckout\Model\Config\Provider\Carrier;
 
 class Shipping
 {
-    private $scopeConfig;
-
     /**
-     * @var Logger
-     */
-    protected $_logger;
-
-    /** @var Session $checkoutSession */
-    private $checkoutSession;
-
-    /**
-     * @param ScopeConfigInterface $scopeConfig
+     * @param Carrier $config
      * @param Session $checkoutSession
-     * @param Logger $logger
+     * @param Logger $_logger
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        Session $checkoutSession,
-        Logger $logger
+        protected readonly Carrier $config,
+        protected readonly Session $checkoutSession,
+        protected readonly Logger $_logger
     )
     {
-        $this->scopeConfig = $scopeConfig;
-        $this->checkoutSession = $checkoutSession;
-        $this->_logger = $logger;
     }
 
+
     /**
-     * @param $subject
-     * @param $result
+     * @param QuoteAddressTotal\Shipping $subject
+     * @param QuoteAddressTotal\Shipping $result
      * @param Quote $quote
      * @param ShippingAssignmentApi $shippingAssignment
      * @param QuoteAddressTotal $total
-     * @return mixed|void
+     * @return QuoteAddressTotal\Shipping|void
      */
     // @codingStandardsIgnoreLine
-    public function afterCollect($subject, $result, Quote $quote, ShippingAssignmentApi $shippingAssignment, QuoteAddressTotal $total)
+    public function afterCollect(QuoteAddressTotal\Shipping $subject, QuoteAddressTotal\Shipping $result, Quote $quote, ShippingAssignmentApi $shippingAssignment, QuoteAddressTotal $total)
     {
         $shipping = $shippingAssignment->getShipping();
         $address = $shipping->getAddress();
-        $rates = $address->getAllShippingRates();
 
-        $fee = $this->scopeConfig->getValue('carriers/montapacking/price', ScopeInterface::SCOPE_STORE);
-
-        if (!$rates) {
+        // Apply return-early principle to validate some things
+        if (!$this->config->isActive()) {
             return $result;
         }
 
+        $rates = $address->getAllShippingRates();
         if (empty($rates)) {
             return $result;
         }
 
         $deliveryOption = $this->getDeliveryOption($address);
-
         if (!$deliveryOption) {
             return $result;
         }
-
-        $deliveryOptionType = $deliveryOption->type;
-        $deliveryOptionDetails = $deliveryOption->details[0];
-        $deliveryOptionAdditionalInfo = $deliveryOption->additional_info[0];
 
         $latestShipping = $this->checkoutSession->getLatestShipping();
         if (!$latestShipping) {
             return $result;
         }
 
-        switch ($deliveryOptionType) {
+        // Get fallback fee from carrier config
+        $fee = $this->config->getPrice();
+
+        $deliveryOptionDetails = $deliveryOption->details[0];
+        $deliveryOptionAdditionalInfo = $deliveryOption->additional_info[0];
+
+        switch ($deliveryOption->type) {
             case 'pickup':
                 $method_title = $deliveryOptionAdditionalInfo->company;
 
@@ -119,12 +106,19 @@ class Shipping
                 }
 
                 // extra options
-                if (isset($deliveryOptionDetails->options)) {
-                    foreach ($deliveryOptionDetails->options as $value) {
-                        $desc[] = $value;
-                        foreach ($selectedOptionFromCache->deliveryOptions as $extra) {
-                            if ($extra->code == $value) {
+                if (!empty($deliveryOptionDetails->options)) {
+                    $extras = $selectedOptionFromCache->deliveryOptions ?? [];
+                    foreach ($deliveryOptionDetails->options as $detailOption) {
+                        // Append this extra to description
+                        $desc[] = $detailOption;
+
+                        // Apply fee from each extra
+                        foreach ($extras as $extra) {
+                            // If this is the selected option
+                            if ($extra->code == $detailOption) {
                                 $fee += $extra->price;
+                                // Break loop, match found
+                                break;
                             }
                         }
                     }
@@ -137,13 +131,14 @@ class Shipping
                 return $result;
         }
 
+        // If code reaches here, delivery option is valid and totals must be adjusted
         $this->adjustTotals($method_title, $subject->getCode(), $address, $total, $fee, $desc);
     }
 
-    /**
-     * @param $address
+    /** Get stdClass object for selected delivery option
      *
-     * @return mixed|null
+     * @param $address
+     * @return \stdClass|null
      */
     private function getDeliveryOption($address)
     {
@@ -156,15 +151,26 @@ class Shipping
         return json_decode($option);
     }
 
-    private function adjustTotals($name, $code, $address, $total, $fee, $description)
+    /**
+     * @param $name
+     * @param $code
+     * @param $address
+     * @param $total
+     * @param $fee
+     * @param $description
+     * @return void
+     */
+    private function adjustTotals($name, $code, $address, $total, $fee, $description): void
     {
         $total->setTotalAmount($code, $fee);
         $total->setBaseTotalAmount($code, $fee);
         $total->setBaseShippingAmount($fee);
         $total->setShippingAmount($fee);
-        $total->setShippingDescription($name . ' - ' . $description);
-        $total->setShippingMethodTitle($name . ' - ' . $description);
 
-        $address->setShippingDescription($name . ' - ' . $description);
+        $shippingDescription = $name . ' - ' . $description;
+        $total->setShippingDescription($shippingDescription);
+        $total->setShippingMethodTitle($shippingDescription);
+
+        $address->setShippingDescription($shippingDescription);
     }
 }
