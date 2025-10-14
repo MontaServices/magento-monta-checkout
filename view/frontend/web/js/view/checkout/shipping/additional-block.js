@@ -581,9 +581,7 @@ define(
                         }
                     );
 
-                    const isEveningDelivery = (time_from === '17:30' && time_to === '22:00') || 
-                        (time_from === '17:30' && time_to === '21:30') || 
-                        (time_from === '18:00' && time_to === '22:00');
+                    const isEveningDelivery = (time_from === '17:30' || time_from === '18:00') && (time_to === '21:30' || time_to === '22:00');
 
                     if (isEveningDelivery) {
                         options.push('EveningDelivery');
